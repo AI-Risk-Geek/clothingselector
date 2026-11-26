@@ -60,11 +60,19 @@ public partial class GuardTests
     [Fact]
     public void No_secrets_in_appsettings()
     {
-        foreach (var f in Directory.EnumerateFiles(Path.Combine(Root, "src"), "appsettings*.json", SearchOption.AllDirectories).Where(f => !f.Contains("bin") && !f.Contains("obj")))
+        foreach (var f in Directory.EnumerateFiles(Path.Combine(Root, "src"), "appsettings*.json", SearchOption.AllDirectories)
+                     .Where(f => !f.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}") && !f.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}")))
         {
             var text = File.ReadAllText(f);
-            Assert.DoesNotMatch("\"(ApiKey|ContentSafetyKey|Secret|ClientSecret|UrlSigningKey|Password|LicenseKey)\"\\s*:\\s*\"[^\"]+\"", text);
-            Assert.DoesNotContain("sk-", text);
+            var name = Path.GetFileName(f);
+            // Real third-party keys and passwords never belong in any settings file (they're public in the repo).
+            Assert.False(Regex.IsMatch(text, "\"(ApiKey|ContentSafetyKey|SafeBrowsingApiKey|Password|LicenseKey|BlobConnection)\"\\s*:\\s*\"(?!UseDevelopmentStorage=true\")[^\"]+\""),
+                $"{f}: real keys go in user-secrets (local) or Key Vault (Azure)");
+            Assert.DoesNotMatch("sk-[A-Za-z0-9_-]{16,}|AIza[0-9A-Za-z_-]{30,}", text);
+            // Production settings (appsettings.json) hold no secrets at all. The local-only Development files may hold the
+            // local sign-in secret and URL signing key, which only work against this machine's localhost.
+            if (!name.Equals("appsettings.Development.json", StringComparison.OrdinalIgnoreCase))
+                Assert.DoesNotMatch("\"(Secret|ClientSecret|UrlSigningKey|SecretKey)\"\\s*:\\s*\"[^\"]+\"", text);
         }
     }
 

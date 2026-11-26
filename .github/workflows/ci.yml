@@ -12,24 +12,44 @@ permissions:
 
 env:
   DOTNET_VERSION: "10.0.x"
+  # ImageSharp 4 refuses Release builds without a Six Labors licence key (free for open source and small businesses:
+  # https://sixlabors.com/pricing/). Add it as the repository secret SIXLABORS_LICENSE_KEY. MSBuild reads this
+  # environment variable as the SixLaborsLicenseKey property. Without it CI builds and tests in Debug and skips packaging.
+  SixLaborsLicenseKey: ${{ secrets.SIXLABORS_LICENSE_KEY }}
 
 jobs:
   build-test:
     runs-on: ubuntu-latest
+    outputs:
+      packaged: ${{ steps.config.outputs.release }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
         with: { dotnet-version: "${{ env.DOTNET_VERSION }}" }
+
+      - name: Choose build configuration
+        id: config
+        run: |
+          if [ -n "$SixLaborsLicenseKey" ]; then
+            echo "configuration=Release" >> "$GITHUB_OUTPUT"; echo "release=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "configuration=Debug" >> "$GITHUB_OUTPUT"; echo "release=false" >> "$GITHUB_OUTPUT"
+            echo "::notice title=Packaging skipped::No SIXLABORS_LICENSE_KEY secret, so this run builds and tests in Debug and doesn't package or deploy."
+          fi
+
       - run: dotnet restore OutfitFinder.sln
-      - run: dotnet build OutfitFinder.sln -c Release --no-restore
+      - run: dotnet build OutfitFinder.sln -c ${{ steps.config.outputs.configuration }} --no-restore
       # Docker is available on ubuntu runners, so the Testcontainers MySQL test runs here.
-      - run: dotnet test tests/OutfitFinder.Tests -c Release --no-build --logger trx --filter "Category!=AiRegression"
+      - run: dotnet test tests/OutfitFinder.Tests -c ${{ steps.config.outputs.configuration }} --no-build --logger trx --filter "Category!=AiRegression"
+
       - name: Publish apps
+        if: steps.config.outputs.release == 'true'
         run: |
           dotnet publish src/OutfitFinder.Identity -c Release -o publish/identity --no-build
           dotnet publish src/OutfitFinder.Api -c Release -o publish/api --no-build
           dotnet publish src/OutfitFinder.Web -c Release -o publish/web --no-build
       - name: Build and zip the extension
+        if: steps.config.outputs.release == 'true'
         run: |
           VERSION=$(jq -r .version src/OutfitFinder.Extension/wwwroot/manifest.json)
           dotnet publish src/OutfitFinder.Extension -c Release -o publish/extension \
@@ -38,17 +58,22 @@ jobs:
           jq --arg api "${{ vars.API_ORIGIN }}" --arg id "${{ vars.IDENTITY_ORIGIN }}" --arg web "${{ vars.WEB_ORIGIN }}" \
             '.ApiBaseUrl=$api | .IdentityAuthority=$id | .WebsiteUrl=$web' \
             publish/extension/browserextension/appsettings.json > tmp.json && mv tmp.json publish/extension/browserextension/appsettings.json
+          if grep -q '__[A-Z_]*__' publish/extension/browserextension/manifest.json; then
+            echo "::error::manifest.json still contains build placeholders"; exit 1
+          fi
           mkdir -p publish/web/wwwroot/extension
           (cd publish/extension/browserextension && zip -r ../../web/wwwroot/extension/outfit-finder-extension-$VERSION.zip .)
           cat > publish/web/wwwroot/extension/latest.json <<EOF
-          { "version": "$VERSION", "downloadUrl": "/extension/outfit-finder-extension-$VERSION.zip",
+          { "version": "$VERSION", "downloadUrl": "extension/outfit-finder-extension-$VERSION.zip",
             "webStoreUrl": "${{ vars.WEB_STORE_URL }}", "publishedUtc": "$(date -u +%Y-%m-%dT%H:%M:%SZ)" }
           EOF
       - uses: actions/upload-artifact@v4
+        if: steps.config.outputs.release == 'true'
         with: { name: apps, path: publish/ }
 
   deploy:
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    # Runs only on main, once the apps were packaged and Azure is set up (the RESOURCE_GROUP repository variable).
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push' && needs.build-test.outputs.packaged == 'true' && vars.RESOURCE_GROUP != ''
     needs: build-test
     runs-on: ubuntu-latest
     environment: production
@@ -64,7 +89,8 @@ jobs:
       - name: Deploy infrastructure (Bicep)
         run: |
           az deployment group create -g ${{ vars.RESOURCE_GROUP }} -f infra/main.bicep \
-            -p infra/main.parameters.json -p mysqlAdminPassword='${{ secrets.MYSQL_ADMIN_PASSWORD }}'
+            -p infra/main.parameters.json -p mysqlAdminPassword='${{ secrets.MYSQL_ADMIN_PASSWORD }}' \
+            -p privacyEmail='${{ vars.PRIVACY_EMAIL }}' -p abuseEmail='${{ vars.ABUSE_EMAIL }}'
       - name: Deploy apps
         run: |
           for app in identity api web; do
