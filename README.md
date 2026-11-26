@@ -5,6 +5,67 @@ Upload a photo of an outfit → the AI finds every piece → where to buy each o
 identity server — all C# / .NET 10. Start with [HANDOFF.md](HANDOFF.md) and [docs/PLAN.md](docs/PLAN.md); the decisions
 made while building are in [docs/DECISIONS.md](docs/DECISIONS.md).
 
+## Set up and run it in Visual Studio Community
+
+No keys, Docker or database server needed: the solution runs in **demo mode** with sample results.
+
+### 1. Install (once)
+
+* **Visual Studio 2026 Community** (free) from https://visualstudio.microsoft.com/vs/community/. In the installer, tick the
+  **ASP.NET and web development** workload. It includes .NET 10, IIS Express and Git.
+* Chrome or Edge, if you want to try the browser extension.
+
+### 2. Get the code
+
+On the Visual Studio start window choose **Clone a repository**, paste
+`https://github.com/AI-Risk-Geek/clothingselector.git`, pick a folder and click **Clone**. Visual Studio opens
+`OutfitFinder.sln`. (Already have the folder? Open `OutfitFinder.sln` with **File > Open > Project/Solution**.)
+
+### 3. Start all three projects together
+
+The website signs people in through the sign-in server and gets results from the API, so all three must run.
+
+* In the start-up dropdown on the toolbar (next to the green ▶) choose **IIS Express (all three)**.
+* Not in the list? In **Solution Explorer**, right-click **Solution 'OutfitFinder'** > **Configure Startup Projects…** >
+  **Multiple startup projects**. Set the **Action** to **Start** for `OutfitFinder.Identity`, `OutfitFinder.Api` and
+  `OutfitFinder.Web` (in that order, using the arrows) and leave the rest as **None**. Click **OK**.
+
+### 4. Press F5
+
+* The first time, Visual Studio asks to trust its development certificate. Click **Yes** each time it asks.
+* The first build downloads packages and takes a few minutes.
+* The browser opens **https://localhost:44303**. The database is created automatically in the `.local` folder.
+
+### 5. Try it
+
+Click **Try a sample photo**. A yellow "Demo mode" banner shows that results are sample data. The "For testing only"
+human check is Cloudflare's test widget and is expected here.
+
+### 6. Make yourself the admin
+
+Click **Sign in** > **Create account** and register the username **`admin`**. That account gets admin rights, and
+**Admin** appears in the menu.
+
+### 7. Optional: use a real AI
+
+Menu > **Admin** (AI settings): pick **OpenAI**, **Azure AI Foundry** or **Google Gemini**, type the model name, paste the
+API key, click **Test connection**, then **Save settings**. New searches use it straight away. Real searches cost money;
+searches stop for the day after `Limits:DailyBudgetUsd` (25 USD).
+
+### If something goes wrong
+
+| What you see | What to do |
+|---|---|
+| `No connection could be made … localhost:44302` (or `44301`) | Only the website started. Do step 3. |
+| `Configuration value '…' is required` | A project started with the wrong launch profile. Do step 3 and pick **IIS Express**. |
+| The browser warns the connection isn't private | Open **View > Terminal**, run `dotnet dev-certs https --trust`, then restart Visual Studio. |
+| A port is already in use | Stop debugging, right-click the IIS Express icon in the Windows taskbar tray and choose **Exit**, then press F5 again. |
+| You want to start again with no data | Stop debugging and delete the `.local` folder. |
+
+The local settings are in each project's `appsettings.Development.json` (local development only: SQLite, a local photo
+folder, the Demo AI and the development moderation bypass, which the app refuses outside Development). Never put real
+production keys in those files.
+
 ## Solution
 
 | Project | What it is | Local URL |
@@ -17,21 +78,6 @@ made while building are in [docs/DECISIONS.md](docs/DECISIONS.md).
 | `OutfitFinder.UI` | Shared Razor components, `tokens.css`, fonts, legal Markdown, API client | |
 | `OutfitFinder.Extension` | Chrome MV3 extension (Blazor WASM pages + JS service worker) | |
 | `tests/OutfitFinder.Tests` | xUnit + bUnit; SQLite unit tests, Api/Identity integration, Testcontainers MySQL | |
-
-## Run it in Visual Studio
-
-Open `OutfitFinder.sln` (Visual Studio 2022 17.12+ or 2026). In the start-up dropdown on the toolbar pick
-**IIS Express (all three)** and press F5. It starts the sign-in server, the API and the website together; the website
-opens at https://localhost:44303. (**Kestrel (demo)** does the same without IIS Express.)
-
-The website can't run on its own: it signs people in through the sign-in server and gets results from the API, so always
-start all three. If the start-up dropdown doesn't list these, right-click the solution > **Configure Startup Projects**
-> **Multiple startup projects** and set Identity, Api and Web to **Start**.
-
-Everything it needs is in each project's `appsettings.Development.json` (local development only): SQLite in `.local/`, a
-local blob folder, the **Demo** AI provider (sample results and a yellow "Demo mode" banner) and the development moderation
-bypass, which are refused outside `Development`. The admin account is the one named `admin`; set a real AI provider on
-`/admin/ai`. Never put production keys in these files.
 
 ## Run the real setup from a terminal
 
@@ -94,12 +140,17 @@ The MySQL test starts `mysql:8.4` with Testcontainers and is skipped if Docker i
 
 ## Chrome extension
 
+To build it and put a download on the website's **Get the extension** page, run this in **View > Terminal**:
+
 ```powershell
-dotnet build src/OutfitFinder.Extension
+.\scripts\package-extension.ps1
 ```
 
-Load `src/OutfitFinder.Extension/bin/Debug/net10.0/browserextension` from `chrome://extensions` → Developer mode →
-Load unpacked. The manifest has a fixed `key`, so the ID is always `edhhknmhcehhhfpifnnkkbfcedljdlhi` (the private key is in
+Then, with the solution running, open https://localhost:44303/install and follow **Manual install (for testers)**: unzip
+the download, open `chrome://extensions`, switch on **Developer mode**, click **Load unpacked** and pick the folder.
+(Or load `publish/extension/browserextension` directly.) Right-click any photo on a website and choose **Find with AI**.
+
+The manifest has a fixed `key`, so the ID is always `edhhknmhcehhhfpifnnkkbfcedljdlhi` (the private key is in
 `.local/`, git-ignored; the Web Store signs its own builds). The extension name comes from `BrandName`; the API and website
 origins from the `ExtensionApiOrigin` / `ExtensionWebOrigin` build properties (CI sets them).
 

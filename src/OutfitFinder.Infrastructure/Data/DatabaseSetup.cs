@@ -47,6 +47,9 @@ public static class DatabaseSetup
         var b = new Microsoft.Data.Sqlite.SqliteConnectionStringBuilder(connectionString);
         if (b.DataSource is { Length: > 0 } file && file != ":memory:" && !Path.IsPathRooted(file))
             b.DataSource = Path.GetFullPath(Path.Combine(ContentRoot(config), file));
+        // SQLite creates the file but not its folder; a fresh clone has no .local folder yet.
+        if (b.DataSource is { Length: > 0 } full && full != ":memory:" && Path.GetDirectoryName(full) is { Length: > 0 } dir)
+            Directory.CreateDirectory(dir);
         return b.ToString();
     }
 
