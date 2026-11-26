@@ -165,3 +165,17 @@ origins from the `ExtensionApiOrigin` / `ExtensionWebOrigin` build properties (C
 `infra/main.bicep` creates App Services (Identity, Api, Web), MySQL Flexible Server, Storage, Key Vault, Content Safety,
 Application Insights, managed identities and budget alerts. `.github/workflows/ci.yml` builds, tests (including MySQL),
 zips the extension with `latest.json`, deploys with OIDC and smoke-tests. Secrets live in Key Vault only.
+
+### GitHub settings the pipeline uses
+
+Every push builds and runs the tests. Packaging and deploying switch on as you add these under the repository's
+**Settings > Secrets and variables > Actions**:
+
+| Name | Kind | What it does |
+|---|---|---|
+| `SIXLABORS_LICENSE_KEY` | Secret | ImageSharp 4 only builds in Release with a licence key (free for open source and small businesses: https://sixlabors.com/pricing/). Without it CI builds and tests in Debug and skips packaging and deploying. |
+| `RESOURCE_GROUP`, `APP_PREFIX` | Variables | The Azure resource group and app name prefix. Deploying is skipped until `RESOURCE_GROUP` is set. |
+| `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_SUBSCRIPTION_ID` | Secrets | Sign-in to Azure (OIDC, no stored password). |
+| `MYSQL_ADMIN_PASSWORD` | Secret | The MySQL server admin password. |
+| `PRIVACY_EMAIL`, `ABUSE_EMAIL` | Variables | Contact addresses printed in the Privacy Policy and Terms. The website refuses to start without them. |
+| `API_ORIGIN`, `IDENTITY_ORIGIN`, `WEB_ORIGIN`, `WEB_STORE_URL` | Variables | The live addresses baked into the Chrome extension, and its Web Store link once listed. |

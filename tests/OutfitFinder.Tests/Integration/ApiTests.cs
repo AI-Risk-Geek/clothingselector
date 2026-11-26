@@ -33,8 +33,9 @@ public class ApiTests : IClassFixture<ApiFactory>
         Assert.NotNull(s.ImageUrl);
         Assert.All(s.Items.SelectMany(i => i.Matches), m => Assert.StartsWith("https://", m.Url));
 
-        // Only the blurred copy is stored; the pending upload is gone.
-        Assert.Empty(Directory.Exists(Path.Combine(_f.BlobRoot, "pending")) ? Directory.GetFiles(Path.Combine(_f.BlobRoot, "pending")) : []);
+        // Only the blurred copy is stored; this search's pending upload is gone. (Only this search's file is checked:
+        // other tests' searches may still be passing through the shared pending folder.)
+        Assert.False(File.Exists(Path.Combine(_f.BlobRoot, "pending", $"{id:N}.jpg")));
         Assert.True(File.Exists(Path.Combine(_f.BlobRoot, "searches", $"{id:N}.jpg")));
 
         // The signed image link works without auth headers; a tampered one doesn't.

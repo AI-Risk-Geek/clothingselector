@@ -71,6 +71,11 @@ public static class DatabaseSetup
         var identity = scope.ServiceProvider.GetRequiredService<AppIdentityDbContext>();
         if ((config["Database:Provider"] ?? "MySql") == "Sqlite")
         {
+            // The search worker, web requests and the sign-in server all write to one SQLite file. In SQLite's default
+            // journal mode a second writer can fail at once with "database is locked"; WAL mode makes writers wait
+            // their turn instead. This is the one deliberate raw SQL statement: a SQLite file-format setting for the
+            // local demo and tests only (it persists in the file), not data access, and it never runs against MySQL.
+            await outfit.Database.ExecuteSqlRawAsync("PRAGMA journal_mode=WAL;", ct);
             // Several contexts (and apps) share one SQLite file: EnsureCreated would skip a context whenever
             // another one's tables already exist, so create each model's tables explicitly.
             await CreateTablesIfMissing(outfit, ct);
