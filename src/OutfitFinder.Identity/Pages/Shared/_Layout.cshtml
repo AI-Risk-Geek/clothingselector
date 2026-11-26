@@ -1,0 +1,31 @@
+﻿@{
+    var web = (Configuration["Clients:Web:Url"] ?? "/").TrimEnd('/');
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] · @Brand.Name</title>
+    <script>try { var t = localStorage.getItem("of-theme"); if (t) document.documentElement.setAttribute("data-theme", t); } catch (e) { }</script>
+    <link rel="stylesheet" href="~/_content/OutfitFinder.UI/css/tokens.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/_content/OutfitFinder.UI/css/fonts.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/_content/OutfitFinder.UI/css/app.css" asp-append-version="true" />
+</head>
+<body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="hdr">
+        <a class="brand" href="@web/">
+            <span class="logo"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 8a2 2 0 1 0-2-2" /><path d="M12 8v2l8.5 6.2a1 1 0 0 1-.6 1.8H4.1a1 1 0 0 1-.6-1.8L12 10" /></svg></span>@Brand.Name
+        </a>
+        <a class="n" href="@web/">Back to the site</a>
+    </header>
+    @RenderBody()
+    <footer class="ftr">
+        <a href="@web/legal/privacy">Privacy</a>
+        <a href="@web/legal/terms">Terms</a>
+        <a href="@web/legal/cookies">Cookies</a>
+    </footer>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

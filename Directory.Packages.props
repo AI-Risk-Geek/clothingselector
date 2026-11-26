@@ -1,0 +1,44 @@
+<Project>
+  <PropertyGroup>
+    <EfVersion>10.0.15</EfVersion>
+    <AspNetVersion>10.0.15</AspNetVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- Data -->
+    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="$(EfVersion)" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="$(EfVersion)" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="$(EfVersion)" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="$(EfVersion)" />
+    <!-- Pomelo has no EF Core 10 release (latest 9.0.0), so per the plan's fallback we use Oracle's provider. -->
+    <PackageVersion Include="MySql.EntityFrameworkCore" Version="10.0.12" />
+    <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="$(AspNetVersion)" />
+    <PackageVersion Include="Microsoft.AspNetCore.DataProtection.EntityFrameworkCore" Version="$(AspNetVersion)" />
+    <!-- Identity -->
+    <PackageVersion Include="Duende.IdentityServer.AspNetIdentity" Version="8.0.11" />
+    <PackageVersion Include="Duende.IdentityServer.EntityFramework" Version="8.0.11" />
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="$(AspNetVersion)" />
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="$(AspNetVersion)" />
+    <!-- Media, storage, documents -->
+    <PackageVersion Include="SixLabors.ImageSharp" Version="4.1.4" />
+    <PackageVersion Include="QuestPDF" Version="2026.9.2" />
+    <PackageVersion Include="Azure.Storage.Blobs" Version="12.30.2" />
+    <PackageVersion Include="Azure.AI.ContentSafety" Version="1.0.0" />
+    <PackageVersion Include="Markdig" Version="1.6.0" />
+    <PackageVersion Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.23.0" />
+    <!-- UI -->
+    <PackageVersion Include="Microsoft.AspNetCore.Components.Web" Version="$(AspNetVersion)" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly" Version="$(AspNetVersion)" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="$(AspNetVersion)" />
+    <PackageVersion Include="Blazor.BrowserExtension" Version="5.1.0" />
+    <!-- Tests -->
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+    <PackageVersion Include="xunit" Version="2.9.3" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.4" />
+    <PackageVersion Include="coverlet.collector" Version="6.0.4" />
+    <PackageVersion Include="Xunit.SkippableFact" Version="1.5.85" />
+    <PackageVersion Include="bunit" Version="2.15.2" />
+    <PackageVersion Include="Testcontainers.MySql" Version="4.17.0" />
+    <PackageVersion Include="Microsoft.Playwright" Version="1.65.1" />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="$(AspNetVersion)" />
+  </ItemGroup>
+</Project>

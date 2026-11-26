@@ -1,0 +1,18 @@
+[
+  {
+    "Name": "IIS Express (all three)",
+    "Projects": [
+      { "Path": "src\OutfitFinder.Identity\OutfitFinder.Identity.csproj", "Action": "Start", "DebugTarget": "IIS Express" },
+      { "Path": "src\OutfitFinder.Api\OutfitFinder.Api.csproj", "Action": "Start", "DebugTarget": "IIS Express" },
+      { "Path": "src\OutfitFinder.Web\OutfitFinder.Web.csproj", "Action": "Start", "DebugTarget": "IIS Express" }
+    ]
+  },
+  {
+    "Name": "Kestrel (demo)",
+    "Projects": [
+      { "Path": "src\OutfitFinder.Identity\OutfitFinder.Identity.csproj", "Action": "Start", "DebugTarget": "Kestrel (demo)" },
+      { "Path": "src\OutfitFinder.Api\OutfitFinder.Api.csproj", "Action": "Start", "DebugTarget": "Kestrel (demo)" },
+      { "Path": "src\OutfitFinder.Web\OutfitFinder.Web.csproj", "Action": "Start", "DebugTarget": "Kestrel (demo)" }
+    ]
+  }
+]

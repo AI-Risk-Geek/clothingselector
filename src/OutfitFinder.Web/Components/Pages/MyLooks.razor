@@ -1,0 +1,95 @@
+@page "/looks"
+@inject OutfitApiClient Api
+@inject WebVisitorState Visitor
+@inject AuthenticationStateProvider Auth
+
+<PageTitle>My looks · @Brand.Name</PageTitle>
+
+<main class="wrap" id="main" style="max-width: 1180px">
+    <div class="spread" style="align-items: flex-end">
+        <div><h1 class="h1s">My looks</h1><div class="m" style="margin-top: 6px; font-size: 15px">Kept for 90 days, then deleted.</div></div>
+        <a class="b" href="">Find a new look</a>
+    </div>
+
+    @if (!_signedIn && Visitor.ConsentChoice != "accepted")
+    {
+        <div class="note lemon">You declined the cookie, so looks are only kept until you close this tab. <a href="signin?returnUrl=%2Flooks">Sign in</a> to keep them.</div>
+    }
+
+    @if (_error is not null)
+    {
+        <div class="note danger" role="alert">@_error</div>
+    }
+    else if (_looks is null)
+    {
+        <div class="gp" aria-busy="true">@for (var i = 0; i < 4; i++) { <div class="sk" style="height: 230px"></div> }</div>
+    }
+    else if (_looks.Count == 0)
+    {
+        <EmptyState Title="No looks yet" Text="Upload a photo of an outfit and it will appear here.">
+            <a class="b" href="">Find your first look</a>
+        </EmptyState>
+    }
+    else
+    {
+        <div class="gp">
+            @for (var i = 0; i < _looks.Count; i++)
+            {
+                var l = _looks[i];
+                <a class="card k look-card" href="looks/@l.Id">
+                    <span class="ph thumb c@(i % 5)">
+                        @if (l.ImageUrl is not null) { <img src="@l.ImageUrl" alt="" loading="lazy" /> } else { <span>Photo</span> }
+                    </span>
+                    <span style="font-weight: 700; overflow-wrap: anywhere">@Title(l)</span>
+                    <span class="m" style="font-size: 14px">@Label(l) · @When(l.CreatedUtc)</span>
+                </a>
+            }
+        </div>
+        @if (!_signedIn)
+        {
+            <p class="m small" style="margin: 0"><a href="signin?returnUrl=%2Flooks">Sign in or create an account</a> to keep your looks on every device.</p>
+        }
+    }
+</main>
+
+@code {
+    private List<SearchSummaryDto>? _looks;
+    private string? _error;
+    private bool _signedIn;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _signedIn = (await Auth.GetAuthenticationStateAsync()).User.Identity?.IsAuthenticated == true;
+        try { _looks = await Api.ListSearchesAsync(); }
+        catch (ApiException e) { _error = e.Message; }
+        catch (HttpRequestException) { _error = "We can't reach the search service right now."; }
+    }
+
+    private static string Title(SearchSummaryDto l) => l.Status switch
+    {
+        SearchStatus.Completed when l.Title is not null => l.Title,
+        SearchStatus.Completed => "Look",
+        SearchStatus.Failed => "Search didn't finish",
+        _ => "Still searching…",
+    };
+
+    private static string Label(SearchSummaryDto l) => l.ItemCount == 1 ? "1 piece" : $"{l.ItemCount} pieces";
+
+    /// <summary>Relative times avoid showing the server's time zone; today's looks get minutes or hours so two can be told apart.</summary>
+    public static string When(DateTime utc)
+    {
+        var ago = DateTime.UtcNow - utc;
+        if (ago < TimeSpan.FromMinutes(1)) return "Just now";
+        if (ago < TimeSpan.FromHours(1)) return ago.Minutes == 1 ? "1 minute ago" : $"{ago.Minutes} minutes ago";
+        if (ago < TimeSpan.FromHours(24)) return (int)ago.TotalHours == 1 ? "1 hour ago" : $"{(int)ago.TotalHours} hours ago";
+        var days = (DateTime.UtcNow.Date - utc.Date).Days;
+        return days switch
+        {
+            0 or 1 => "Yesterday",
+            < 7 => $"{days} days ago",
+            < 14 => "Last week",
+            < 31 => $"{days / 7} weeks ago",
+            _ => utc.ToString("d MMM yyyy", CultureInfo.InvariantCulture),
+        };
+    }
+}

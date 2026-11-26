@@ -1,0 +1,59 @@
+/* Design tokens.
+   The ONLY file where colors and shape values are written (fonts are named here and loaded in fonts.css).
+   Values come from the approved prototype; change them here and every page, the sign-in pages and the
+   extension follow. Guard tests fail the build if a hex color appears anywhere else. */
+:root {
+  color-scheme: light;
+  /* Surfaces and text */
+  --color-bg: #FFF8F2;        --color-surface: #ffffff;   --color-soft: #FFF8F2;
+  --color-ink: #1B1033;       --color-muted: #51466B;
+  --color-line: #1B1033;      --color-shadow: #1B1033;    --color-rule: #F1E6DC;
+  --color-hover: #FFE9A8;     --color-skeleton: #F1E6DC;
+  /* Actions and links */
+  --color-action: #6C3BFF;    --color-on-action: #ffffff; --color-link: #4a22c9;
+  --color-focus: #6C3BFF;
+  /* Color blocks (always carry dark text: --color-on-block) */
+  --color-block-lemon: #FFD84D; --color-block-lilac: #D9CCFF; --color-block-mint: #A8EBCB;
+  --color-block-coral: #FF9B85; --color-block-sky: #A9D8FF;   --color-on-block: #1B1033;
+  /* Fixed-contrast elements that look the same in both themes (photo markers, badges) */
+  --color-marker: #1B1033; --color-marker-ring: #ffffff; --color-marker-text: #ffffff;
+  --color-badge-bg: #ffffff; --color-badge-ink: #1B1033;
+  --color-scrim: rgba(27, 16, 51, 0.55);
+  /* Status */
+  --color-danger: #b91c1c;    --color-danger-soft: #FFE1DC; --color-success-soft: #A8EBCB;
+  /* Type */
+  --font-heading: "Outfit", system-ui, sans-serif;
+  --font-body: "DM Sans", system-ui, sans-serif;
+  --text-h1: 60px; --text-h1-sm: 44px; --text-h2: 24px; --text-h3: 18px; --text-body: 16px; --text-small: 14px; --text-tiny: 13px;
+  /* Shape */
+  --border-width: 2px;
+  --radius-card: 28px; --radius-block: 24px; --radius-box: 20px; --radius-field: 14px; --radius-pill: 999px; --radius-thumb: 12px;
+  --shadow-pop: 6px 6px 0 var(--color-shadow); --shadow-button: 3px 3px 0 var(--color-shadow);
+  --shadow-button-hover: 4px 4px 0 var(--color-shadow);
+  --touch-min: 44px;
+  /* Spacing */
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px; --space-5: 24px; --space-6: 36px; --space-7: 44px;
+  /* Layout (keep in sync with the @media queries in app.css; CSS cannot use variables in media queries) */
+  --breakpoint-mobile: 760px;
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --color-bg: #15102A;   --color-surface: #221A40; --color-soft: #2B2250;
+  --color-ink: #F6F1FF;  --color-muted: #C3B8E4;
+  --color-line: #F6F1FF; --color-shadow: #6C3BFF;  --color-rule: #3A2F66;
+  --color-hover: #3A2F66; --color-skeleton: #2B2250;
+  --color-link: #C9B8FF; --color-focus: #C9B8FF;
+  --color-danger: #ff8a7a; --color-danger-soft: #4a1f2a;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --color-bg: #15102A;   --color-surface: #221A40; --color-soft: #2B2250;
+    --color-ink: #F6F1FF;  --color-muted: #C3B8E4;
+    --color-line: #F6F1FF; --color-shadow: #6C3BFF;  --color-rule: #3A2F66;
+    --color-hover: #3A2F66; --color-skeleton: #2B2250;
+    --color-link: #C9B8FF; --color-focus: #C9B8FF;
+    --color-danger: #ff8a7a; --color-danger-soft: #4a1f2a;
+  }
+}
+@media (max-width: 760px) { :root { --text-h1: 40px; --text-h1-sm: 32px; --text-h2: 21px; } }

@@ -1,0 +1,119 @@
+@page "/install"
+@inject OutfitJs Js
+@inject SiteSettings Site
+@inject IWebHostEnvironment Env
+
+<PageTitle>Get the extension · @Brand.Name</PageTitle>
+
+<main class="wrap w-lg" id="main">
+    <section class="blk lilac pop stack" style="border-radius: 32px; padding: 36px 20px; align-items: center; text-align: center; gap: 14px">
+        <h1 class="h1s">See a look online? Right-click it.</h1>
+        <p style="margin: 0; max-width: 540px; font-size: 18px">Right-click any photo on any site and choose "Find with AI". Your results open right beside the page.</p>
+
+        @if (_browser is { IsMobile: true })
+        {
+            <div class="note lemon stack" style="align-items: center; gap: 10px">
+                <span>The extension runs on a computer. Send this page to yourself to install it there, or keep using <a href="">the website</a> on your phone.</span>
+                <button type="button" class="b w sm" @onclick="ShareToComputer">Send this page to my computer</button>
+                @if (_shareResult is not null) { <span class="small" role="status">@_shareResult</span> }
+            </div>
+        }
+        else if (_browser is { Supported: false })
+        {
+            <div class="note lemon">The extension needs Chrome, Edge or Brave on a computer. You're using @_browser.Name.</div>
+        }
+
+        @if (_installedVersion is not null)
+        {
+            <div class="pill mint">Installed · version @_installedVersion</div>
+            @if (_latest is not null && IsNewer(_latest.Version, _installedVersion))
+            {
+                <div class="note lemon">Version @_latest.Version is available. Chrome updates store installs automatically; for a manual install, download the new zip below.</div>
+            }
+        }
+        else if (!string.IsNullOrEmpty(Site.WebStoreUrl))
+        {
+            <a class="b" style="min-height: 54px; font-size: 17px" href="@Site.WebStoreUrl" target="_blank" rel="noopener">Add to Chrome</a>
+        }
+        else
+        {
+            @* Not a button: nothing happens on tap, so it must not look like one. *@
+            <div class="pill lemon">Coming soon to the Chrome Web Store</div>
+            @if (Site.ManualDownloadEnabled && _latest is not null)
+            {
+                <a class="lk" href="install#manual">Testers can install it now</a>
+            }
+        }
+        <div class="small">@(_latest is null ? "" : $"Version {_latest.Version} · ")Desktop Chrome, Edge and Brave</div>
+    </section>
+
+    <section class="g3">
+        <div class="card"><div class="h1s" aria-hidden="true">1</div><h2 class="h3" style="margin: 8px 0 4px">Add to Chrome</h2><p class="m" style="margin: 0; font-size: 15px">@(string.IsNullOrEmpty(Site.WebStoreUrl) ? "From the Chrome Web Store as soon as it's listed." : "One click from the Chrome Web Store.")</p></div>
+        <div class="card"><div class="h1s" aria-hidden="true">2</div><h2 class="h3" style="margin: 8px 0 4px">Right-click a photo</h2><p class="m" style="margin: 0; font-size: 15px">Choose "Find with AI" from the menu.</p></div>
+        <div class="card"><div class="h1s" aria-hidden="true">3</div><h2 class="h3" style="margin: 8px 0 4px">Shop or sew</h2><p class="m" style="margin: 0; font-size: 15px">Results open in a side panel next to the page.</p></div>
+    </section>
+
+    <section class="card stack">
+        <h2 class="h2">What the extension can access</h2>
+        <table class="simple">
+            <tbody>
+                <tr><th scope="row">Right-click menu</th><td>Adds "Find with AI" when you right-click an image.</td></tr>
+                <tr><th scope="row">Side panel</th><td>Shows your results next to the page you're on.</td></tr>
+                <tr><th scope="row">The image you clicked</th><td>Only that one image, only when you choose "Find with AI". If the site blocks direct downloads, the extension copies the image from the page instead.</td></tr>
+                <tr><th scope="row">Storage</th><td>Remembers your visitor ID and sign-in on this browser.</td></tr>
+                <tr><th scope="row">Sign-in</th><td>Opens the @Brand.Name sign-in page in a pop-up window.</td></tr>
+            </tbody>
+        </table>
+        <p class="m small" style="margin: 0">It never reads pages you don't right-click, and it doesn't track your browsing.</p>
+    </section>
+
+    @if (Site.ManualDownloadEnabled && _latest is not null)
+    {
+        <section class="box stack" id="manual">
+            <h2 class="h3">Manual install (for testers)</h2>
+            <ol class="howto">
+                <li><a href="@_latest.DownloadUrl" download>Download the extension zip</a> and unzip it to a folder you'll keep.</li>
+                <li>Open <code>chrome://extensions</code> and switch on <b>Developer mode</b> (top right).</li>
+                <li>Click <b>Load unpacked</b> and choose the unzipped folder.</li>
+                <li>Pin @Brand.Name from the puzzle-piece menu so it's easy to find.</li>
+            </ol>
+            <p class="m small" style="margin: 0">Chrome only allows normal users to install from the Web Store; manual installs show a developer-mode warning.</p>
+        </section>
+    }
+</main>
+
+@code {
+    private BrowserInfo? _browser;
+    private string? _installedVersion;
+    private ExtensionRelease? _latest;
+    private string? _shareResult;
+    [Inject] private NavigationManager Nav { get; set; } = default!;
+
+    private async Task ShareToComputer()
+    {
+        _shareResult = await Js.Invoke<string>("shareLink", $"{Brand.Name} for Chrome", Nav.Uri) switch
+        {
+            "copied" => "Link copied. Paste it into a message or email to yourself.",
+            "failed" => "Couldn't share from this browser. The address is " + Nav.Uri,
+            _ => null,
+        };
+    }
+
+    protected override void OnInitialized()
+    {
+        var path = Path.Combine(Env.WebRootPath, "extension", "latest.json");
+        if (File.Exists(path))
+            _latest = System.Text.Json.JsonSerializer.Deserialize<ExtensionRelease>(File.ReadAllText(path), OutfitApiClient.Json);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
+        _browser = await Js.Invoke<BrowserInfo>("browserInfo");
+        if (!string.IsNullOrEmpty(Site.ExtensionId)) _installedVersion = await Js.Invoke<string?>("pingExtension", Site.ExtensionId);
+        StateHasChanged();
+    }
+
+    private static bool IsNewer(string latest, string installed) =>
+        Version.TryParse(latest, out var a) && Version.TryParse(installed, out var b) && a > b;
+}

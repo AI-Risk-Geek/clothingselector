@@ -1,0 +1,131 @@
+@page "/sidepanel.html"
+@inherits BasePage
+@implements IDisposable
+@inject ExtJs Ext
+@inject OutfitApiClient Api
+@inject ExtensionSettings Settings
+
+<main class="wrap" id="main" style="padding: 16px; gap: 16px">
+    @if (_needsNotice)
+    {
+        <UploadNotice OnAccepted="NoticeAccepted" />
+    }
+    else if (_search is null && _error is null && !_working)
+    {
+        <EmptyState Title="Right-click a photo" Text="On any website, right-click a photo of an outfit and choose “Find with AI”. Results appear here." />
+    }
+    else if (_error is not null)
+    {
+        <div class="note danger" role="alert">@_error</div>
+        <button type="button" class="b w" @onclick="Reset">OK</button>
+    }
+    else if (_search is null || !_search.IsFinished)
+    {
+        <h1 class="h2">@(_status ?? "Finding your look…")</h1>
+        @if (_search?.ImageUrl is { } img) { <div class="photo"><img src="@img" alt="Your photo" /><div class="scan" aria-hidden="true"></div></div> }
+        <ProgressSteps Stage="@(_search?.Stage ?? SearchStage.Queued)" />
+    }
+    else if (_search.Status != SearchStatus.Completed)
+    {
+        <LoadingView Stage="SearchStage.CheckingPhoto" Failed="true" Error="@_search.Error" OnCancel="Reset" />
+    }
+    else
+    {
+        <ResultsView Search="_search" Compact="true" FullResultsHref="@(_signedIn ? $"{Settings.WebsiteUrl.TrimEnd('/')}/looks/{_search.Id}" : null)"
+                     OnNewSearch="id => Track(id)" OnChanged="s => _search = s" />
+        @if (!_signedIn)
+        {
+            <p class="m small" style="margin: 0">Sign in from the toolbar button to see your looks on the website too.</p>
+        }
+    }
+</main>
+
+@code {
+    private DotNetObjectReference<SidePanel>? _ref;
+    private SearchDto? _search;
+    private string? _error, _status;
+    private bool _working, _needsNotice, _signedIn;
+    private PendingRequest? _waiting;
+    private CancellationTokenSource? _poll;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _signedIn = await Ext.Call<string?>("getUserName") is not null;
+        _ref = DotNetObjectReference.Create(this);
+        await Ext.Call("onPending", _ref);
+        await PendingArrived();
+    }
+
+    [JSInvokable]
+    public async Task PendingArrived()
+    {
+        var json = await Ext.Call<string?>("takePending");
+        if (json is null) return;
+        var pending = System.Text.Json.JsonSerializer.Deserialize<PendingRequest>(json, OutfitApiClient.Json)!;
+        if (pending.SearchId is { } id) { Track(id); return; }
+        if (!await Ext.Call<bool>("getFlag", "noticeAccepted")) { _waiting = pending; _needsNotice = true; StateHasChanged(); return; }
+        await StartFromUrl(pending);
+    }
+
+    private async Task NoticeAccepted()
+    {
+        await Ext.Call("setFlag", "noticeAccepted");
+        _needsNotice = false;
+        if (_waiting is { } w) { _waiting = null; await StartFromUrl(w); }
+    }
+
+    private async Task StartFromUrl(PendingRequest p)
+    {
+        _error = null; _search = null; _working = true; _status = "Getting the photo…";
+        StateHasChanged();
+        try
+        {
+            Guid id;
+            try
+            {
+                id = await Api.CreateSearchFromUrlAsync(p.SrcUrl!, p.PageUrl);
+            }
+            catch (ApiException e) when (e.Status == System.Net.HttpStatusCode.UnprocessableEntity)
+            {
+                // The server couldn't download it (login-only or expiring link): copy it from the page instead.
+                _status = "Copying the photo from the page…"; StateHasChanged();
+                var base64 = await Ext.Call<string?>("grabImage", p.TabId, p.FrameId, p.SrcUrl);
+                if (base64 is null) throw new ApiException(e.Status, "This site doesn't let us read that image. Save it and upload it from the toolbar button instead.");
+                using var ms = new MemoryStream(Convert.FromBase64String(base64));
+                id = await Api.CreateSearchAsync(ms, "page-image.jpg", "image/jpeg", SearchSource.ExtensionUpload, null);
+            }
+            Track(id);
+        }
+        catch (ApiException e) { _error = e.Message; _working = false; }
+        catch (HttpRequestException) { _error = "We can't reach the search service right now."; _working = false; }
+    }
+
+    private void Track(Guid id)
+    {
+        _poll?.Cancel();
+        _poll = new CancellationTokenSource();
+        _status = null; _working = true;
+        _ = PollAsync(id, _poll.Token);
+    }
+
+    private async Task PollAsync(Guid id, CancellationToken ct)
+    {
+        try
+        {
+            do
+            {
+                _search = await Api.GetSearchAsync(id, ct);
+                StateHasChanged();
+                if (_search.IsFinished) break;
+                await Task.Delay(1500, ct);
+            } while (!ct.IsCancellationRequested);
+        }
+        catch (OperationCanceledException) { }
+        catch (ApiException e) { _error = e.Message; StateHasChanged(); }
+        finally { _working = false; }
+    }
+
+    private void Reset() { _error = null; _search = null; _working = false; }
+
+    public void Dispose() { _poll?.Cancel(); _ref?.Dispose(); }
+}

@@ -1,0 +1,16 @@
+@if (Visible)
+{
+    <div class="cookie" role="region" aria-label="Cookie notice">
+        <div style="flex: 1 1 240px">We use one cookie to remember your looks on this device. No ads, no tracking. <a href="legal/cookies">Cookie Policy</a></div>
+        <div class="cluster">
+            @* Both choices look the same, so neither is nudged. *@
+            <button type="button" class="t cookie-choice" @onclick="() => OnChoice.InvokeAsync(false)">Decline</button>
+            <button type="button" class="t cookie-choice" @onclick="() => OnChoice.InvokeAsync(true)">Accept</button>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public bool Visible { get; set; }
+    [Parameter] public EventCallback<bool> OnChoice { get; set; }
+}

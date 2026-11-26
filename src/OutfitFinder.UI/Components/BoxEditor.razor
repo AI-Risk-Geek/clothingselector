@@ -1,0 +1,110 @@
+@implements IAsyncDisposable
+@inject OutfitJs Js
+
+<div class="stack">
+    <div class="photo boxes @(_drawing ? "drawing" : null)" @ref="_root">
+        @if (ImageUrl is not null)
+        {
+            <img src="@ImageUrl" alt="Your photo, with faces blurred" draggable="false" />
+        }
+        @for (var i = 0; i < _boxes.Count; i++)
+        {
+            var b = _boxes[i];
+            @* A small box puts its number above itself so the resize handle never hides it. *@
+            <div class="bx @(b.Keep ? null : "off") @(b.W < 0.14 || b.H < 0.1 ? "small" : null)" data-i="@i" style="left: @P(b.X); top: @P(b.Y); width: @P(b.W); height: @P(b.H)">
+                <span class="num">@(i + 1)</span><span class="hd" aria-hidden="true"></span>
+            </div>
+        }
+    </div>
+    <div class="m small">Drag a box to move it, drag its corner to resize. Untick anything that isn't clothing.</div>
+    <fieldset class="box stack" style="gap: 6px">
+        <legend class="lab">Pieces to search</legend>
+        @for (var i = 0; i < _boxes.Count; i++)
+        {
+            var b = _boxes[i];
+            var index = i;
+            <div class="cluster">
+                <label class="check" style="flex: 1">
+                    <input type="checkbox" checked="@b.Keep" @onchange="e => b.Keep = (bool)e.Value!" />
+                    <span>@(index + 1). @(b.Name ?? "New piece")</span>
+                </label>
+                @if (b.Id is null)
+                {
+                    <label class="sr-only" for="cat-@index">Category for piece @(index + 1)</label>
+                    <select id="cat-@index" class="in" style="width: auto; min-height: 44px" @bind="b.Category">
+                        @foreach (var c in Categories) { <option value="@c">@c</option> }
+                    </select>
+                }
+            </div>
+        }
+    </fieldset>
+    <button type="button" class="b w sm" style="align-self: flex-start" aria-pressed="@(_drawing ? "true" : "false")" @onclick="() => _drawing = !_drawing">
+        <Icon Name="plus" Size="18" /> @(_drawing ? "Drag on the photo to draw…" : "Draw a new box")
+    </button>
+    <div class="cluster" style="align-items: center">
+        <button type="button" class="b sm" @onclick="Save" disabled="@Busy">@(Busy ? "Searching…" : "Save and re-search")</button>
+        <button type="button" class="lk" style="min-height: 44px" @onclick="OnCancel">Cancel</button>
+    </div>
+</div>
+
+@code {
+    private static readonly string[] Categories = ["Top", "Bottoms", "Dress", "Outerwear", "Shoes", "Bag", "Hat", "Eyewear", "Jewelry", "Belt", "Watch", "Other"];
+
+    private sealed class EditBox
+    {
+        public Guid? Id; public string? Name; public string Category = "Top";
+        public double X, Y, W, H; public bool Keep = true; public bool Changed;
+    }
+
+    private readonly List<EditBox> _boxes = new();
+    private ElementReference _root;
+    private DotNetObjectReference<BoxEditor>? _ref;
+    private bool _drawing;
+
+    [Parameter] public string? ImageUrl { get; set; }
+    [Parameter, EditorRequired] public IReadOnlyList<ItemDto> Items { get; set; } = [];
+    [Parameter] public bool Busy { get; set; }
+    [Parameter] public EventCallback OnCancel { get; set; }
+    [Parameter] public EventCallback<AdjustItemsRequest> OnSave { get; set; }
+
+    protected override void OnInitialized()
+    {
+        foreach (var i in Items)
+            _boxes.Add(new EditBox { Id = i.Id, Name = i.Name, Category = i.Category, X = i.Box.X, Y = i.Box.Y, W = i.Box.W, H = i.Box.H });
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
+        _ref = DotNetObjectReference.Create(this);
+        await Js.Invoke("initBoxEditor", _root, _ref);
+    }
+
+    [JSInvokable]
+    public void BoxChanged(int index, double x, double y, double w, double h)
+    {
+        if (index < 0 || index >= _boxes.Count) return;
+        var b = _boxes[index];
+        (b.X, b.Y, b.W, b.H, b.Changed) = (x, y, w, h, true);
+        StateHasChanged();
+    }
+
+    [JSInvokable]
+    public void BoxAdded(double x, double y, double w, double h)
+    {
+        _boxes.Add(new EditBox { X = x, Y = y, W = w, H = h, Changed = true });
+        _drawing = false;
+        StateHasChanged();
+    }
+
+    private Task Save() => OnSave.InvokeAsync(new AdjustItemsRequest(
+        _boxes.Where(b => b.Keep).Select(b => new AdjustedItem(b.Id, b.Id is null ? b.Category : null, new BoxDto(b.X, b.Y, b.W, b.H))).ToList()));
+
+    private static string P(double v) => (v * 100).ToString("0.###", CultureInfo.InvariantCulture) + "%";
+
+    public async ValueTask DisposeAsync()
+    {
+        _ref?.Dispose();
+        await Task.CompletedTask;
+    }
+}

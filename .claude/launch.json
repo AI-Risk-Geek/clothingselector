@@ -1,0 +1,26 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "identity-demo",
+      "runtimeExecutable": "dotnet",
+      "runtimeArgs": ["run", "--project", "src/OutfitFinder.Identity", "--launch-profile", "Kestrel (demo)"],
+      "port": 44301,
+      "url": "https://localhost:44301"
+    },
+    {
+      "name": "api-demo",
+      "runtimeExecutable": "dotnet",
+      "runtimeArgs": ["run", "--project", "src/OutfitFinder.Api", "--launch-profile", "Kestrel (demo)"],
+      "port": 44302,
+      "url": "https://localhost:44302"
+    },
+    {
+      "name": "web-demo",
+      "runtimeExecutable": "dotnet",
+      "runtimeArgs": ["run", "--project", "src/OutfitFinder.Web", "--launch-profile", "Kestrel (demo)"],
+      "port": 44303,
+      "url": "https://localhost:44303"
+    }
+  ]
+}

@@ -1,0 +1,1124 @@
+[
+ {
+  "name": "01-home-first-visit-phone-light",
+  "device": "phone",
+  "url": "https://localhost:5003/",
+  "title": "Outfit Finder · Find every piece of an outfit",
+  "overflowX": false,
+  "height": 1790,
+  "buttons": [
+   "Menu",
+   "Try a sample photo",
+   "Cookie settings",
+   "Decline",
+   "Accept"
+  ],
+  "smallTargets": [
+   {
+    "t": "",
+    "w": 1,
+    "h": 1
+   },
+   {
+    "t": "Cookie Policy",
+    "w": 92,
+    "h": 18
+   }
+  ],
+  "unlabeled": [],
+  "h1": [
+   "Love the look? Find every piece."
+  ],
+  "text": "Skip to content\nDemo mode: results are sample data, not real products.\nOutfit Finder\nSnap it. Shop it. Sew it.\nLove the look? Find every piece.\n\nUpload a photo of any outfit. We spot each piece, find where to buy it, and give you a pattern to make it yourself.\n\nDrop a photo here\nChoose a photo\nTry a sample photo\nTake a photo\nFaces are blurred before anything is saved. Photos are deleted after 90 days. Only upload photos you have the right to use.\n1\nUpload a photo\n\nFrom your camera roll, or right-click any photo with the Chrome extension.\n\n2\nWe find each piece\n\nTop, trousers, shoes, bag, glasses: every item, matched across online stores.\n\n3\nBuy it or make it\n\nShop the closest matches, or print a life-size sewing pattern with a materials list.\n\nPrivacy\nTerms\nCookies\nReport content\nCookie settings\n© 2026 Outfit Finder\nWe use one cookie to remember your looks on this device. No ads, no tracking. Cookie Policy\nDecline\nAccept",
+  "errors": []
+ },
+ {
+  "name": "01b-home-full-phone-light",
+  "device": "phone",
+  "url": "https://localhost:5003/",
+  "title": "Outfit Finder · Find every piece of an outfit",
+  "overflowX": false,
+  "height": 1790,
+  "buttons": [
+   "Menu",
+   "Try a sample photo",
+   "Cookie settings",
+   "Decline",
+   "Accept"
+  ],
+  "smallTargets": [
+   {
+    "t": "",
+    "w": 1,
+    "h": 1
+   },
+   {
+    "t": "Cookie Policy",
+    "w": 92,
+    "h": 18
+   }
+  ],
+  "unlabeled": [],
+  "h1": [
+   "Love the look? Find every piece."
+  ],
+  "text": "Skip to content\nDemo mode: results are sample data, not real products.\nOutfit Finder\nSnap it. Shop it. Sew it.\nLove the look? Find every piece.\n\nUpload a photo of any outfit. We spot each piece, find where to buy it, and give you a pattern to make it yourself.\n\nDrop a photo here\nChoose a photo\nTry a sample photo\nTake a photo\nFaces are blurred before anything is saved. Photos are deleted after 90 days. Only upload photos you have the right to use.\n1\nUpload a photo\n\nFrom your camera roll, or right-click any photo with the Chrome extension.\n\n2\nWe find each piece\n\nTop, trousers, shoes, bag, glasses: every item, matched across online stores.\n\n3\nBuy it or make it\n\nShop the closest matches, or print a life-size sewing pattern with a materials list.\n\nPrivacy\nTerms\nCookies\nReport content\nCookie settings\n© 2026 Outfit Finder\nWe use one cookie to remember your looks on this device. No ads, no tracking. Cookie Policy\nDecline\nAccept",
+  "errors": []
+ },
+ {
+  "name": "02-menu-open-phone-light",
+  "device": "phone",
+  "url": "https://localhost:5003/",
+  "title": "Outfit Finder · Find every piece of an outfit",
+  "overflowX": false,
+  "height": 2078,
+  "buttons": [
+   "Menu",
+   "Dark mode",
+   "Sign in",
+   "Try a sample photo",
+   "Cookie settings",
+   "Decline",
+   "Accept"
+  ],
+  "smallTargets": [
+   {
+    "t": "",
+    "w": 1,
+    "h": 1
+   },
+   {
+    "t": "Cookie Policy",
+    "w": 92,
+    "h": 18
+   }
+  ],
+  "unlabeled": [],
+  "h1": [
+   "Love the look? Find every piece."
+  ],
+  "text": "Skip to content\nDemo mode: results are sample data, not real products.\nOutfit Finder\nFind a look\nMy looks\nGet the extension\nDark mode\nSign in\nSnap it. Shop it. Sew it.\nLove the look? Find every piece.\n\nUpload a photo of any outfit. We spot each piece, find where to buy it, and give you a pattern to make it yourself.\n\nDrop a photo here\nChoose a photo\nTry a sample photo\nTake a photo\nFaces are blurred before anything is saved. Photos are deleted after 90 days. Only upload photos you have the right to use.\n1\nUpload a photo\n\nFrom your camera roll, or right-click any photo with the Chrome extension.\n\n2\nWe find each piece\n\nTop, trousers, shoes, bag, glasses: every item, matched across online stores.\n\n3\nBuy it or make it\n\nShop the closest matches, or print a life-size sewing pattern with a materials list.\n\nPrivacy\nTerms\nCookies\nReport content\nCookie settings\n© 2026 Outfit Finder\nWe use one cookie to remember your looks on this device. No ads, no tracking. Cookie Policy\nDecline\nAccept",
+  "errors": []
+ },
+ {
+  "name": "03-home-phone-dark",
+  "device": "phone",
+  "url": "https://localhost:5003/",
+  "title": "Outfit Finder · Find every piece of an outfit",
+  "overflowX": false,
+  "height": 1654,
+  "buttons": [
+   "Menu",
+   "Try a sample photo",
+   "Cookie settings"
+  ],
+  "smallTargets": [
+   {
+    "t": "",
+    "w": 1,
+    "h": 1
+   }
+  ],
+  "unlabeled": [],
+  "h1": [
+   "Love the look? Find every piece."
+  ],
+  "text": "Skip to content\nDemo mode: results are sample data, not real products.\nOutfit Finder\nSnap it. Shop it. Sew it.\nLove the look? Find every piece.\n\nUpload a photo of any outfit. We spot each piece, find where to buy it, and give you a pattern to make it yourself.\n\nDrop a photo here\nChoose a photo\nTry a sample photo\nTake a photo\nFaces are blurred before anything is saved. Photos are deleted after 90 days. Only upload photos you have the right to use.\n1\nUpload a photo\n\nFrom your camera roll, or right-click any photo with the Chrome extension.\n\n2\nWe find each piece\n\nTop, trousers, shoes, bag, glasses: every item, matched across online stores.\n\n3\nBuy it or make it\n\nShop the closest matches, or print a life-size sewing pattern with a materials list.\n\nPrivacy\nTerms\nCookies\nReport content\nCookie settings\n© 2026 Outfit Finder",
+  "errors": []
+ },
+ {
+  "name": "04-home-desktop-light",
+  "device": "desktop",
+  "url": "https://localhost:5003/",
+  "title": "Outfit Finder · Find every piece of an outfit",
+  "overflowX": false,
+  "height": 917,
+  "buttons": [
+   "Switch to dark mode",
+   "Sign in",
+   "Try a sample photo",
+   "Cookie settings"
+  ],
+  "smallTargets": [
+   {
+    "t": "",
+    "w": 1,
+    "h": 1
+   }
+  ],
+  "unlabeled": [],
+  "h1": [
+   "Love the look? Find every piece."
+  ],
+  "text": "Skip to content\nDemo mode: results are sample data, not real products.\nOutfit Finder\nFind a look\nMy looks\nGet the extension\nSign in\nSnap it. Shop it. Sew it.\nLove the look? Find every piece.\n\nUpload a photo of any outfit. We spot each piece, find where to buy it, and give you a pattern to make it yourself.\n\nDrop a photo here\nChoose a photo\nTry a sample photo\nFaces are blurred before anything is saved. Photos are deleted after 90 days. Only upload photos you have the right to use.\n1\nUpload a photo\n\nFrom your camera roll, or right-click any photo with the Chrome extension.\n\n2\nWe find each piece\n\nTop, trousers, shoes, bag, glasses: every item, matched across online stores.\n\n3\nBuy it or make it\n\nShop the closest matches, or print a life-size sewing pattern with a materials list.\n\nPrivacy\nTerms\nCookies\nReport content\nCookie settings\n© 2026 Outfit Finder",
+  "errors": []
+ },
+ {
+  "name": "05-loading-phone-light",
+  "device": "phone",
+  "url": "https://localhost:5003/looks/a9937bc4-a626-428d-8476-9dc234d580d4",
+  "title": "Finding your look… · Outfit Finder",
+  "overflowX": false,
+  "height": 1206,
+  "buttons": [
+   "Menu",
+   "Cancel",
+   "Cookie settings"
+  ],
+  "smallTargets": [],
+  "unlabeled": [],
+  "h1": [
+   "Finding your look…"
+  ],
+  "text": "Skip to content\nDemo mode: results are sample data, not real products.\nOutfit Finder\nFinding your look…\nChecking the photo\nFinding every piece\nSearching stores\nChecking links\n\nThis usually takes under a minute. You can leave this page; the look will be in My looks.\n\nCancel\nPrivacy\nTerms\nCookies\nReport content\nCookie settings\n© 2026 Outfit Finder",
+  "errors": []
+ },
+ {
+  "name": "06-results-first-screen-phone-light",
+  "device": "phone",
+  "url": "https://localhost:5003/looks/a9937bc4-a626-428d-8476-9dc234d580d4",
+  "title": "Your look · Outfit Finder",
+  "overflowX": false,
+  "height": 1978,
+  "buttons": [
+   "Menu",
+   "1",
+   "2",
+   "3",
+   "4",
+   "5",
+   "Fix the boxes",
+   "Search again",
+   "Delete",
+   "1 · Sunglasses",
+   "2 · Shirt",
+   "3 · Trousers",
+   "4 · Loafers",
+   "5 · Bag",
+   "Buy it",
+   "Make it",
+   "Good match",
+   "Bad match",
+   "View at store\n(opens in a new tab)",
+   "Good match",
+   "Bad match",
+   "View at store\n(opens in a new tab)",
+   "Good match",
+   "Bad match",
+   "View at store\n(opens in a new tab)",
+   "Report a problem",
+   "Cookie settings"
+  ],
+  "smallTargets": [],
+  "unlabeled": [],
+  "h1": [
+   "We found 5 pieces"
+  ],
+  "text": "Skip to content\nDemo mode: results are sample data, not real products.\nOutfit Finder\n1\n2\n3\n4\n5\nTap a number to see that piece. Faces are blurred.\nFix the boxes\nSearch again\nDelete\nWe found 5 pieces\nWhole look $246 – $457\nFound on 25 November 2026. Prices and stock can change.\n1 · Sunglasses\n2 · Shirt\n3 · Trousers\n4 · Loafers\n5 · Bag\nRectangular sunglasses\nBlack acetate frame, dark lens\nBuy it\nMake it\nProduct photo\nSimilar\nSample Store F\nSlim rectangle sunglasses\n$38\nView at store\n(opens in a new tab)\nProduct photo\nSimilar\nSample Store B\nSquare acetate shades\n$65\nView at store\n(opens in a new tab)\nProduct photo\nSimilar\nSample Store G\nClassic black frames\n$24\nView at store\n(opens in a new tab)\nReport a problem\nPrivacy\nTerms\nCookies\nReport content\nCookie settings\n© 2026 Outfit Finder",
+  "errors": []
+ },
+ {
+  "name": "07-results-full-phone-light",
+  "device": "phone",
+  "url": "https://localhost:5003/looks/a9937bc4-a626-428d-8476-9dc234d580d4",
+  "title": "Your look · Outfit Finder",
+  "overflowX": false,
+  "height": 1978,
+  "buttons": [
+   "Menu",
+   "1",
+   "2",
+   "3",
+   "4",
+   "5",
+   "Fix the boxes",
+   "Search again",
+   "Delete",
+   "1 · Sunglasses",
+   "2 · Shirt",
+   "3 · Trousers",
+   "4 · Loafers",
+   "5 · Bag",
+   "Buy it",
+   "Make it",
+   "Good match",
+   "Bad match",
+   "View at store\n(opens in a new tab)",
+   "Good match",
+   "Bad match",
+   "View at store\n(opens in a new tab)",
+   "Good match",
+   "Bad match",
+   "View at store\n(opens in a new tab)",
+   "Report a problem",
+   "Cookie settings"
+  ],
+  "smallTargets": [],
+  "unlabeled": [],
+  "h1": [
+   "We found 5 pieces"
+  ],
+  "text": "Skip to content\nDemo mode: results are sample data, not real products.\nOutfit Finder\n1\n2\n3\n4\n5\nTap a number to see that piece. Faces are blurred.\nFix the boxes\nSearch again\nDelete\nWe found 5 pieces\nWhole look $246 – $457\nFound on 25 November 2026. Prices and stock can change.\n1 · Sunglasses\n2 · Shirt\n3 · Trousers\n4 · Loafers\n5 · Bag\nRectangular sunglasses\nBlack acetate frame, dark lens\nBuy it\nMake it\nProduct photo\nSimilar\nSample Store F\nSlim rectangle sunglasses\n$38\nView at store\n(opens in a new tab)\nProduct photo\nSimilar\nSample Store B\nSquare acetate shades\n$65\nView at store\n(opens in a new tab)\nProduct photo\nSimilar\nSample Store G\nClassic black frames\n$24\nView at store\n(opens in a new tab)\nReport a problem\nPrivacy\nTerms\nCookies\nReport content\nCookie settings\n© 2026 Outfit Finder",
+  "errors": []
+ },
+ {
+  "name": "08-results-full-phone-dark",
+  "device": "phone",
+  "url": "https://localhost:5003/looks/a9937bc4-a626-428d-8476-9dc234d580d4",
+  "title": "Your look · Outfit Finder",
+  "overflowX": false,
+  "height": 1978,
+  "buttons": [
+   "Menu",
+   "1",
+   "2",
+   "3",
+   "4",
+   "5",
+   "Fix the boxes",
+   "Search again",
+   "Delete",
+   "1 · Sunglasses",
+   "2 · Shirt",
+   "3 · Trousers",
+   "4 · Loafers",
+   "5 · Bag",
+   "Buy it",
+   "Make it",
+   "Good match",
+   "Bad match",
+   "View at store\n(opens in a new tab)",
+   "Good match",
+   "Bad match",
+   "View at store\n(opens in a new tab)",
+   "Good match",
+   "Bad match",
+   "View at store\n(opens in a new tab)",
+   "Report a problem",
+   "Cookie settings"
+  ],
+  "smallTargets": [],
+  "unlabeled": [],
+  "h1": [
+   "We found 5 pieces"
+  ],
+  "text": "Skip to content\nDemo mode: results are sample data, not real products.\nOutfit Finder\n1\n2\n3\n4\n5\nTap a number to see that piece. Faces are blurred.\nFix the boxes\nSearch again\nDelete\nWe found 5 pieces\nWhole look $246 – $457\nFound on 25 November 2026. Prices and stock can change.\n1 · Sunglasses\n2 · Shirt\n3 · Trousers\n4 · Loafers\n5 · Bag\nRectangular sunglasses\nBlack acetate frame, dark lens\nBuy it\nMake it\nProduct photo\nSimilar\nSample Store F\nSlim rectangle sunglasses\n$38\nView at store\n(opens in a new tab)\nProduct photo\nSimilar\nSample Store B\nSquare acetate shades\n$65\nView at store\n(opens in a new tab)\nProduct photo\nSimilar\nSample Store G\nClassic black frames\n$24\nView at store\n(opens in a new tab)\nReport a problem\nPrivacy\nTerms\nCookies\nReport content\nCookie settings\n© 2026 Outfit Finder",
+  "errors": []
+ },
+ {
+  "name": "09-make-it-phone-light",
+  "device": "phone",
+  "url": "https://localhost:5003/looks/a9937bc4-a626-428d-8476-9dc234d580d4",
+  "title": "Your look · Outfit Finder",
+  "overflowX": false,
+  "height": 1501,
+  "buttons": [
+   "Menu",
+   "1",
+   "2",
+   "3",
+   "4",
+   "5",
+   "Fix the boxes",
+   "Search again",
+   "Delete",
+   "1 · Sunglasses",
+   "2 · Shirt",
+   "3 · Trousers",
+   "4 · Loafers",
+   "5 · Bag",
+   "Buy it",
+   "Make it",
+   "See where to buy it",
+   "Report a problem",
+   "Cookie settings"
+  ],
+  "smallTargets": [],
+  "unlabeled": [],
+  "h1": [
+   "We found 5 pieces"
+  ],
+  "text": "Skip to content\nDemo mode: results are sample data, not real products.\nOutfit Finder\n1\n2\n3\n4\n5\nTap a number to see that piece. Faces are blurred.\nFix the boxes\nSearch again\nDelete\nWe found 5 pieces\nWhole look $246 – $457\nFound on 25 November 2026. Prices and stock can change.\n1 · Sunglasses\n2 · Shirt\n3 · Trousers\n4 · Loafers\n5 · Bag\nRectangular sunglasses\nBlack acetate frame, dark lens\nBuy it\nMake it\nNo pattern for this piece yet\nPatterns are available for sewn clothing like T-shirts, skirts and trousers.\nSee where to buy it\nReport a problem\nPrivacy\nTerms\nCookies\nReport content\nCookie settings\n© 2026 Outfit Finder",
+  "errors": []
+ },
+ {
+  "name": "10-fix-boxes-phone-light",
+  "device": "phone",
+  "url": "https://localhost:5003/looks/a9937bc4-a626-428d-8476-9dc234d580d4",
+  "title": "Your look · Outfit Finder",
+  "overflowX": false,
+  "height": 1735,
+  "buttons": [
+   "Menu",
+   "Draw a new box",
+   "Save and re-search",
+   "Cancel",
+   "1 · Sunglasses",
+   "2 · Shirt",
+   "3 · Trousers",
+   "4 · Loafers",
+   "5 · Bag",
+   "Buy it",
+   "Make it",
+   "See where to buy it",
+   "Report a problem",
+   "Cookie settings"
+  ],
+  "smallTargets": [
+   {
+    "t": "",
+    "w": 22,
+    "h": 22
+   },
+   {
+    "t": "",
+    "w": 22,
+    "h": 22
+   },
+   {
+    "t": "",
+    "w": 22,
+    "h": 22
+   },
+   {
+    "t": "",
+    "w": 22,
+    "h": 22
+   },
+   {
+    "t": "",
+    "w": 22,
+    "h": 22
+   }
+  ],
+  "unlabeled": [],
+  "h1": [
+   "We found 5 pieces"
+  ],
+  "text": "Skip to content\nDemo mode: results are sample data, not real products.\nOutfit Finder\n1\n2\n3\n4\n5\nDrag a box to move it, drag its corner to resize. Untick anything that isn't clothing.\nPieces to search\n1. Rectangular sunglasses\n2. Linen camp shirt\n3. Pleated trousers\n4. Leather loafers\n5. Canvas tote bag\nDraw a new box\nSave and re-search\nCancel\nWe found 5 pieces\nWhole look $246 – $457\nFound on 25 November 2026. Prices and stock can change.\n1 · Sunglasses\n2 · Shirt\n3 · Trousers\n4 · Loafers\n5 · Bag\nRectangular sunglasses\nBlack acetate frame, dark lens\nBuy it\nMake it\nNo pattern for this piece yet\nPatterns are available for sewn clothing like T-shirts, skirts and trousers.\nSee where to buy it\nReport a problem\nPrivacy\nTerms\nCookies\nReport content\nCookie settings\n© 2026 Outfit Finder",
+  "errors": []
+ },
+ {
+  "name": "11-report-dialog-phone-light",
+  "device": "phone",
+  "url": "https://localhost:5003/looks/a9937bc4-a626-428d-8476-9dc234d580d4",
+  "title": "Your look · Outfit Finder",
+  "overflowX": false,
+  "height": 1501,
+  "buttons": [
+   "Menu",
+   "1",
+   "2",
+   "3",
+   "4",
+   "5",
+   "Fix the boxes",
+   "Search again",
+   "Delete",
+   "1 · Sunglasses",
+   "2 · Shirt",
+   "3 · Trousers",
+   "4 · Loafers",
+   "5 · Bag",
+   "Buy it",
+   "Make it",
+   "See where to buy it",
+   "Report a problem",
+   "Send report",
+   "Cancel",
+   "Cookie settings"
+  ],
+  "smallTargets": [],
+  "unlabeled": [],
+  "h1": [
+   "We found 5 pieces"
+  ],
+  "text": "Skip to content\nDemo mode: results are sample data, not real products.\nOutfit Finder\n1\n2\n3\n4\n5\nTap a number to see that piece. Faces are blurred.\nFix the boxes\nSearch again\nDelete\nWe found 5 pieces\nWhole look $246 – $457\nFound on 25 November 2026. Prices and stock can change.\n1 · Sunglasses\n2 · Shirt\n3 · Trousers\n4 · Loafers\n5 · Bag\nRectangular sunglasses\nBlack acetate frame, dark lens\nBuy it\nMake it\nNo pattern for this piece yet\nPatterns are available for sewn clothing like T-shirts, skirts and trousers.\nSee where to buy it\nReport a problem\nReport a problem\nWhat's wrong?\nA piece was found wrong or missed\nA link is broken or goes to the wrong product\nA price is wrong\nA face is not blurred\nInappropriate content\nSomething else\nDetails (optional)\nSend report\nCancel\nPrivacy\nTerms\nCookies\nReport content\nCookie settings\n© 2026 Outfit Finder",
+  "errors": []
+ },
+ {
+  "name": "12-results-desktop-light",
+  "device": "desktop",
+  "url": "https://localhost:5003/looks/a9937bc4-a626-428d-8476-9dc234d580d4",
+  "title": "Your look · Outfit Finder",
+  "overflowX": false,
+  "height": 971,
+  "buttons": [
+   "Switch to dark mode",
+   "Sign in",
+   "1",
+   "2",
+   "3",
+   "4",
+   "5",
+   "Fix the boxes",
+   "Search again",
+   "Delete",
+   "1 · Sunglasses",
+   "2 · Shirt",
+   "3 · Trousers",
+   "4 · Loafers",
+   "5 · Bag",
+   "Buy it",
+   "Make it",
+   "Good match",
+   "Bad match",
+   "View at store\n(opens in a new tab)",
+   "Good match",
+   "Bad match",
+   "View at store\n(opens in a new tab)",
+   "Good match",
+   "Bad match",
+   "View at store\n(opens in a new tab)",
+   "Report a problem",
+   "Cookie settings"
+  ],
+  "smallTargets": [],
+  "unlabeled": [],
+  "h1": [
+   "We found 5 pieces"
+  ],
+  "text": "Skip to content\nDemo mode: results are sample data, not real products.\nOutfit Finder\nFind a look\nMy looks\nGet the extension\nSign in\n1\n2\n3\n4\n5\nTap a number to see that piece. Faces are blurred.\nFix the boxes\nSearch again\nDelete\nWe found 5 pieces\nWhole look $246 – $457\nFound on 25 November 2026. Prices and stock can change.\n1 · Sunglasses\n2 · Shirt\n3 · Trousers\n4 · Loafers\n5 · Bag\nRectangular sunglasses\nBlack acetate frame, dark lens\nBuy it\nMake it\nProduct photo\nSimilar\nSample Store F\nSlim rectangle sunglasses\n$38\nView at store\n(opens in a new tab)\nProduct photo\nSimilar\nSample Store B\nSquare acetate shades\n$65\nView at store\n(opens in a new tab)\nProduct photo\nSimilar\nSample Store G\nClassic black frames\n$24\nView at store\n(opens in a new tab)\nReport a problem\nPrivacy\nTerms\nCookies\nReport content\nCookie settings\n© 2026 Outfit Finder",
+  "errors": []
+ },
+ {
+  "name": "13-make-it-desktop-dark",
+  "device": "desktop",
+  "url": "https://localhost:5003/looks/a9937bc4-a626-428d-8476-9dc234d580d4",
+  "title": "Your look · Outfit Finder",
+  "overflowX": false,
+  "height": 844,
+  "buttons": [
+   "Switch to light mode",
+   "Sign in",
+   "1",
+   "2",
+   "3",
+   "4",
+   "5",
+   "Fix the boxes",
+   "Search again",
+   "Delete",
+   "1 · Sunglasses",
+   "2 · Shirt",
+   "3 · Trousers",
+   "4 · Loafers",
+   "5 · Bag",
+   "Buy it",
+   "Make it",
+   "See where to buy it",
+   "Report a problem",
+   "Cookie settings"
+  ],
+  "smallTargets": [],
+  "unlabeled": [],
+  "h1": [
+   "We found 5 pieces"
+  ],
+  "text": "Skip to content\nDemo mode: results are sample data, not real products.\nOutfit Finder\nFind a look\nMy looks\nGet the extension\nSign in\n1\n2\n3\n4\n5\nTap a number to see that piece. Faces are blurred.\nFix the boxes\nSearch again\nDelete\nWe found 5 pieces\nWhole look $246 – $457\nFound on 25 November 2026. Prices and stock can change.\n1 · Sunglasses\n2 · Shirt\n3 · Trousers\n4 · Loafers\n5 · Bag\nRectangular sunglasses\nBlack acetate frame, dark lens\nBuy it\nMake it\nNo pattern for this piece yet\nPatterns are available for sewn clothing like T-shirts, skirts and trousers.\nSee where to buy it\nReport a problem\nPrivacy\nTerms\nCookies\nReport content\nCookie settings\n© 2026 Outfit Finder",
+  "errors": []
+ },
+ {
+  "name": "14-my-looks-anon-phone-light",
+  "device": "phone",
+  "url": "https://localhost:5003/looks",
+  "title": "My looks · Outfit Finder",
+  "overflowX": false,
+  "height": 844,
+  "buttons": [
+   "Menu",
+   "Find a new look",
+   "Cookie settings"
+  ],
+  "smallTargets": [
+   {
+    "t": "Sign in or create an account",
+    "w": 191,
+    "h": 18
+   }
+  ],
+  "unlabeled": [],
+  "h1": [
+   "My looks"
+  ],
+  "text": "Skip to content\nDemo mode: results are sample data, not real products.\nOutfit Finder\nMy looks\nKept for 90 days, then deleted.\nFind a new look\n5 pieces\nToday\n\nSign in or create an account to keep your looks on every device.\n\nPrivacy\nTerms\nCookies\nReport content\nCookie settings\n© 2026 Outfit Finder",
+  "errors": []
+ },
+ {
+  "name": "15-install-phone-light",
+  "device": "phone",
+  "url": "https://localhost:5003/install",
+  "title": "Get the extension · Outfit Finder",
+  "overflowX": false,
+  "height": 1648,
+  "buttons": [
+   "Menu",
+   "Cookie settings"
+  ],
+  "smallTargets": [],
+  "unlabeled": [],
+  "h1": [
+   "See a look online? Right-click it."
+  ],
+  "text": "Skip to content\nDemo mode: results are sample data, not real products.\nOutfit Finder\nSee a look online? Right-click it.\n\nRight-click any photo on any site and choose \"Find with AI\". Your results open right beside the page.\n\nChrome Web Store listing coming soon\nDesktop Chrome, Edge and Brave\n1\nAdd to Chrome\n\nOne click from the Chrome Web Store.\n\n2\nRight-click a photo\n\nChoose \"Find with AI\" from the menu.\n\n3\nShop or sew\n\nResults open in a side panel next to the page.\n\nWhat the extension can access\nRight-click menu\tAdds \"Find with AI\" when you right-click an image.\nSide panel\tShows your results next to the page you're on.\nThe image you clicked\tOnly that one image, only when you choose \"Find with AI\". If the site blocks direct downloads, the extension copies the image from the page instead.\nStorage\tRemembers your visitor ID and sign-in on this browser.\nSign-in\tOpens the Outfit Finder sign-in page in a pop-up window.\n\nIt never reads pages you don't right-click, and it doesn't track your browsing.\n\nPrivacy\nTerms\nCookies\nReport content\nCookie settings\n© 2026 Outfit Finder",
+  "errors": []
+ },
+ {
+  "name": "16-account-anon-phone-light",
+  "device": "phone",
+  "url": "https://localhost:5003/account",
+  "title": "Account & privacy · Outfit Finder",
+  "overflowX": false,
+  "height": 1643,
+  "buttons": [
+   "Menu",
+   "Download",
+   "Clear history",
+   "Save measurements",
+   "Sign in or create an account",
+   "Cookie settings"
+  ],
+  "smallTargets": [],
+  "unlabeled": [],
+  "h1": [
+   "Account & privacy"
+  ],
+  "text": "Skip to content\nDemo mode: results are sample data, not real products.\nOutfit Finder\nAccount & privacy\nYou're not signed in. These settings apply to this device.\nYour data\nDownload my data\nYour looks, results, measurements and blurred photos, as a zip.\nDownload\nClear my history\nDeletes every look and photo on this device.\nClear history\nCookie settings\nCurrently: accepted. Change it from the footer link \"Cookie settings\".\nMy measurements\n\nUsed to size \"Make it\" patterns. In centimetres. Leave a box empty to use the nearest standard size.\n\nBust / chest\nWaist\nHip\nNeck\nShoulder width\nBack waist length\nUpper arm\nCrotch depth\nInseam\nSave measurements\nKeep your looks on every device\nSign in or create an account\nPrivacy\nTerms\nCookies\nReport content\nCookie settings\n© 2026 Outfit Finder",
+  "errors": []
+ },
+ {
+  "name": "17-admin-anon-phone-light",
+  "device": "phone",
+  "url": "https://localhost:5001/Account/Login?ReturnUrl=%2Fconnect%2Fauthorize%2Fcallback%3Frequest_uri%3Durn%253Aietf%253Aparams%253Aoauth%253Arequest_uri%253AD581522B43EBCAB097C73BDCC8FA386163F026356C667097A439B25D19335714%26client_id%3Dweb",
+  "title": "Sign in · Outfit Finder",
+  "overflowX": false,
+  "height": 844,
+  "buttons": [
+   "Sign in"
+  ],
+  "smallTargets": [
+   {
+    "t": "Input.Remember",
+    "w": 22,
+    "h": 22
+   }
+  ],
+  "unlabeled": [],
+  "h1": [
+   "Welcome back"
+  ],
+  "text": "Skip to content\nOutfit Finder\nBack to the site\nWelcome back\nSign in\nCreate account\nUsername\nPassword\nKeep me signed in on this device\nSign in\nForgot password?\n\nLooks you found on this device move into your account when you sign in.\n\nPrivacy\nTerms\nCookies",
+  "errors": []
+ },
+ {
+  "name": "18-legal-privacy-phone-light",
+  "device": "phone",
+  "url": "https://localhost:5003/legal/privacy",
+  "title": "Privacy Policy · Outfit Finder",
+  "overflowX": false,
+  "height": 1828,
+  "buttons": [
+   "Menu",
+   "Cookie settings"
+  ],
+  "smallTargets": [],
+  "unlabeled": [],
+  "h1": [
+   "Privacy Policy"
+  ],
+  "text": "Skip to content\nDemo mode: results are sample data, not real products.\nOutfit Finder\nPrivacy Policy\nPrivacy\nTerms\nCookies\nReport content\nVersion 1.0, effective 1 December 2026. Draft text: final wording needs legal review.\nWhat we collect\n\nThe photos you upload, the clothing results we find, your username, your email address if you choose to give one, and body measurements if you choose to add them. If you accept our cookie, we also keep a random visitor ID so your looks are remembered on this device.\n\nHow photos are handled\n\nEach photo is first checked for unsafe content by [CONTENT SAFETY PROVIDER]. It is then sent to our AI provider ([AI PROVIDER]) to find the clothing and where to buy it. Faces are blurred, and only the blurred copy is saved. The original upload is deleted as soon as the search finishes. Photos that fail the safety check are never stored; we keep only a fingerprint (hash) and the reason, to stop repeat uploads.\n\nHow long we keep it\n\nPhotos and results are deleted after 90 days. You can delete any search, or everything, at any time from Account & privacy.\n\nWho processes your data\n\n[HOSTING PROVIDER] hosts the service. [AI PROVIDER] analyses photos. [CONTENT SAFETY PROVIDER] checks photos for unsafe content. We do not sell your data and we do not show ads.\n\nYour rights\n\nYou can download your data, correct it, or delete your account and everything in it from Account & privacy. You can also contact us at [PRIVACY EMAIL]. If you are in the EU or UK you may com",
+  "errors": []
+ },
+ {
+  "name": "19-legal-terms-phone-light",
+  "device": "phone",
+  "url": "https://localhost:5003/legal/terms",
+  "title": "Terms of Service · Outfit Finder",
+  "overflowX": false,
+  "height": 1405,
+  "buttons": [
+   "Menu",
+   "Cookie settings"
+  ],
+  "smallTargets": [],
+  "unlabeled": [],
+  "h1": [
+   "Terms of Service"
+  ],
+  "text": "Skip to content\nDemo mode: results are sample data, not real products.\nOutfit Finder\nTerms of Service\nPrivacy\nTerms\nCookies\nReport content\nVersion 1.0, effective 1 December 2026. Draft text: final wording needs legal review.\nWho can use it\n\nYou must be 16 or older to use Outfit Finder.\n\nPhotos you upload\n\nOnly upload photos you have the right to use. No photos of children, and no explicit or illegal content. Repeated attempts to upload unsafe content will block uploads from your device.\n\nResults\n\nMatches, prices and stock come from other websites and can be wrong or out of date. Check with the store before you buy. We are not the seller and are not responsible for third-party stores.\n\nPatterns\n\nPatterns are drafted in the style of a garment for personal use. They are not copies of the original design. Logos and branded prints are never included.\n\nMisuse\n\nWe can suspend accounts that break these terms. Report a problem or ask for content to be removed using the takedown form, or email [ABUSE EMAIL].\n\nPrivacy\nTerms\nCookies\nReport content\nCookie settings\n© 2026 Outfit Finder",
+  "errors": []
+ },
+ {
+  "name": "20-legal-cookies-phone-light",
+  "device": "phone",
+  "url": "https://localhost:5003/legal/cookies",
+  "title": "Cookie Policy · Outfit Finder",
+  "overflowX": false,
+  "height": 1088,
+  "buttons": [
+   "Menu",
+   "Cookie settings"
+  ],
+  "smallTargets": [],
+  "unlabeled": [],
+  "h1": [
+   "Cookie Policy"
+  ],
+  "text": "Skip to content\nDemo mode: results are sample data, not real products.\nOutfit Finder\nCookie Policy\nPrivacy\nTerms\nCookies\nReport content\nVersion 1.0, effective 1 December 2026. Draft text: final wording needs legal review.\nThe cookies we use\n\nOne cookie (gf_visitor) remembers your looks on this device, and only after you accept it. When you sign in, one more cookie keeps you signed in. A tiny setting in your browser remembers light or dark mode. That is all.\n\nWhat we do not use\n\nNo advertising cookies and no third-party tracking.\n\nYour choice\n\nIf you decline, the site still works but your looks are not remembered between visits. You can change your mind at any time from the footer link \"Cookie settings\".\n\nPrivacy\nTerms\nCookies\nReport content\nCookie settings\n© 2026 Outfit Finder",
+  "errors": []
+ },
+ {
+  "name": "21-legal-takedown-phone-light",
+  "device": "phone",
+  "url": "https://localhost:5003/legal/takedown",
+  "title": "Legal · Outfit Finder",
+  "overflowX": false,
+  "height": 992,
+  "buttons": [
+   "Menu",
+   "Send report",
+   "Cookie settings"
+  ],
+  "smallTargets": [],
+  "unlabeled": [],
+  "h1": [
+   "Report content"
+  ],
+  "text": "Skip to content\nDemo mode: results are sample data, not real products.\nOutfit Finder\nReport content\n\nAsk us to remove a photo or result: for example a photo of you uploaded without permission, a copyright claim, or anything unsafe.\n\nReason\nPhoto of me used without permission\nCopyright\nUnsafe or illegal content\nSomething else\nLink to the look or content\nWhat should we know?\nYour email (so we can reply)\nSend report\nPrivacy\nTerms\nCookies\nReport content\nCookie settings\n© 2026 Outfit Finder",
+  "errors": []
+ },
+ {
+  "name": "22-legal-unknown-phone-light",
+  "device": "phone",
+  "url": "https://localhost:5003/legal/nope",
+  "title": "Legal · Outfit Finder",
+  "overflowX": false,
+  "height": 844,
+  "buttons": [
+   "Menu",
+   "Cookie settings"
+  ],
+  "smallTargets": [],
+  "unlabeled": [],
+  "h1": [
+   "Page not found"
+  ],
+  "text": "Skip to content\nDemo mode: results are sample data, not real products.\nOutfit Finder\nPage not found\nPrivacy\nTerms\nCookies\nReport content\nCookie settings\n© 2026 Outfit Finder",
+  "errors": []
+ },
+ {
+  "name": "23-not-found-phone-light",
+  "device": "phone",
+  "url": "https://localhost:5003/this-page-does-not-exist",
+  "title": "Page not found · Outfit Finder",
+  "overflowX": false,
+  "height": 844,
+  "buttons": [
+   "Menu",
+   "Find a look",
+   "Cookie settings"
+  ],
+  "smallTargets": [],
+  "unlabeled": [],
+  "h1": [
+   "We can't find that page"
+  ],
+  "text": "Skip to content\nDemo mode: results are sample data, not real products.\nOutfit Finder\nWe can't find that page\n\nThe link may be old, or the look may have been deleted.\n\nFind a look\nPrivacy\nTerms\nCookies\nReport content\nCookie settings\n© 2026 Outfit Finder",
+  "errors": []
+ },
+ {
+  "name": "24-error-phone-light",
+  "device": "phone",
+  "url": "https://localhost:5003/Error",
+  "title": "Something went wrong · Outfit Finder",
+  "overflowX": false,
+  "height": 844,
+  "buttons": [
+   "Menu",
+   "Back to the start",
+   "Cookie settings"
+  ],
+  "smallTargets": [],
+  "unlabeled": [],
+  "h1": [
+   "Something went wrong"
+  ],
+  "text": "Skip to content\nDemo mode: results are sample data, not real products.\nOutfit Finder\nSomething went wrong\n\nPlease go back and try again.\n\nBack to the start\nPrivacy\nTerms\nCookies\nReport content\nCookie settings\n© 2026 Outfit Finder",
+  "errors": []
+ },
+ {
+  "name": "15b-install-phone-dark",
+  "device": "phone",
+  "url": "https://localhost:5003/install",
+  "title": "Get the extension · Outfit Finder",
+  "overflowX": false,
+  "height": 1648,
+  "buttons": [
+   "Menu",
+   "Cookie settings"
+  ],
+  "smallTargets": [],
+  "unlabeled": [],
+  "h1": [
+   "See a look online? Right-click it."
+  ],
+  "text": "Skip to content\nDemo mode: results are sample data, not real products.\nOutfit Finder\nSee a look online? Right-click it.\n\nRight-click any photo on any site and choose \"Find with AI\". Your results open right beside the page.\n\nChrome Web Store listing coming soon\nDesktop Chrome, Edge and Brave\n1\nAdd to Chrome\n\nOne click from the Chrome Web Store.\n\n2\nRight-click a photo\n\nChoose \"Find with AI\" from the menu.\n\n3\nShop or sew\n\nResults open in a side panel next to the page.\n\nWhat the extension can access\nRight-click menu\tAdds \"Find with AI\" when you right-click an image.\nSide panel\tShows your results next to the page you're on.\nThe image you clicked\tOnly that one image, only when you choose \"Find with AI\". If the site blocks direct downloads, the extension copies the image from the page instead.\nStorage\tRemembers your visitor ID and sign-in on this browser.\nSign-in\tOpens the Outfit Finder sign-in page in a pop-up window.\n\nIt never reads pages you don't right-click, and it doesn't track your browsing.\n\nPrivacy\nTerms\nCookies\nReport content\nCookie settings\n© 2026 Outfit Finder",
+  "errors": []
+ },
+ {
+  "name": "18b-legal-privacy-phone-dark",
+  "device": "phone",
+  "url": "https://localhost:5003/legal/privacy",
+  "title": "Privacy Policy · Outfit Finder",
+  "overflowX": false,
+  "height": 1828,
+  "buttons": [
+   "Menu",
+   "Cookie settings"
+  ],
+  "smallTargets": [],
+  "unlabeled": [],
+  "h1": [
+   "Privacy Policy"
+  ],
+  "text": "Skip to content\nDemo mode: results are sample data, not real products.\nOutfit Finder\nPrivacy Policy\nPrivacy\nTerms\nCookies\nReport content\nVersion 1.0, effective 1 December 2026. Draft text: final wording needs legal review.\nWhat we collect\n\nThe photos you upload, the clothing results we find, your username, your email address if you choose to give one, and body measurements if you choose to add them. If you accept our cookie, we also keep a random visitor ID so your looks are remembered on this device.\n\nHow photos are handled\n\nEach photo is first checked for unsafe content by [CONTENT SAFETY PROVIDER]. It is then sent to our AI provider ([AI PROVIDER]) to find the clothing and where to buy it. Faces are blurred, and only the blurred copy is saved. The original upload is deleted as soon as the search finishes. Photos that fail the safety check are never stored; we keep only a fingerprint (hash) and the reason, to stop repeat uploads.\n\nHow long we keep it\n\nPhotos and results are deleted after 90 days. You can delete any search, or everything, at any time from Account & privacy.\n\nWho processes your data\n\n[HOSTING PROVIDER] hosts the service. [AI PROVIDER] analyses photos. [CONTENT SAFETY PROVIDER] checks photos for unsafe content. We do not sell your data and we do not show ads.\n\nYour rights\n\nYou can download your data, correct it, or delete your account and everything in it from Account & privacy. You can also contact us at [PRIVACY EMAIL]. If you are in the EU or UK you may com",
+  "errors": []
+ },
+ {
+  "name": "21b-takedown-empty-submit-phone-light",
+  "device": "phone",
+  "url": "https://localhost:5003/legal/takedown",
+  "title": "Legal · Outfit Finder",
+  "overflowX": false,
+  "height": 1019,
+  "buttons": [
+   "Menu",
+   "Send report",
+   "Cookie settings"
+  ],
+  "smallTargets": [],
+  "unlabeled": [],
+  "h1": [
+   "Report content"
+  ],
+  "text": "Skip to content\nDemo mode: results are sample data, not real products.\nOutfit Finder\nReport content\n\nAsk us to remove a photo or result: for example a photo of you uploaded without permission, a copyright claim, or anything unsafe.\n\nReason\nPhoto of me used without permission\nCopyright\nUnsafe or illegal content\nSomething else\nLink to the look or content\nWhat should we know?\nTell us what to remove and why.\nYour email (so we can reply)\nSend report\nPrivacy\nTerms\nCookies\nReport content\nCookie settings\n© 2026 Outfit Finder",
+  "errors": []
+ },
+ {
+  "name": "25-login-phone-light",
+  "device": "phone",
+  "url": "https://localhost:5001/Account/Login",
+  "title": "Sign in · Outfit Finder",
+  "overflowX": false,
+  "height": 844,
+  "buttons": [
+   "Sign in"
+  ],
+  "smallTargets": [
+   {
+    "t": "Input.Remember",
+    "w": 22,
+    "h": 22
+   }
+  ],
+  "unlabeled": [],
+  "h1": [
+   "Welcome back"
+  ],
+  "text": "Skip to content\nOutfit Finder\nBack to the site\nWelcome back\nSign in\nCreate account\nUsername\nPassword\nKeep me signed in on this device\nSign in\nForgot password?\n\nLooks you found on this device move into your account when you sign in.\n\nPrivacy\nTerms\nCookies",
+  "errors": []
+ },
+ {
+  "name": "26-register-phone-light",
+  "device": "phone",
+  "url": "https://localhost:5001/Account/Register",
+  "title": "Create account · Outfit Finder",
+  "overflowX": false,
+  "height": 1136,
+  "buttons": [
+   "Create account"
+  ],
+  "smallTargets": [
+   {
+    "t": "Input.Agree",
+    "w": 22,
+    "h": 22
+   },
+   {
+    "t": "Terms",
+    "w": 42,
+    "h": 18
+   },
+   {
+    "t": "Privacy Policy",
+    "w": 95,
+    "h": 18
+   }
+  ],
+  "unlabeled": [],
+  "h1": [
+   "Save your looks"
+  ],
+  "text": "Skip to content\nOutfit Finder\nBack to the site\nSave your looks\nSign in\nCreate account\nUsername\nLetters, numbers, dots, dashes and underscores.\nEmail (optional)\nOnly used to reset your password. Without it, a forgotten password can't be recovered.\nPassword\nAt least 10 characters.\nConfirm password\nI am 16 or older and agree to the Terms and Privacy Policy.\nCreate account\n\nLooks you found on this device move into your account when you sign in.\n\nPrivacy\nTerms\nCookies",
+  "errors": []
+ },
+ {
+  "name": "27-forgot-phone-light",
+  "device": "phone",
+  "url": "https://localhost:5001/Account/ForgotPassword",
+  "title": "Forgot password · Outfit Finder",
+  "overflowX": false,
+  "height": 844,
+  "buttons": [
+   "Send reset link"
+  ],
+  "smallTargets": [],
+  "unlabeled": [],
+  "h1": [
+   "Forgot your password?"
+  ],
+  "text": "Skip to content\nOutfit Finder\nBack to the site\nForgot your password?\n\nEnter your username. If you added an email when you signed up, we'll send a reset link. Accounts without an email can't be recovered.\n\nUsername\nSend reset link\nBack to sign in\nPrivacy\nTerms\nCookies",
+  "errors": []
+ },
+ {
+  "name": "28-reset-no-code-phone-light",
+  "device": "phone",
+  "url": "https://localhost:5001/Account/ResetPassword",
+  "title": "Choose a new password · Outfit Finder",
+  "overflowX": false,
+  "height": 844,
+  "buttons": [
+   "Save new password"
+  ],
+  "smallTargets": [],
+  "unlabeled": [],
+  "h1": [
+   "Choose a new password"
+  ],
+  "text": "Skip to content\nOutfit Finder\nBack to the site\nChoose a new password\nNew password\nAt least 10 characters.\nConfirm new password\nSave new password\nPrivacy\nTerms\nCookies",
+  "errors": []
+ },
+ {
+  "name": "29-logout-phone-light",
+  "device": "phone",
+  "url": "https://localhost:5001/Account/Logout",
+  "title": "Signed out · Outfit Finder",
+  "overflowX": false,
+  "height": 844,
+  "buttons": [
+   "Back to Outfit Finder"
+  ],
+  "smallTargets": [],
+  "unlabeled": [],
+  "h1": [
+   "You're signed out"
+  ],
+  "text": "Skip to content\nOutfit Finder\nBack to the site\nYou're signed out\n\nYour looks stay in your account for next time.\n\nBack to Outfit Finder\nPrivacy\nTerms\nCookies",
+  "errors": []
+ },
+ {
+  "name": "25b-login-phone-dark",
+  "device": "phone",
+  "url": "https://localhost:5001/Account/Login",
+  "title": "Sign in · Outfit Finder",
+  "overflowX": false,
+  "height": 844,
+  "buttons": [
+   "Sign in"
+  ],
+  "smallTargets": [
+   {
+    "t": "Input.Remember",
+    "w": 22,
+    "h": 22
+   }
+  ],
+  "unlabeled": [],
+  "h1": [
+   "Welcome back"
+  ],
+  "text": "Skip to content\nOutfit Finder\nBack to the site\nWelcome back\nSign in\nCreate account\nUsername\nPassword\nKeep me signed in on this device\nSign in\nForgot password?\n\nLooks you found on this device move into your account when you sign in.\n\nPrivacy\nTerms\nCookies",
+  "errors": []
+ },
+ {
+  "name": "25c-login-empty-submit-phone-light",
+  "device": "phone",
+  "url": "https://localhost:5001/Account/Login",
+  "title": "Sign in · Outfit Finder",
+  "overflowX": false,
+  "height": 844,
+  "buttons": [
+   "Sign in"
+  ],
+  "smallTargets": [
+   {
+    "t": "Input.Remember",
+    "w": 22,
+    "h": 22
+   }
+  ],
+  "unlabeled": [],
+  "h1": [
+   "Welcome back"
+  ],
+  "text": "Skip to content\nOutfit Finder\nBack to the site\nWelcome back\nSign in\nCreate account\nUsername\nEnter your username.\nPassword\nEnter your password.\nKeep me signed in on this device\nSign in\nForgot password?\n\nLooks you found on this device move into your account when you sign in.\n\nPrivacy\nTerms\nCookies",
+  "errors": []
+ },
+ {
+  "name": "30-my-looks-signed-in-phone-light",
+  "device": "phone",
+  "url": "https://localhost:5003/looks",
+  "title": "My looks · Outfit Finder",
+  "overflowX": false,
+  "height": 844,
+  "buttons": [
+   "Menu",
+   "Find a new look",
+   "Cookie settings"
+  ],
+  "smallTargets": [],
+  "unlabeled": [],
+  "h1": [
+   "My looks"
+  ],
+  "text": "Skip to content\nDemo mode: results are sample data, not real products.\nOutfit Finder\nMy looks\nKept for 90 days, then deleted.\nFind a new look\n5 pieces\nToday\n4 pieces\nToday\nPrivacy\nTerms\nCookies\nReport content\nCookie settings\n© 2026 Outfit Finder",
+  "errors": []
+ },
+ {
+  "name": "31-account-phone-light",
+  "device": "phone",
+  "url": "https://localhost:5003/account",
+  "title": "Account & privacy · Outfit Finder",
+  "overflowX": false,
+  "height": 1743,
+  "buttons": [
+   "Menu",
+   "Download",
+   "Clear history",
+   "Save measurements",
+   "Sign out",
+   "Delete account",
+   "Cookie settings"
+  ],
+  "smallTargets": [],
+  "unlabeled": [],
+  "h1": [
+   "Account & privacy"
+  ],
+  "text": "Skip to content\nDemo mode: results are sample data, not real products.\nOutfit Finder\nAccount & privacy\nSigned in as admin\nYour data\nDownload my data\nYour looks, results, measurements and blurred photos, as a zip.\nDownload\nClear my history\nDeletes every look and photo.\nClear history\nCookie settings\nCurrently: accepted. Change it from the footer link \"Cookie settings\".\nMy measurements\n\nUsed to size \"Make it\" patterns. In centimetres. Leave a box empty to use the nearest standard size.\n\nBust / chest\nWaist\nHip\nNeck\nShoulder width\nBack waist length\nUpper arm\nCrotch depth\nInseam\nSave measurements\nAccount\nSign out\nDelete my account\nRemoves your account, every look, photo, pattern and measurement. This can't be undone.\nDelete account\nPrivacy\nTerms\nCookies\nReport content\nCookie settings\n© 2026 Outfit Finder",
+  "errors": []
+ },
+ {
+  "name": "31b-account-phone-dark",
+  "device": "phone",
+  "url": "https://localhost:5003/account",
+  "title": "Account & privacy · Outfit Finder",
+  "overflowX": false,
+  "height": 1743,
+  "buttons": [
+   "Menu",
+   "Download",
+   "Clear history",
+   "Save measurements",
+   "Sign out",
+   "Delete account",
+   "Cookie settings"
+  ],
+  "smallTargets": [],
+  "unlabeled": [],
+  "h1": [
+   "Account & privacy"
+  ],
+  "text": "Skip to content\nDemo mode: results are sample data, not real products.\nOutfit Finder\nAccount & privacy\nSigned in as admin\nYour data\nDownload my data\nYour looks, results, measurements and blurred photos, as a zip.\nDownload\nClear my history\nDeletes every look and photo.\nClear history\nCookie settings\nCurrently: accepted. Change it from the footer link \"Cookie settings\".\nMy measurements\n\nUsed to size \"Make it\" patterns. In centimetres. Leave a box empty to use the nearest standard size.\n\nBust / chest\nWaist\nHip\nNeck\nShoulder width\nBack waist length\nUpper arm\nCrotch depth\nInseam\nSave measurements\nAccount\nSign out\nDelete my account\nRemoves your account, every look, photo, pattern and measurement. This can't be undone.\nDelete account\nPrivacy\nTerms\nCookies\nReport content\nCookie settings\n© 2026 Outfit Finder",
+  "errors": []
+ },
+ {
+  "name": "32-admin-ai-phone-light",
+  "device": "phone",
+  "url": "https://localhost:5003/admin/ai",
+  "title": "AI settings · Outfit Finder",
+  "overflowX": false,
+  "height": 1318,
+  "buttons": [
+   "Menu",
+   "Azure AI Foundry",
+   "OpenAI",
+   "Google Gemini",
+   "Test connection",
+   "Save settings",
+   "Cookie settings"
+  ],
+  "smallTargets": [
+   {
+    "t": "",
+    "w": 22,
+    "h": 22
+   }
+  ],
+  "unlabeled": [],
+  "h1": [
+   "AI settings"
+  ],
+  "text": "Skip to content\nDemo mode: results are sample data, not real products.\nOutfit Finder\nAI settings\nAdmins only. Changes apply to new searches straight away.\nNow using Demo (development only) · set in app configuration\nProvider\nAzure AI Foundry\nOpenAI\nGoogle Gemini\nModel\nAPI key\nStored encrypted. Only the last 4 characters are ever shown. Leave empty to keep the saved key.\nUse the model's web search\nTest connection\nSave settings\nRecent changes\n\nNo changes yet.\n\nPrivacy\nTerms\nCookies\nReport content\nCookie settings\n© 2026 Outfit Finder",
+  "errors": []
+ },
+ {
+  "name": "33-admin-ai-desktop-light",
+  "device": "desktop",
+  "url": "https://localhost:5003/admin/ai",
+  "title": "AI settings · Outfit Finder",
+  "overflowX": false,
+  "height": 1072,
+  "buttons": [
+   "Switch to dark mode",
+   "My account",
+   "Azure AI Foundry",
+   "OpenAI",
+   "Google Gemini",
+   "Test connection",
+   "Save settings",
+   "Cookie settings"
+  ],
+  "smallTargets": [
+   {
+    "t": "",
+    "w": 22,
+    "h": 22
+   }
+  ],
+  "unlabeled": [],
+  "h1": [
+   "AI settings"
+  ],
+  "text": "Skip to content\nDemo mode: results are sample data, not real products.\nOutfit Finder\nFind a look\nMy looks\nGet the extension\nAdmin\nMy account\nAI settings\nAdmins only. Changes apply to new searches straight away.\nNow using Demo (development only) · set in app configuration\nProvider\nAzure AI Foundry\nOpenAI\nGoogle Gemini\nModel\nAPI key\nStored encrypted. Only the last 4 characters are ever shown. Leave empty to keep the saved key.\nUse the model's web search\nTest connection\nSave settings\nRecent changes\n\nNo changes yet.\n\nPrivacy\nTerms\nCookies\nReport content\nCookie settings\n© 2026 Outfit Finder",
+  "errors": []
+ },
+ {
+  "name": "34-menu-signed-in-phone-light",
+  "device": "phone",
+  "url": "https://localhost:5003/",
+  "title": "Outfit Finder · Find every piece of an outfit",
+  "overflowX": false,
+  "height": 1910,
+  "buttons": [
+   "Menu",
+   "Dark mode",
+   "My account",
+   "Try a sample photo",
+   "Cookie settings"
+  ],
+  "smallTargets": [
+   {
+    "t": "",
+    "w": 1,
+    "h": 1
+   }
+  ],
+  "unlabeled": [],
+  "h1": [
+   "Love the look? Find every piece."
+  ],
+  "text": "Skip to content\nDemo mode: results are sample data, not real products.\nOutfit Finder\nFind a look\nMy looks\nGet the extension\nAdmin\nDark mode\nMy account\nSnap it. Shop it. Sew it.\nLove the look? Find every piece.\n\nUpload a photo of any outfit. We spot each piece, find where to buy it, and give you a pattern to make it yourself.\n\nDrop a photo here\nChoose a photo\nTry a sample photo\nTake a photo\nFaces are blurred before anything is saved. Photos are deleted after 90 days. Only upload photos you have the right to use.\n1\nUpload a photo\n\nFrom your camera roll, or right-click any photo with the Chrome extension.\n\n2\nWe find each piece\n\nTop, trousers, shoes, bag, glasses: every item, matched across online stores.\n\n3\nBuy it or make it\n\nShop the closest matches, or print a life-size sewing pattern with a materials list.\n\nPrivacy\nTerms\nCookies\nReport content\nCookie settings\n© 2026 Outfit Finder",
+  "errors": []
+ }
+]

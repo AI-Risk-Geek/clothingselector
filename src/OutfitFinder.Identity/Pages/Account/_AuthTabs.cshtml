@@ -1,0 +1,5 @@
+@model (string Active, string? ReturnUrl)
+<nav aria-label="Account" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+    <a class="t @(Model.Active == "in" ? "on" : "")" aria-current="@(Model.Active == "in" ? "page" : null)" asp-page="/Account/Login" asp-route-returnUrl="@Model.ReturnUrl">Sign in</a>
+    <a class="t @(Model.Active == "up" ? "on" : "")" aria-current="@(Model.Active == "up" ? "page" : null)" asp-page="/Account/Register" asp-route-returnUrl="@Model.ReturnUrl">Create account</a>
+</nav>

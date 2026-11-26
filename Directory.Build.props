@@ -1,0 +1,18 @@
+<Project>
+  <!-- Brand: change these two values and every page, email, PDF and the extension name follow. -->
+  <PropertyGroup>
+    <BrandName>Outfit Finder</BrandName>
+    <BrandTagline>Snap it. Shop it. Sew it.</BrandTagline>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <!-- NU1603/NU1608: dependency version resolution notes; CS1591: missing XML docs -->
+    <NoWarn>$(NoWarn);CS1591;NU1603</NoWarn>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+</Project>

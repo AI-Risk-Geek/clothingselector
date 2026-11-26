@@ -1,0 +1,11 @@
+<div class="box dashed stack" style="align-items: flex-start">
+    <div class="h3">@Title</div>
+    @if (Text is not null) { <div class="m" style="font-size: 15px">@Text</div> }
+    @ChildContent
+</div>
+
+@code {
+    [Parameter, EditorRequired] public string Title { get; set; } = "";
+    [Parameter] public string? Text { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+}

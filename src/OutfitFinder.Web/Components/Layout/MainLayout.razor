@@ -1,0 +1,78 @@
+﻿@inherits LayoutComponentBase
+@implements IDisposable
+@inject WebVisitorState Visitor
+@inject OutfitJs Js
+@inject OutfitApiClient Api
+@inject NavigationManager Nav
+
+@if (_demo)
+{
+    <div class="demo-banner" role="note">Demo mode: results are sample data, not real products.</div>
+}
+<AuthorizeView>
+    <Authorized>
+        <AppHeader IsSignedIn="true" IsAdmin="@context.User.HasClaim("role", "Admin")" />
+    </Authorized>
+    <NotAuthorized>
+        <AppHeader IsSignedIn="false" SignInHref="@SignInHref" />
+    </NotAuthorized>
+</AuthorizeView>
+
+@* The notice sits in the page flow under the header, so it never covers the upload buttons or the human check. *@
+<CookieBanner Visible="@(_showCookies || (_rendered && !Visitor.ConsentDecided))" OnChoice="ChooseCookies" />
+
+@Body
+
+<AppFooter OnCookieSettings="OpenCookieSettings" ReportHref="@ReportHref" />
+<ReconsentDialog />
+
+@code {
+    private bool _demo, _showCookies, _rendered;
+
+    private string? ReportHref => Nav.ToBaseRelativePath(Nav.Uri).StartsWith("looks/", StringComparison.Ordinal)
+        ? "legal/takedown?link=" + Uri.EscapeDataString(Nav.Uri) : null;
+
+    private string SignInHref => "signin?returnUrl=" + Uri.EscapeDataString("/" + Nav.ToBaseRelativePath(Nav.Uri));
+
+    protected override void OnInitialized()
+    {
+        Visitor.Changed += OnVisitorChanged;
+        Visitor.CookieSettingsRequested += OnCookieSettingsRequested;
+    }
+
+    /// <summary>The notice is at the top of the page, so bring it into view when it's opened from further down.</summary>
+    private async Task OpenCookieSettings()
+    {
+        _showCookies = true;
+        StateHasChanged();
+        await Js.Invoke("scrollToTop");
+    }
+
+    private void OnCookieSettingsRequested() => _ = InvokeAsync(OpenCookieSettings);
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
+        _rendered = true;
+        try { _demo = (await Api.GetPublicConfigAsync()).GetValueOrDefault("aiProvider") == "Demo"; }
+        catch (Exception) { /* banner is cosmetic */ }
+        StateHasChanged();
+    }
+
+    private async Task ChooseCookies(bool accept)
+    {
+        var result = await Js.Invoke<CookieResult>("sendCookieConsent", "consent/cookies", accept);
+        _showCookies = false;
+        Visitor.Set(result.VisitorId, accept ? "accepted" : "declined");
+    }
+
+    private void OnVisitorChanged() => _ = InvokeAsync(StateHasChanged);
+
+    public void Dispose()
+    {
+        Visitor.Changed -= OnVisitorChanged;
+        Visitor.CookieSettingsRequested -= OnCookieSettingsRequested;
+    }
+
+    private sealed record CookieResult(Guid? VisitorId);
+}

@@ -1,0 +1,53 @@
+@inject OutfitApiClient Api
+
+<div class="dialog-scrim" @onclick="OnClose">
+    <div class="dialog card pop stack" role="dialog" aria-modal="true" aria-labelledby="report-title" @onclick:stopPropagation="true">
+        <h2 class="h2" id="report-title">Report a problem</h2>
+        @if (_sent)
+        {
+            <p class="m" style="margin: 0">Thanks. We read every report.</p>
+            <button type="button" class="b" @onclick="OnClose">Close</button>
+        }
+        else
+        {
+            <div class="f">
+                <label class="lab" for="rp-reason">What's wrong?</label>
+                <select id="rp-reason" class="in" @bind="_reason">
+                    <option value="wrong-item">A piece was found wrong or missed</option>
+                    <option value="bad-link">A link is broken or goes to the wrong product</option>
+                    <option value="price">A price is wrong</option>
+                    <option value="face-not-blurred">A face is not blurred</option>
+                    <option value="inappropriate">Inappropriate content</option>
+                    <option value="other">Something else</option>
+                </select>
+            </div>
+            <div class="f">
+                <label class="lab" for="rp-details">Details (optional)</label>
+                <textarea id="rp-details" class="in" maxlength="2000" @bind="_details"></textarea>
+            </div>
+            @if (_error is not null) { <div class="err" role="alert">@_error</div> }
+            <div class="cluster">
+                <button type="button" class="b" @onclick="Send" disabled="@_busy">Send report</button>
+                <button type="button" class="b w" @onclick="OnClose">Cancel</button>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private string _reason = "wrong-item";
+    private string _details = "";
+    private bool _busy, _sent;
+    private string? _error;
+
+    [Parameter] public Guid? SearchId { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
+
+    private async Task Send()
+    {
+        _busy = true; _error = null;
+        try { await Api.ReportAsync(new ReportRequest(SearchId, _reason, _details, null, null)); _sent = true; }
+        catch (ApiException e) { _error = e.Message; }
+        finally { _busy = false; }
+    }
+}

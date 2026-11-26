@@ -1,0 +1,17 @@
+﻿@page "/Error"
+@using System.Diagnostics
+
+<PageTitle>Something went wrong · @Brand.Name</PageTitle>
+
+<main class="wrap w-sm" id="main">
+    <h1 class="h1s">Something went wrong</h1>
+    <p class="m" style="margin: 0">Please go back and try again.</p>
+    @if (!string.IsNullOrEmpty(RequestId)) { <p class="m tiny">Reference: <code>@RequestId</code></p> }
+    <a class="b" href="">Back to the start</a>
+</main>
+
+@code {
+    [CascadingParameter] private HttpContext? HttpContext { get; set; }
+    private string? RequestId { get; set; }
+    protected override void OnInitialized() => RequestId = Activity.Current?.Id ?? HttpContext?.TraceIdentifier;
+}

@@ -1,0 +1,36 @@
+﻿@using OutfitFinder.Web.Services
+@inject WebVisitorState Visitor
+
+<Router AppAssembly="typeof(Program).Assembly" NotFoundPage="typeof(Pages.NotFound)">
+    <Found Context="routeData">
+        <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)">
+            <NotAuthorized>
+                <LayoutView Layout="typeof(Layout.MainLayout)">
+                    <main class="wrap w-sm" id="main">
+                        @if (context.User.Identity?.IsAuthenticated == true)
+                        {
+                            <h1 class="h1s">Admins only</h1>
+                            <p class="m">Your account doesn't have access to this page.</p>
+                        }
+                        else
+                        {
+                            <h1 class="h1s">Please sign in</h1>
+                            <p class="m">You need to sign in to see this page.</p>
+                            <a class="b" href="signin?returnUrl=@Uri.EscapeDataString("/" + Nav.ToBaseRelativePath(Nav.Uri))">Sign in</a>
+                        }
+                    </main>
+                </LayoutView>
+            </NotAuthorized>
+        </AuthorizeRouteView>
+        <FocusOnNavigate RouteData="routeData" Selector="h1" />
+    </Found>
+</Router>
+
+@code {
+    [Inject] private NavigationManager Nav { get; set; } = default!;
+    [Parameter] public string? VisitorId { get; set; }
+    [Parameter] public string? ConsentChoice { get; set; }
+
+    protected override void OnInitialized() =>
+        Visitor.Set(Guid.TryParse(VisitorId, out var id) ? id : null, ConsentChoice);
+}

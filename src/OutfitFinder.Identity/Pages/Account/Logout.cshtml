@@ -1,0 +1,14 @@
+@page
+@model LogoutModel
+@{
+    ViewData["Title"] = "Signed out";
+}
+<main class="wrap w-sm" id="main">
+    <h1 class="h1s">You're signed out</h1>
+    <p class="m">Your looks stay in your account for next time.</p>
+    <a class="b" href="@Model.ReturnTo">Back to @Brand.Name</a>
+    @if (Model.SignOutIframeUrl is not null)
+    {
+        <iframe width="0" height="0" class="sr-only" src="@Model.SignOutIframeUrl" title="Signing out"></iframe>
+    }
+</main>

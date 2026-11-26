@@ -1,0 +1,201 @@
+@* The results screen, shared by the website and the extension side panel. *@
+@inject OutfitApiClient Api
+
+<div class="row">
+    <div class="col-photo">
+        @if (_editing)
+        {
+            <BoxEditor ImageUrl="@Search.ImageUrl" Items="Search.Items" OnCancel="() => _editing = false" OnSave="SaveBoxes" Busy="_busy" />
+        }
+        else
+        {
+            <div class="photo">
+                @if (Search.ImageUrl is not null)
+                {
+                    <img src="@Search.ImageUrl" alt="Your photo, with faces blurred" />
+                }
+                @for (var i = 0; i < Search.Items.Count; i++)
+                {
+                    var index = i;
+                    var item = Search.Items[i];
+                    <button type="button" class="dot @(index == _selected ? "on" : null)" aria-label="Item @item.Number, @item.Name"
+                            aria-pressed="@(index == _selected ? "true" : "false")" @onclick="() => Select(index)"
+                            style="left: @Pct(item.Box.CenterX); top: @Pct(item.Box.CenterY)">@item.Number</button>
+                }
+            </div>
+            @if (Search.Items.Count > 0)
+            {
+                <div class="m small" style="text-align: center">Tap a number to see that piece. Faces are blurred.</div>
+            }
+            <div class="cluster" style="justify-content: center">
+                @if (!Compact && Search.Items.Count > 0)
+                {
+                    <button type="button" class="b w sm" @onclick="() => _editing = true"><Icon Name="edit" Size="18" /> Fix the boxes</button>
+                }
+                <button type="button" class="b w sm" @onclick="SearchAgain" disabled="@_busy"><Icon Name="refresh" Size="18" /> Search again</button>
+            </div>
+        }
+    </div>
+
+    <div class="col-main">
+        @if (_error is not null)
+        {
+            <div class="note danger" role="alert">@_error</div>
+        }
+        @if (Search.Items.Count == 0)
+        {
+            <EmptyState Title="We couldn't spot any clothing" Text="Try a photo where the outfit is clearly visible, in good light, with the whole person in frame." />
+        }
+        else
+        {
+            <div class="spread">
+                <h1 class="h1s">We found @Search.Items.Count @(Search.Items.Count == 1 ? "piece" : "pieces")</h1>
+                @if (Search.PriceRange() is { } range)
+                {
+                    <div class="pill lemon" style="font-size: 15px">Whole look @Money(range.Min, range.Currency) – @Money(range.Max, range.Currency)</div>
+                }
+            </div>
+            <div class="m small">Found on @Search.CreatedUtc.ToLocalTime().ToString("d MMMM yyyy", CultureInfo.InvariantCulture). Prices and stock can change.</div>
+            <div class="cluster" role="group" aria-label="Pieces">
+                @for (var i = 0; i < Search.Items.Count; i++)
+                {
+                    var index = i;
+                    var item = Search.Items[i];
+                    <button type="button" class="t @(index == _selected ? "on" : null)" aria-pressed="@(index == _selected ? "true" : "false")" @onclick="() => Select(index)">
+                        @item.Number · @ShortName(item)
+                        @if (item.Makeable) { <Icon Name="scissors" Size="15" Label="pattern available" /> }
+                    </button>
+                }
+            </div>
+            @if (Search.Items.Any(i => i.Makeable))
+            {
+                <div class="m tiny"><Icon Name="scissors" Size="14" /> marks pieces you can sew yourself with a printable pattern.</div>
+            }
+
+            var sel = Search.Items[Math.Min(_selected, Search.Items.Count - 1)];
+            <section class="card stack" style="gap: 18px" aria-label="@sel.Name">
+                <div class="spread">
+                    <div style="min-width: 0">
+                        <h2 class="h2">@sel.Name</h2>
+                        <div class="m" style="font-size: 15px">@sel.Description</div>
+                        @if (!string.IsNullOrWhiteSpace(sel.BrandHints)) { <div class="m tiny">Visible branding: @sel.BrandHints</div> }
+                    </div>
+                    @* Only sewable pieces get the Buy / Make choice, so "Make it" never leads to a dead end. *@
+                    @if (sel.Makeable)
+                    {
+                        <div role="tablist" aria-label="Buy or make" class="cluster" style="gap: 6px">
+                            <button type="button" class="t @(_tab == "buy" ? "on" : null)" role="tab" aria-selected="@(_tab == "buy" ? "true" : "false")" @onclick='() => _tab = "buy"'>Buy it</button>
+                            <button type="button" class="t @(_tab == "make" ? "on" : null)" role="tab" aria-selected="@(_tab == "make" ? "true" : "false")" @onclick='() => _tab = "make"'><Icon Name="scissors" Size="15" /> Make it</button>
+                        </div>
+                    }
+                </div>
+
+                @if (_tab == "buy" || !sel.Makeable)
+                {
+                    @if (sel.Matches.Count == 0)
+                    {
+                        <EmptyState Title="No shops found for this piece" Text="None of the links we found were working. Try Search again, or adjust the box around this piece." />
+                    }
+                    else
+                    {
+                        <div class="gp">
+                            @for (var m = 0; m < sel.Matches.Count; m++)
+                            {
+                                <MatchCard Match="sel.Matches[m]" ColorIndex="m + sel.Number" />
+                            }
+                        </div>
+                    }
+                }
+                else
+                {
+                    <PatternPanel @key="sel.Id" Item="sel" />
+                }
+            </section>
+        }
+        <div class="cluster">
+            @if (FullResultsHref is not null)
+            {
+                <a class="b" href="@FullResultsHref" target="_blank" rel="noopener">Open full results <Icon Name="external" Size="18" /></a>
+            }
+            <button type="button" class="lk" @onclick="() => _reportOpen = true"><Icon Name="flag" Size="16" /> Report a problem</button>
+            @* Deleting is rare and can't be undone, so it sits with the quiet links, not beside the main actions. *@
+            @if (!Compact)
+            {
+                <button type="button" class="lk" @onclick="() => _confirmDelete = true"><Icon Name="trash" Size="16" /> Delete this look</button>
+            }
+        </div>
+        @if (_confirmDelete)
+        {
+            <div class="note coral stack" role="alertdialog" aria-label="Delete this look">
+                <span>Delete this look and its photo? This can't be undone.</span>
+                <div class="cluster">
+                    <button type="button" class="b danger sm" @onclick="Delete" disabled="@_busy">Delete</button>
+                    <button type="button" class="b w sm" @onclick="() => _confirmDelete = false">Keep it</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@if (_reportOpen)
+{
+    <ReportDialog SearchId="Search.Id" OnClose="() => _reportOpen = false" />
+}
+
+@code {
+    private int _selected;
+    private string _tab = "buy";
+    private bool _editing, _busy, _confirmDelete, _reportOpen;
+    private string? _error;
+
+    [Parameter, EditorRequired] public SearchDto Search { get; set; } = default!;
+    [Parameter] public bool Compact { get; set; }
+    [Parameter] public string? FullResultsHref { get; set; }
+    [Parameter] public EventCallback OnDeleted { get; set; }
+    [Parameter] public EventCallback<Guid> OnNewSearch { get; set; }
+    [Parameter] public EventCallback<SearchDto> OnChanged { get; set; }
+
+    private void Select(int i) { _selected = i; _tab = "buy"; }
+
+    private static string Pct(double v) => (Math.Clamp(v, 0.03, 0.97) * 100).ToString("0.##", CultureInfo.InvariantCulture) + "%";
+
+    private static string ShortName(ItemDto i) => i.Name.Split(' ', StringSplitOptions.RemoveEmptyEntries).LastOrDefault() is { } last
+        ? char.ToUpperInvariant(last[0]) + last[1..] : i.Category;
+
+    public static string Money(decimal amount, string? currency) => (currency ?? "USD") switch
+    {
+        "USD" => "$" + amount.ToString("0.##", CultureInfo.InvariantCulture),
+        "EUR" => "€" + amount.ToString("0.##", CultureInfo.InvariantCulture),
+        "GBP" => "£" + amount.ToString("0.##", CultureInfo.InvariantCulture),
+        var c => amount.ToString("0.##", CultureInfo.InvariantCulture) + " " + c,
+    };
+
+    private async Task SearchAgain()
+    {
+        _busy = true; _error = null;
+        try { var created = await Api.SearchAgainAsync(Search.Id); await OnNewSearch.InvokeAsync(created.Id); }
+        catch (ApiException e) { _error = e.Message; }
+        finally { _busy = false; }
+    }
+
+    private async Task Delete()
+    {
+        _busy = true; _error = null;
+        try { await Api.DeleteSearchAsync(Search.Id); await OnDeleted.InvokeAsync(); }
+        catch (ApiException e) { _error = e.Message; _confirmDelete = false; }
+        finally { _busy = false; }
+    }
+
+    private async Task SaveBoxes(AdjustItemsRequest request)
+    {
+        _busy = true; _error = null;
+        try
+        {
+            var updated = await Api.AdjustItemsAsync(Search.Id, request);
+            _editing = false; _selected = 0;
+            await OnChanged.InvokeAsync(updated);
+        }
+        catch (ApiException e) { _error = e.Message; }
+        finally { _busy = false; }
+    }
+}

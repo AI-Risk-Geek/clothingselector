@@ -1,0 +1,53 @@
+@implements IDisposable
+@inject NavigationManager Nav
+
+<header class="hdr">
+    <a class="brand" href="@HomeHref" @onclick="Close">
+        <span class="logo"><Icon Name="hanger" Size="20" Stroke="2.4" /></span>@Brand.Name
+    </a>
+    <button type="button" class="burger" aria-label="Menu" aria-expanded="@(_open ? "true" : "false")" aria-controls="of-nav" @onclick="Toggle">
+        <Icon Name="@(_open ? "close" : "menu")" Stroke="2.4" />
+    </button>
+    <nav id="of-nav" class="nav @(_open ? "open" : null)" aria-label="Main">
+        <NavLink class="n" href="@HomeHref" Match="NavLinkMatch.All" @onclick="Close">Find a look</NavLink>
+        <NavLink class="n" href="looks" @onclick="Close">My looks</NavLink>
+        <NavLink class="n" href="install" @onclick="Close">Get the extension</NavLink>
+        @if (IsAdmin)
+        {
+            <NavLink class="n" href="admin/ai" @onclick="Close">Admin</NavLink>
+        }
+        <ThemeToggle />
+        @if (IsSignedIn)
+        {
+            <a class="b w" href="account" @onclick="Close">My account</a>
+        }
+        else
+        {
+            <a class="b w" href="@SignInHref" @onclick="Close">Sign in</a>
+        }
+    </nav>
+</header>
+
+@code {
+    private bool _open;
+
+    [Parameter] public string HomeHref { get; set; } = "./";
+    [Parameter] public string SignInHref { get; set; } = "signin";
+    [Parameter] public bool IsSignedIn { get; set; }
+    [Parameter] public bool IsAdmin { get; set; }
+
+    protected override void OnInitialized() => Nav.LocationChanged += OnLocationChanged;
+
+    private void Toggle() => _open = !_open;
+    private void Close() => _open = false;
+
+    // The menu closes on any navigation, including browser back/forward.
+    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        if (!_open) return;
+        _open = false;
+        _ = InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose() => Nav.LocationChanged -= OnLocationChanged;
+}

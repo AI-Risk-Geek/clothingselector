@@ -1,0 +1,29 @@
+# Local dependencies: MySQL 8 (utf8mb4) and Azurite (Blob storage emulator).
+#   docker compose up -d
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: outfitfinder-mysql
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_0900_ai_ci"]
+    environment:
+      MYSQL_DATABASE: outfitfinder
+      MYSQL_USER: outfit
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-local-dev-only}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-local-dev-root-only}
+    ports: ["3306:3306"]
+    volumes: ["mysql-data:/var/lib/mysql"]
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      retries: 20
+
+  azurite:
+    image: mcr.microsoft.com/azure-storage/azurite:latest
+    container_name: outfitfinder-azurite
+    command: ["azurite-blob", "--blobHost", "0.0.0.0", "--loose"]
+    ports: ["10000:10000"]
+    volumes: ["azurite-data:/data"]
+
+volumes:
+  mysql-data:
+  azurite-data:

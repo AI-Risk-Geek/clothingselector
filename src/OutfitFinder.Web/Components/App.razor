@@ -1,0 +1,49 @@
+﻿@using Microsoft.AspNetCore.Authentication
+@using OutfitFinder.Web.Services
+@inject TokenStore Tokens
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <base href="/" />
+    <script>try { var t = localStorage.getItem("of-theme"); if (t) document.documentElement.setAttribute("data-theme", t); } catch (e) { }</script>
+    <ResourcePreloader />
+    <link rel="stylesheet" href="@Assets["_content/OutfitFinder.UI/css/tokens.css"]" />
+    <link rel="stylesheet" href="@Assets["_content/OutfitFinder.UI/css/fonts.css"]" />
+    <link rel="stylesheet" href="@Assets["_content/OutfitFinder.UI/css/app.css"]" />
+    <link rel="stylesheet" href="@Assets["OutfitFinder.Web.styles.css"]" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <ImportMap />
+    <HeadOutlet @rendermode="InteractiveServer" />
+</head>
+
+<body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <Routes @rendermode="InteractiveServer" VisitorId="@_visitor" ConsentChoice="@_consent" />
+    <ReconnectModal />
+    <script src="@Assets["_framework/blazor.web.js"]"></script>
+</body>
+
+</html>
+
+@code {
+    [CascadingParameter] private HttpContext HttpContext { get; set; } = default!;
+    private string? _visitor;
+    private string? _consent;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _consent = HttpContext.Request.Cookies[VisitorCookies.Consent];
+        _visitor = _consent == "accepted" ? HttpContext.Request.Cookies[VisitorCookies.Visitor] : null;
+
+        // Re-seed the server-side token store on every full page load (survives site restarts).
+        if (HttpContext.User.FindFirst("sub")?.Value is { } sub && await HttpContext.GetTokenAsync("access_token") is { } access)
+        {
+            var exp = DateTimeOffset.TryParse(await HttpContext.GetTokenAsync("expires_at"), out var e) ? e : DateTimeOffset.UtcNow.AddMinutes(30);
+            Tokens.Save(sub, new UserTokens(access, await HttpContext.GetTokenAsync("refresh_token"), exp));
+        }
+    }
+}

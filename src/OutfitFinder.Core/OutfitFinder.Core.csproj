@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <EmbeddedResource Include="Ai\outfit-analysis.schema.json" LogicalName="OutfitFinder.Core.Ai.outfit-analysis.schema.json" />
+    <EmbeddedResource Include="Ai\instructions.md" LogicalName="OutfitFinder.Core.Ai.instructions.md" />
+    <EmbeddedResource Include="Ai\item-search.schema.json" LogicalName="OutfitFinder.Core.Ai.item-search.schema.json" />
+  </ItemGroup>
+
+  <!-- Generates Brand.Name / Brand.Tagline from the BrandName / BrandTagline MSBuild properties. -->
+  <Target Name="GenerateBrandConstants" BeforeTargets="CoreCompile">
+    <PropertyGroup>
+      <BrandFile>$(IntermediateOutputPath)Brand.g.cs</BrandFile>
+      <BrandEscaped>$(BrandName.Replace('"', '\"'))</BrandEscaped>
+      <TaglineEscaped>$(BrandTagline.Replace('"', '\"'))</TaglineEscaped>
+    </PropertyGroup>
+    <WriteLinesToFile File="$(BrandFile)" Overwrite="true" WriteOnlyWhenDifferent="true"
+      Lines="// &lt;auto-generated/&gt; from Directory.Build.props;namespace OutfitFinder.Core%3B;public static class Brand { public const string Name = &quot;$(BrandEscaped)&quot;%3B public const string Tagline = &quot;$(TaglineEscaped)&quot;%3B }" />
+    <ItemGroup>
+      <Compile Include="$(BrandFile)" />
+      <FileWrites Include="$(BrandFile)" />
+    </ItemGroup>
+  </Target>
+</Project>

@@ -1,0 +1,36 @@
+@page "/legal/{Doc}"
+@using OutfitFinder.UI.Legal
+
+<PageTitle>@(_doc?.Title ?? "Legal") · @Brand.Name</PageTitle>
+
+<main class="wrap w-md" id="main">
+    @if (Doc == "takedown")
+    {
+        <Takedown />
+    }
+    else if (_doc is not null)
+    {
+        <h1 class="h1s">@_doc.Title</h1>
+        <nav class="cluster" aria-label="Legal documents">
+            <a class="t @(Doc == "privacy" ? "on" : null)" href="legal/privacy" aria-current="@(Doc == "privacy" ? "page" : null)">Privacy</a>
+            <a class="t @(Doc == "terms" ? "on" : null)" href="legal/terms" aria-current="@(Doc == "terms" ? "page" : null)">Terms</a>
+            <a class="t @(Doc == "cookies" ? "on" : null)" href="legal/cookies" aria-current="@(Doc == "cookies" ? "page" : null)">Cookies</a>
+            <a class="t" href="legal/takedown">Report content</a>
+        </nav>
+        <div class="note lemon">Version @_doc.Version, effective @_doc.Effective.ToString("d MMMM yyyy", CultureInfo.InvariantCulture). Draft text: final wording needs legal review.</div>
+        <article class="card legal-body">@((MarkupString)_doc.Html)</article>
+    }
+</main>
+
+@code {
+    private LegalDocument? _doc;
+    [Parameter] public string Doc { get; set; } = "";
+    [Inject] private NavigationManager Nav { get; set; } = default!;
+
+    protected override void OnParametersSet()
+    {
+        _doc = LegalDocuments.Get(Doc);
+        // Unknown documents get the site's real 404 page (and a 404 status), not a bare heading.
+        if (_doc is null && Doc != "takedown") Nav.NotFound();
+    }
+}

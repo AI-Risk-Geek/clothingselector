@@ -1,0 +1,161 @@
+@page "/admin/ai"
+@attribute [Authorize(Roles = "Admin")]
+@inject OutfitApiClient Api
+
+<PageTitle>AI settings · @Brand.Name</PageTitle>
+
+<main class="wrap w-md" id="main">
+    <div><h1 class="h1s">AI settings</h1><div class="m" style="margin-top: 6px; font-size: 15px">Admins only. Changes apply to new searches straight away.</div></div>
+
+    @if (_error is not null) { <div class="note danger" role="alert">@_error</div> }
+
+    @if (_current is not null)
+    {
+        var model = string.IsNullOrWhiteSpace(_current.Deployment) ? _current.Model : _current.Deployment;
+        <div class="m small">Now using <b>@ProviderLabel(_current.Provider)</b>@(string.IsNullOrWhiteSpace(model) ? "" : $" · {model}") · set in @(_current.Source == "admin" ? "this page" : "app configuration")@(_current.UpdatedBy is null ? "" : $", changed by {_current.UpdatedBy} on {_current.UpdatedUtc:d MMM yyyy HH:mm} UTC")</div>
+    }
+
+    <section class="card stack" style="gap: 14px">
+        <h2 class="h3">Provider</h2>
+        <div class="g3" style="grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px">
+            @foreach (var p in ShownProviders)
+            {
+                var active = _current?.Provider == p;
+                <button type="button" class="t @(_form.Provider == p ? "on" : null)" aria-pressed="@(_form.Provider == p ? "true" : "false")" @onclick="() => Pick(p)"
+                        style="border-radius: 18px; min-height: 64px; justify-content: space-between; font-size: 16px; gap: 8px">
+                    <span>@ProviderLabel(p)</span>
+                    @if (active) { <span class="pill mint" style="padding: 2px 10px">In use</span> }
+                </button>
+            }
+        </div>
+        @if (_current is { Source: not "admin" })
+        {
+            <div class="m small">The provider in use comes from app configuration. Saving a provider here takes over from it straight away.</div>
+        }
+        @if (_current is not null && _form.Provider != _current.Provider)
+        {
+            <div class="note">Changing provider changes which company receives uploaded photos. Update the <code>Legal:AiProvider</code> setting so the Privacy Policy names the new company.</div>
+        }
+    </section>
+
+    <section class="card" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px">
+        <div class="f">
+            <label class="lab" for="a-model">@(_form.Provider == AiProviderKind.AzureAiFoundry ? "Deployment name" : "Model")</label>
+            @if (_form.Provider == AiProviderKind.AzureAiFoundry)
+            {
+                <input class="in" id="a-model" @bind="_form.Deployment" placeholder="my-gpt-deployment" />
+            }
+            else
+            {
+                <input class="in" id="a-model" @bind="_form.Model" placeholder="@(_form.Provider == AiProviderKind.Google ? "gemini-2.5-pro" : "gpt-5")" />
+            }
+        </div>
+        @if (_form.Provider == AiProviderKind.AzureAiFoundry)
+        {
+            <div class="f"><label class="lab" for="a-base">Model (for cost estimates)</label><input class="in" id="a-base" @bind="_form.Model" placeholder="gpt-5" /></div>
+            <div class="f"><label class="lab" for="a-end">Endpoint</label><input class="in" id="a-end" type="url" @bind="_form.Endpoint" placeholder="https://your-resource.openai.azure.com" /></div>
+        }
+        <div class="f">
+            <label class="lab" for="a-key">API key</label>
+            <input class="in" id="a-key" type="password" autocomplete="off" @bind="_form.ApiKey" placeholder="@(_current?.KeyLast4 is { } l ? $"Saved key ends in {l}" : "Paste the key")" />
+            <span class="m tiny">Stored encrypted. Only the last 4 characters are ever shown. Leave empty to keep the saved key.</span>
+        </div>
+        <label class="check" style="align-items: center"><input type="checkbox" @bind="_form.WebSearch" /> <span class="lab">Use the model's web search</span></label>
+    </section>
+
+    <section class="card stack" style="gap: 14px">
+        <div class="cluster">
+            <button type="button" class="b w" @onclick="Test" disabled="@_busy">Test connection</button>
+            <button type="button" class="b" @onclick="Save" disabled="@_busy">@(_saved ? "Saved" : "Save settings")</button>
+        </div>
+        @if (_testing)
+        {
+            <div class="st act" role="status"><Icon Name="spinner" Class="spin" Stroke="2.6" /> Running a sample photo…</div>
+        }
+        else if (_test is not null)
+        {
+            <div class="st @(_test.Ok ? "done" : "fail")" role="status" style="flex-wrap: wrap">
+                <Icon Name="@(_test.Ok ? "check" : "alert")" Stroke="2.6" /> @_test.Message
+                @if (_test.Ok) { <span class="small">Estimated cost: $@_test.CostUsd.ToString("0.0000", CultureInfo.InvariantCulture)</span> }
+            </div>
+        }
+    </section>
+
+    <section class="card stack">
+        <h2 class="h3">Recent changes</h2>
+        @if (_audit.Count == 0) { <p class="m small" style="margin: 0">No changes yet.</p> }
+        else
+        {
+            <table class="simple">
+                <thead><tr><th>When (UTC)</th><th>Who</th><th>What</th></tr></thead>
+                <tbody>
+                    @foreach (var a in _audit) { <tr><td>@a.CreatedUtc.ToString("d MMM HH:mm", CultureInfo.InvariantCulture)</td><td>@a.Actor</td><td>@a.Details</td></tr> }
+                </tbody>
+            </table>
+        }
+    </section>
+</main>
+
+@code {
+    private static readonly AiProviderKind[] Providers = [AiProviderKind.AzureAiFoundry, AiProviderKind.OpenAI, AiProviderKind.Google];
+
+    /// <summary>The three real providers, plus the one in use when it isn't one of them (the development-only Demo), so something is always shown as selected.</summary>
+    private IEnumerable<AiProviderKind> ShownProviders =>
+        _current is not null && !Providers.Contains(_current.Provider) ? Providers.Prepend(_current.Provider) : Providers;
+    private sealed class Form
+    {
+        public AiProviderKind Provider; public string Model = ""; public string? Deployment; public string? Endpoint; public string? ApiKey; public bool WebSearch = true;
+    }
+
+    private readonly Form _form = new();
+    private AiSettingsDto? _current;
+    private AiTestResult? _test;
+    private List<AuditEntryDto> _audit = new();
+    private bool _busy, _testing, _saved;
+    private string? _error;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _current = await Api.GetAiSettingsAsync();
+            (_form.Provider, _form.Model, _form.Deployment, _form.Endpoint, _form.WebSearch) =
+                (_current.Provider, _current.Model, _current.Deployment, _current.Endpoint, _current.WebSearchEnabled);
+            _audit = await Api.GetAuditAsync();
+        }
+        catch (ApiException e) { _error = e.Message; }
+    }
+
+    private void Pick(AiProviderKind p) { _form.Provider = p; _test = null; _saved = false; }
+
+    private AiSettingsUpdate Update() => new(_form.Provider, _form.Model, _form.Deployment, _form.Endpoint, _form.ApiKey, _form.WebSearch);
+
+    private async Task Test()
+    {
+        _busy = _testing = true; _test = null; _error = null;
+        try { _test = await Api.TestAiAsync(Update()); }
+        catch (ApiException e) { _error = e.Message; }
+        finally { _busy = _testing = false; }
+    }
+
+    private async Task Save()
+    {
+        _busy = true; _error = null;
+        try
+        {
+            _current = await Api.SaveAiSettingsAsync(Update());
+            _form.ApiKey = null; _saved = true;
+            _audit = await Api.GetAuditAsync();
+        }
+        catch (ApiException e) { _error = e.Message; }
+        finally { _busy = false; }
+    }
+
+    private static string ProviderLabel(AiProviderKind p) => p switch
+    {
+        AiProviderKind.AzureAiFoundry => "Azure AI Foundry",
+        AiProviderKind.OpenAI => "OpenAI",
+        AiProviderKind.Google => "Google Gemini",
+        _ => "Demo (development only)",
+    };
+}

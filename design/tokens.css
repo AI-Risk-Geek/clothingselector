@@ -1,0 +1,45 @@
+/* Outfit Finder design tokens — starter for src/OutfitFinder.UI/wwwroot/css/tokens.css
+   The ONLY file where colors, fonts and shape values are written. All values are placeholders
+   taken from the approved prototype; change them here and nowhere else. */
+:root {
+  /* Surfaces and text */
+  --color-bg: #FFF8F2;        --color-surface: #ffffff;   --color-soft: #FFF8F2;
+  --color-ink: #1B1033;       --color-muted: #51466B;
+  --color-line: #1B1033;      --color-shadow: #1B1033;    --color-rule: #F1E6DC;
+  --color-hover: #FFE9A8;     --color-skeleton: #F1E6DC;
+  /* Actions and links */
+  --color-action: #6C3BFF;    --color-on-action: #ffffff; --color-link: #4a22c9;
+  /* Color blocks (always carry dark text: --color-on-block) */
+  --color-block-lemon: #FFD84D; --color-block-lilac: #D9CCFF; --color-block-mint: #A8EBCB;
+  --color-block-coral: #FF9B85; --color-block-sky: #A9D8FF;   --color-on-block: #1B1033;
+  /* Status */
+  --color-danger: #b91c1c;
+  /* Type — self-host these fonts; do not link Google Fonts in production */
+  --font-heading: "Outfit", system-ui, sans-serif;
+  --font-body: "DM Sans", system-ui, sans-serif;
+  --text-h1: 60px; --text-h1-sm: 44px; --text-h2: 24px; --text-h3: 18px; --text-body: 16px; --text-small: 14px;
+  /* Shape */
+  --border-width: 2px;
+  --radius-card: 28px; --radius-block: 24px; --radius-box: 20px; --radius-field: 14px; --radius-pill: 999px;
+  --shadow-pop: 6px 6px 0 var(--color-shadow); --shadow-button: 3px 3px 0 var(--color-shadow);
+  --touch-min: 44px;
+  /* Layout */
+  --breakpoint-mobile: 760px; /* hamburger menu below this width */
+}
+[data-theme="dark"] {
+  --color-bg: #15102A;   --color-surface: #221A40; --color-soft: #2B2250;
+  --color-ink: #F6F1FF;  --color-muted: #C3B8E4;
+  --color-line: #F6F1FF; --color-shadow: #6C3BFF;  --color-rule: #3A2F66;
+  --color-hover: #3A2F66; --color-skeleton: #2B2250;
+  --color-link: #C9B8FF;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --color-bg: #15102A;   --color-surface: #221A40; --color-soft: #2B2250;
+    --color-ink: #F6F1FF;  --color-muted: #C3B8E4;
+    --color-line: #F6F1FF; --color-shadow: #6C3BFF;  --color-rule: #3A2F66;
+    --color-hover: #3A2F66; --color-skeleton: #2B2250;
+    --color-link: #C9B8FF;
+  }
+}
+@media (max-width: 760px) { :root { --text-h1: 40px; --text-h1-sm: 32px; --text-h2: 21px; } }

@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" />
+    <PackageReference Include="Markdig" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OutfitFinder.Core\OutfitFinder.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legal\*.md" />
+  </ItemGroup>
+</Project>

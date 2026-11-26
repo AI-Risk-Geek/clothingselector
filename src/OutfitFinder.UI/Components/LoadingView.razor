@@ -1,0 +1,38 @@
+@* "Finding your look…" screen with live steps. *@
+<div class="row">
+    <div class="col-photo">
+        <div class="photo" style="min-height: 240px">
+            @if (ImageUrl is not null) { <img src="@ImageUrl" alt="Your photo" /> }
+            @if (!Failed) { <div class="scan" aria-hidden="true"></div> }
+        </div>
+    </div>
+    <div class="col-main">
+        <h1 class="h1s" tabindex="-1">@(Failed ? "We couldn't finish this search" : "Finding your look…")</h1>
+        @if (Error is not null)
+        {
+            <div class="note danger" role="alert">@Error</div>
+        }
+        <ProgressSteps Stage="Stage" Failed="Failed" />
+        @if (!Failed)
+        {
+            <div aria-hidden="true" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px"><div class="sk"></div><div class="sk"></div><div class="sk"></div></div>
+            <p class="m small" style="margin: 0">This usually takes under a minute. You can leave this page; the look will be in My looks.</p>
+        }
+        <div class="cluster">
+            @if (Failed && OnRetry.HasDelegate)
+            {
+                <button type="button" class="b" @onclick="OnRetry">Try again</button>
+            }
+            <button type="button" class="b w" style="align-self: flex-start" @onclick="OnCancel">@(Failed ? "Try another photo" : "Cancel")</button>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public string? ImageUrl { get; set; }
+    [Parameter] public SearchStage Stage { get; set; }
+    [Parameter] public bool Failed { get; set; }
+    [Parameter] public string? Error { get; set; }
+    [Parameter] public EventCallback OnCancel { get; set; }
+    [Parameter] public EventCallback OnRetry { get; set; }
+}

@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <!-- xUnit1031/1030: some sync waits are intentional in integration helpers -->
+    <NoWarn>$(NoWarn);xUnit1031;xUnit1030</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+    <PackageReference Include="coverlet.collector" />
+    <PackageReference Include="Xunit.SkippableFact" />
+    <PackageReference Include="bunit" />
+    <PackageReference Include="Testcontainers.MySql" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\OutfitFinder.Api\OutfitFinder.Api.csproj" />
+    <ProjectReference Include="..\..\src\OutfitFinder.Identity\OutfitFinder.Identity.csproj" />
+    <ProjectReference Include="..\..\src\OutfitFinder.UI\OutfitFinder.UI.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Using Include="Xunit" />
+    <None Include="..\photos\**" LinkBase="photos" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

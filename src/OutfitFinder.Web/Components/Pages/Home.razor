@@ -1,0 +1,139 @@
+@page "/"
+@inject OutfitApiClient Api
+@inject NavigationManager Nav
+@inject OutfitJs Js
+@inject IWebHostEnvironment Env
+@inject AuthenticationStateProvider Auth
+@inject UploadPreview Preview
+
+<PageTitle>@Brand.Name · Find every piece of an outfit</PageTitle>
+
+<main class="wrap" id="main" style="max-width: 1180px; gap: 44px">
+    <section class="row" style="align-items: center">
+        <div class="stack" style="flex: 1 1 380px; min-width: 0; align-items: flex-start; gap: 18px">
+            <span class="pill mint">@Brand.Tagline</span>
+            <h1 class="h1">Love the look? Find every piece.</h1>
+            <p class="m" style="margin: 0; max-width: 480px; font-size: 18px">Upload a photo of any outfit. We spot each piece, find where to buy it, and give you a pattern to make it yourself.</p>
+        </div>
+        <div class="blk lemon pop stack" style="flex: 1 1 340px; min-width: 0; border-radius: var(--radius-card); align-items: center; text-align: center; gap: 14px">
+            <div class="drop" @ref="_drop">
+                <Icon Name="photo" Size="48" Stroke="1.8" />
+                <div class="h2">@(_busy ? "Uploading…" : "Drop a photo here")</div>
+                <div class="cluster" style="justify-content: center; gap: 10px">
+                    <label class="b" for="photo-input">Choose a photo</label>
+                    <button type="button" class="b w" @onclick="TrySample" disabled="@_busy">Try a sample photo</button>
+                </div>
+                <label class="b w sm camera-only" for="camera-input"><Icon Name="camera" Size="18" /> Take a photo</label>
+                @* The transparent input covers the drop zone, so dragging a file anywhere onto it works. *@
+                <InputFile id="photo-input" class="drop-input" accept="image/jpeg,image/png,image/webp" OnChange="OnFile" disabled="@_busy" aria-label="Choose a photo" />
+                <InputFile id="camera-input" class="sr-only" accept="image/*" capture="environment" OnChange="OnFile" disabled="@_busy" tabindex="-1" />
+            </div>
+            @if (_needsCaptcha)
+            {
+                <div @ref="_turnstile" aria-label="Human check"></div>
+            }
+            @if (_error is not null)
+            {
+                <div class="note danger" role="alert" style="width: 100%">@_error</div>
+            }
+            <div class="small">Faces are blurred before anything is saved. Photos are deleted after 90 days. Only upload photos you have the right to use.</div>
+        </div>
+    </section>
+    <section class="g3" aria-label="How it works">
+        <div class="blk lilac"><div class="h1s" aria-hidden="true">1</div><h2 class="h2" style="margin: 8px 0 4px">Upload a photo</h2><p style="margin: 0">From your camera roll, or right-click any photo with the Chrome extension.</p></div>
+        <div class="blk mint"><div class="h1s" aria-hidden="true">2</div><h2 class="h2" style="margin: 8px 0 4px">We find each piece</h2><p style="margin: 0">Top, trousers, shoes, bag, glasses: every item, matched across online stores.</p></div>
+        <div class="blk coral"><div class="h1s" aria-hidden="true">3</div><h2 class="h2" style="margin: 8px 0 4px">Buy it or make it</h2><p style="margin: 0">Shop the closest matches, or print a life-size sewing pattern with a materials list.</p></div>
+    </section>
+</main>
+
+@code {
+    private ElementReference _drop, _turnstile;
+    private DotNetObjectReference<Home>? _ref;
+    private bool _busy, _needsCaptcha;
+    private string? _error, _captchaToken;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
+        await Js.Invoke("attachDropZone", _drop);
+        var signedIn = (await Auth.GetAuthenticationStateAsync()).User.Identity?.IsAuthenticated == true;
+        if (signedIn) return;
+        try
+        {
+            var cfg = await Api.GetPublicConfigAsync();
+            if (cfg.GetValueOrDefault("captchaForAnonymous") == "True" && cfg.GetValueOrDefault("turnstileSiteKey") is { Length: > 0 } key)
+            {
+                _needsCaptcha = true;
+                StateHasChanged();
+                await Task.Yield();
+                _ref = DotNetObjectReference.Create(this);
+                await Js.Invoke("renderTurnstile", _turnstile, key, _ref);
+            }
+        }
+        catch (ApiException e) { _error = e.Message; StateHasChanged(); }
+        catch (HttpRequestException) { _error = "We can't reach the search service right now. Please try again in a minute."; StateHasChanged(); }
+    }
+
+    [JSInvokable] public void TurnstileToken(string token) => _captchaToken = token;
+
+    private async Task OnFile(InputFileChangeEventArgs e)
+    {
+        _error = null;
+        var file = e.File;
+        if (file.Size > 10 * 1024 * 1024) { _error = "Photos must be 10 MB or smaller."; return; }
+        _busy = true;
+        try
+        {
+            await using var stream = file.OpenReadStream(10 * 1024 * 1024);
+            using var ms = new MemoryStream();
+            await stream.CopyToAsync(ms);
+            ms.Position = 0;
+            await Upload(ms, file.Name, file.ContentType, await PreviewOf(file));
+        }
+        catch (IOException) { _error = "That photo couldn't be read. Try another file."; }
+        finally { _busy = false; }
+    }
+
+    private async Task TrySample()
+    {
+        _busy = true; _error = null;
+        try
+        {
+            await using var fs = File.OpenRead(Path.Combine(Env.WebRootPath, "samples", "sample-outfit.jpg"));
+            await Upload(fs, "sample-outfit.jpg", "image/jpeg", "samples/sample-outfit.jpg");
+        }
+        finally { _busy = false; }
+    }
+
+    /// <summary>The browser shrinks the photo to a small JPEG for the loading screen. Formats it can't decode just get no preview.</summary>
+    private static async Task<string?> PreviewOf(IBrowserFile file)
+    {
+        try
+        {
+            var small = await file.RequestImageFileAsync("image/jpeg", 480, 640);
+            if (small.Size > 400_000) return null;
+            await using var s = small.OpenReadStream(400_000);
+            using var ms = new MemoryStream();
+            await s.CopyToAsync(ms);
+            return "data:image/jpeg;base64," + Convert.ToBase64String(ms.ToArray());
+        }
+        catch (Exception e) when (e is IOException or InvalidOperationException or JSException) { return null; }
+    }
+
+    private async Task Upload(Stream stream, string name, string contentType, string? preview)
+    {
+        if (_needsCaptcha && string.IsNullOrEmpty(_captchaToken))
+        {
+            _error = "Please complete the 'I am human' check first.";
+            return;
+        }
+        try
+        {
+            var id = await Api.CreateSearchAsync(stream, name, contentType, SearchSource.Web, _captchaToken);
+            Preview.Set(id, preview);
+            Nav.NavigateTo($"looks/{id}");
+        }
+        catch (ApiException e) { _error = e.Message; }
+        catch (HttpRequestException) { _error = "We can't reach the search service right now. Please try again in a minute."; }
+    }
+}

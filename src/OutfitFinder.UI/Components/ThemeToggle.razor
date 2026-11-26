@@ -1,0 +1,19 @@
+@inject OutfitJs Js
+
+<button type="button" class="ico" aria-label="@(_dark ? "Switch to light mode" : "Switch to dark mode")" @onclick="Toggle">
+    <Icon Name="@(_dark ? "sun" : "moon")" Size="22" />
+    <span class="tl" aria-hidden="true">@(_dark ? "Light mode" : "Dark mode")</span>
+</button>
+
+@code {
+    private bool _dark;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
+        _dark = await Js.Invoke<string>("getTheme") == "dark";
+        StateHasChanged();
+    }
+
+    private async Task Toggle() => _dark = await Js.Invoke<string>("toggleTheme") == "dark";
+}

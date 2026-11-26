@@ -1,0 +1,24 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["matches"],
+  "properties": {
+    "matches": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["store", "title", "price", "currency", "url", "imageUrl", "matchType"],
+        "properties": {
+          "store": { "type": "string" },
+          "title": { "type": "string" },
+          "price": { "type": ["number", "null"] },
+          "currency": { "type": ["string", "null"] },
+          "url": { "type": "string" },
+          "imageUrl": { "type": ["string", "null"] },
+          "matchType": { "type": "string", "enum": ["exact", "similar"] }
+        }
+      }
+    }
+  }
+}

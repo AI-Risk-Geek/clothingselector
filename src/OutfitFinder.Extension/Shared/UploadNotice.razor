@@ -1,0 +1,15 @@
+@* One-time notice before the first upload from the extension. *@
+<section class="card stack" aria-labelledby="notice-title" style="padding: 16px">
+    <h1 class="h3" id="notice-title">Before your first search</h1>
+    <ul style="margin: 0; padding-left: 18px" class="small">
+        <li>The photo is checked for unsafe content, then sent to our AI provider to find the clothing.</li>
+        <li>Faces are blurred, and only the blurred copy is saved.</li>
+        <li>Photos and results are deleted after 90 days.</li>
+        <li>Only search photos you have the right to use. No photos of children.</li>
+    </ul>
+    <button type="button" class="b" @onclick="OnAccepted">Got it, continue</button>
+</section>
+
+@code {
+    [Parameter] public EventCallback OnAccepted { get; set; }
+}

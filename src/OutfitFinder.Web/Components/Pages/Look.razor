@@ -1,0 +1,75 @@
+@page "/looks/{Id:guid}"
+@implements IDisposable
+@inject OutfitApiClient Api
+@inject NavigationManager Nav
+@inject UploadPreview Preview
+
+<PageTitle>@(_search?.Status == SearchStatus.Completed ? "Your look" : "Finding your look…") · @Brand.Name</PageTitle>
+
+<main class="wrap w-xl" id="main">
+    @if (_error is not null && _search is null)
+    {
+        <EmptyState Title="We couldn't open this look" Text="@_error">
+            <a class="b" href="">Find a new look</a>
+        </EmptyState>
+    }
+    else if (_search is null)
+    {
+        <LoadingView ImageUrl="@Preview.For(Id)" Stage="SearchStage.Queued" OnCancel="GoHome" />
+    }
+    else if (_search.Status is SearchStatus.Pending or SearchStatus.Running)
+    {
+        <LoadingView ImageUrl="@(_search.ImageUrl ?? Preview.For(Id))" Stage="_search.Stage" OnCancel="GoHome" />
+    }
+    else if (_search.Status is SearchStatus.Failed or SearchStatus.Rejected)
+    {
+        <LoadingView Stage="_search.Stage == SearchStage.Done ? SearchStage.CheckingPhoto : _search.Stage" Failed="true" Error="@_search.Error" OnCancel="GoHome" />
+    }
+    else
+    {
+        <ResultsView Search="_search" OnDeleted='() => Nav.NavigateTo("looks")' OnNewSearch='id => Nav.NavigateTo($"looks/{id}")' OnChanged="s => _search = s" />
+    }
+</main>
+
+@code {
+    private SearchDto? _search;
+    private string? _error;
+    private CancellationTokenSource? _cts;
+
+    [Parameter] public Guid Id { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        _cts?.Cancel();
+        _cts = new CancellationTokenSource();
+        _search = null; _error = null;
+        await LoadAsync(_cts.Token);
+        _ = PollAsync(_cts.Token);
+    }
+
+    private async Task LoadAsync(CancellationToken ct)
+    {
+        try { _search = await Api.GetSearchAsync(Id, ct); _error = null; }
+        catch (ApiException e) { _error = e.Message; }
+        catch (HttpRequestException) { _error = "We can't reach the search service right now."; }
+    }
+
+    // Live steps: poll until the search finishes.
+    private async Task PollAsync(CancellationToken ct)
+    {
+        try
+        {
+            while (!ct.IsCancellationRequested && (_search is null || !_search.IsFinished) && _error is null)
+            {
+                await Task.Delay(1500, ct);
+                await LoadAsync(ct);
+                await InvokeAsync(StateHasChanged);
+            }
+        }
+        catch (OperationCanceledException) { }
+    }
+
+    private void GoHome() => Nav.NavigateTo("");
+
+    public void Dispose() { _cts?.Cancel(); _cts?.Dispose(); }
+}

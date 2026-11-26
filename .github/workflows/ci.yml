@@ -1,0 +1,78 @@
+name: build-test-deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write   # OIDC login to Azure (no stored credentials)
+
+env:
+  DOTNET_VERSION: "10.0.x"
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with: { dotnet-version: "${{ env.DOTNET_VERSION }}" }
+      - run: dotnet restore OutfitFinder.sln
+      - run: dotnet build OutfitFinder.sln -c Release --no-restore
+      # Docker is available on ubuntu runners, so the Testcontainers MySQL test runs here.
+      - run: dotnet test tests/OutfitFinder.Tests -c Release --no-build --logger trx --filter "Category!=AiRegression"
+      - name: Publish apps
+        run: |
+          dotnet publish src/OutfitFinder.Identity -c Release -o publish/identity --no-build
+          dotnet publish src/OutfitFinder.Api -c Release -o publish/api --no-build
+          dotnet publish src/OutfitFinder.Web -c Release -o publish/web --no-build
+      - name: Build and zip the extension
+        run: |
+          VERSION=$(jq -r .version src/OutfitFinder.Extension/wwwroot/manifest.json)
+          dotnet publish src/OutfitFinder.Extension -c Release -o publish/extension \
+            -p:ExtensionApiOrigin=${{ vars.API_ORIGIN }} -p:ExtensionWebOrigin=${{ vars.WEB_ORIGIN }}
+          # Point the extension at the deployed services.
+          jq --arg api "${{ vars.API_ORIGIN }}" --arg id "${{ vars.IDENTITY_ORIGIN }}" --arg web "${{ vars.WEB_ORIGIN }}" \
+            '.ApiBaseUrl=$api | .IdentityAuthority=$id | .WebsiteUrl=$web' \
+            publish/extension/browserextension/appsettings.json > tmp.json && mv tmp.json publish/extension/browserextension/appsettings.json
+          mkdir -p publish/web/wwwroot/extension
+          (cd publish/extension/browserextension && zip -r ../../web/wwwroot/extension/outfit-finder-extension-$VERSION.zip .)
+          cat > publish/web/wwwroot/extension/latest.json <<EOF
+          { "version": "$VERSION", "downloadUrl": "/extension/outfit-finder-extension-$VERSION.zip",
+            "webStoreUrl": "${{ vars.WEB_STORE_URL }}", "publishedUtc": "$(date -u +%Y-%m-%dT%H:%M:%SZ)" }
+          EOF
+      - uses: actions/upload-artifact@v4
+        with: { name: apps, path: publish/ }
+
+  deploy:
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    needs: build-test
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with: { name: apps, path: publish/ }
+      - uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      - name: Deploy infrastructure (Bicep)
+        run: |
+          az deployment group create -g ${{ vars.RESOURCE_GROUP }} -f infra/main.bicep \
+            -p infra/main.parameters.json -p mysqlAdminPassword='${{ secrets.MYSQL_ADMIN_PASSWORD }}'
+      - name: Deploy apps
+        run: |
+          for app in identity api web; do
+            (cd publish/$app && zip -r ../$app.zip .)
+            az webapp deploy -g ${{ vars.RESOURCE_GROUP }} -n "${{ vars.APP_PREFIX }}-$app" --src-path publish/$app.zip --type zip
+          done
+      - name: Smoke test
+        run: |
+          curl -fsS https://${{ vars.APP_PREFIX }}-api.azurewebsites.net/health
+          curl -fsS https://${{ vars.APP_PREFIX }}-identity.azurewebsites.net/.well-known/openid-configuration > /dev/null
+          curl -fsS https://${{ vars.APP_PREFIX }}-web.azurewebsites.net/ > /dev/null

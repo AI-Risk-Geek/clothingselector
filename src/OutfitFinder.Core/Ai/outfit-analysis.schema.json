@@ -1,0 +1,75 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["flags", "faces", "items"],
+  "properties": {
+    "flags": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["noPersonOrClothing", "appearsToBeMinor", "inappropriate"],
+      "properties": {
+        "noPersonOrClothing": { "type": "boolean" },
+        "appearsToBeMinor": { "type": "boolean" },
+        "inappropriate": { "type": "boolean" }
+      }
+    },
+    "faces": { "type": "array", "items": { "$ref": "#/$defs/box" } },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["category", "name", "description", "brandHints", "box", "confidence", "makeIt", "matches"],
+        "properties": {
+          "category": { "type": "string" },
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "brandHints": { "type": ["string", "null"] },
+          "box": { "$ref": "#/$defs/box" },
+          "confidence": { "type": "number" },
+          "makeIt": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["makeable", "garmentType", "fit", "length", "neckline", "closures", "fabricSuggestion", "difficulty"],
+            "properties": {
+              "makeable": { "type": "boolean" },
+              "garmentType": { "type": "string", "enum": ["tshirt", "skirt", "trousers", "other"] },
+              "fit": { "type": "string" },
+              "length": { "type": "string" },
+              "neckline": { "type": "string" },
+              "closures": { "type": "string" },
+              "fabricSuggestion": { "type": "string" },
+              "difficulty": { "type": "string", "enum": ["beginner", "intermediate", "advanced"] }
+            }
+          },
+          "matches": { "type": "array", "items": { "$ref": "#/$defs/match" } }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "box": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y", "w", "h"],
+      "properties": {
+        "x": { "type": "number" }, "y": { "type": "number" },
+        "w": { "type": "number" }, "h": { "type": "number" }
+      }
+    },
+    "match": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["store", "title", "price", "currency", "url", "imageUrl", "matchType"],
+      "properties": {
+        "store": { "type": "string" },
+        "title": { "type": "string" },
+        "price": { "type": ["number", "null"] },
+        "currency": { "type": ["string", "null"] },
+        "url": { "type": "string" },
+        "imageUrl": { "type": ["string", "null"] },
+        "matchType": { "type": "string", "enum": ["exact", "similar"] }
+      }
+    }
+  }
+}

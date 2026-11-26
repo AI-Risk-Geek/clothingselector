@@ -1,0 +1,43 @@
+@* Shown to signed-in users when the Terms or Privacy Policy version changed since they last accepted. *@
+@inject OutfitApiClient Api
+@inject AuthenticationStateProvider Auth
+
+@if (_outstanding.Count > 0)
+{
+    <div class="dialog-scrim">
+        <div class="dialog card pop stack" role="dialog" aria-modal="true" aria-labelledby="rc-title">
+            <h2 class="h2" id="rc-title">We've updated our terms</h2>
+            <p class="m" style="margin: 0">Please review the changes to keep using your account.</p>
+            <ul style="margin: 0">
+                @foreach (var d in _outstanding)
+                {
+                    <li><a href="legal/@d.Document" target="_blank">@Title(d.Document)</a> · version @d.Version, effective @d.Effective.ToString("d MMMM yyyy", CultureInfo.InvariantCulture)</li>
+                }
+            </ul>
+            <label class="check"><input type="checkbox" @bind="_agree" /> <span>I have read and agree to the updated documents.</span></label>
+            <button type="button" class="b" disabled="@(!_agree)" @onclick="Accept">Continue</button>
+        </div>
+    </div>
+}
+
+@code {
+    private List<LegalDocumentVersion> _outstanding = new();
+    private bool _agree;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
+        var user = (await Auth.GetAuthenticationStateAsync()).User;
+        if (user.Identity?.IsAuthenticated != true) return;
+        try { _outstanding = (await Api.GetConsentStatusAsync()).Outstanding.ToList(); StateHasChanged(); }
+        catch (ApiException) { }
+    }
+
+    private async Task Accept()
+    {
+        foreach (var d in _outstanding) await Api.AcceptConsentAsync(new ConsentRequest(d.Document, d.Version));
+        _outstanding.Clear();
+    }
+
+    private static string Title(string doc) => doc switch { "terms" => "Terms of Service", "privacy" => "Privacy Policy", _ => doc };
+}

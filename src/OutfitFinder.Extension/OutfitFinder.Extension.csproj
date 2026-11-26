@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+  <PropertyGroup>
+    <!-- Origins baked into manifest.json; CI overrides these for staging / production. -->
+    <ExtensionApiOrigin Condition="'$(ExtensionApiOrigin)' == ''">https://localhost:44302</ExtensionApiOrigin>
+    <ExtensionWebOrigin Condition="'$(ExtensionWebOrigin)' == ''">https://localhost:44303</ExtensionWebOrigin>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Blazor.BrowserExtension" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" PrivateAssets="all" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OutfitFinder.UI\OutfitFinder.UI.csproj" />
+  </ItemGroup>
+
+  <!-- The service worker (wwwroot/background.js) is plain JS on purpose: chrome.sidePanel.open() must run
+       synchronously inside the context-menu click. The pages (popup, side panel) are Blazor. -->
+
+  <!-- Extension name comes from BrandName; API / website origins from the properties above. -->
+  <!-- Two targets on purpose: MSBuild runs a target only once per build, so one target hooked to both Build and Publish
+       stamped the build output and then skipped the published copy (leaving __API_ORIGIN__ etc. in the zip). -->
+  <Target Name="StampExtensionManifest" AfterTargets="Build">
+    <ItemGroup>
+      <_OfManifest Include="$(OutputPath)browserextension\manifest.json" Condition="Exists('$(OutputPath)browserextension\manifest.json')" />
+    </ItemGroup>
+    <PropertyGroup>
+      <_OfBrandJson>$(BrandName.Replace('"', '\"'))</_OfBrandJson>
+    </PropertyGroup>
+    <WriteLinesToFile Condition="'@(_OfManifest)' != ''" File="%(_OfManifest.FullPath)" Overwrite="true"
+      Lines="$([System.IO.File]::ReadAllText('%(_OfManifest.FullPath)').Replace('__BRAND_NAME__', '$(_OfBrandJson)').Replace('__API_ORIGIN__', '$(ExtensionApiOrigin)').Replace('__WEB_ORIGIN__', '$(ExtensionWebOrigin)'))" />
+  </Target>
+  <!-- Blazor.BrowserExtension.Build writes publish\browserextension in CallRunPublishBlazorToBrowserExtension (after AfterPublish). -->
+  <Target Name="StampPublishedExtensionManifest" AfterTargets="CallRunPublishBlazorToBrowserExtension">
+    <ItemGroup>
+      <_OfPublishedManifest Include="$(PublishDir)browserextension\manifest.json" Condition="Exists('$(PublishDir)browserextension\manifest.json')" />
+    </ItemGroup>
+    <PropertyGroup>
+      <_OfBrandJson>$(BrandName.Replace('"', '\"'))</_OfBrandJson>
+    </PropertyGroup>
+    <Error Condition="'@(_OfPublishedManifest)' == ''" Text="Published extension has no browserextension\manifest.json in $(PublishDir)" />
+    <WriteLinesToFile File="%(_OfPublishedManifest.FullPath)" Overwrite="true"
+      Lines="$([System.IO.File]::ReadAllText('%(_OfPublishedManifest.FullPath)').Replace('__BRAND_NAME__', '$(_OfBrandJson)').Replace('__API_ORIGIN__', '$(ExtensionApiOrigin)').Replace('__WEB_ORIGIN__', '$(ExtensionWebOrigin)'))" />
+  </Target>
+</Project>

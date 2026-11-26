@@ -1,0 +1,44 @@
+@inject OutfitApiClient Api
+
+<article class="box k match">
+    <div class="thumb c@(ColorIndex % 5)">
+        @if (Match.ImageUrl is not null && !_imageFailed)
+        {
+            <img src="@Match.ImageUrl" alt="" loading="lazy" referrerpolicy="no-referrer" @onerror="() => _imageFailed = true" />
+        }
+        else
+        {
+            <span>Product photo</span>
+        }
+        <span class="badge">@(Match.MatchType == MatchKind.Exact ? "Exact match" : "Similar")</span>
+    </div>
+    <div class="m tiny">@Match.Store</div>
+    <div class="title">@Match.Title</div>
+    <div class="price-row">
+        <div class="h2">@(Match.Price is { } p ? ResultsView.Money(p, Match.Currency) : "See price")</div>
+        <div class="thumbs" role="group" aria-label="Was this a good match?">
+            <button type="button" class="ico" aria-label="Good match" aria-pressed="@(_feedback == MatchFeedback.Up ? "true" : "false")" @onclick="() => Rate(MatchFeedback.Up)"><Icon Name="thumb-up" Size="18" /></button>
+            <button type="button" class="ico" aria-label="Bad match" aria-pressed="@(_feedback == MatchFeedback.Down ? "true" : "false")" @onclick="() => Rate(MatchFeedback.Down)"><Icon Name="thumb-down" Size="18" /></button>
+        </div>
+    </div>
+    <a class="b sm store-link" href="@Match.Url" target="_blank" rel="noopener noreferrer nofollow">View at store<span class="sr-only"> (opens in a new tab)</span></a>
+</article>
+
+@code {
+    private bool _imageFailed;
+    private MatchFeedback? _feedback;
+
+    [Parameter, EditorRequired] public MatchDto Match { get; set; } = default!;
+    [Parameter] public int ColorIndex { get; set; }
+
+    protected override void OnParametersSet() => _feedback = Match.Feedback;
+
+    private async Task Rate(MatchFeedback value)
+    {
+        var next = _feedback == value ? (MatchFeedback?)null : value;
+        var previous = _feedback;
+        _feedback = next;
+        try { await Api.SetFeedbackAsync(Match.Id, next); }
+        catch (ApiException) { _feedback = previous; }
+    }
+}

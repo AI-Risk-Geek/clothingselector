@@ -1,0 +1,145 @@
+@inject OutfitApiClient Api
+
+<div class="stack" style="gap: 18px">
+    <div class="note">A pattern in the style of this piece, sized to you. It is not an exact copy of the original.</div>
+
+    <div class="cluster" role="group" aria-label="Size">
+        <span class="lab" style="margin-right: 4px">Size</span>
+        @foreach (var size in Sizes)
+        {
+            <button type="button" class="t" style="min-width: 52px" aria-pressed="@(_size == size && _profileId is null ? "true" : "false")" @onclick="() => PickSize(size)">@size</button>
+        }
+        @foreach (var p in _profiles)
+        {
+            <button type="button" class="t" aria-pressed="@(_profileId == p.Id ? "true" : "false")" @onclick="() => PickProfile(p.Id!.Value)">@p.Name</button>
+        }
+        <a class="lk" href="account#measurements">@(_profiles.Count == 0 ? "Use my measurements" : "Edit measurements")</a>
+    </div>
+
+    @if (_error is not null)
+    {
+        <div class="note danger" role="alert">@_error</div>
+    }
+
+    @if (_loading && _pattern is null)
+    {
+        <div class="st act" role="status"><Icon Name="spinner" Class="spin" Stroke="2.6" /> Drafting your pattern…</div>
+    }
+    else if (_pattern is not null)
+    {
+        <div class="m small">Drafted as: <b>@_pattern.GarmentName</b>, size @_pattern.SizeLabel · @_pattern.Difficulty</div>
+        <div class="row" style="gap: 18px">
+            <div class="box stack" style="flex: 1 1 260px; min-width: 0">
+                <h3 class="h3">Pattern pieces</h3>
+                <div class="pieces">
+                    @foreach (var piece in _pattern.Pieces)
+                    {
+                        <div>@((MarkupString)piece.PreviewSvg)<div>@piece.Name</div><div class="m">@(piece.OnFold ? "Cut 1 on fold" : $"Cut {piece.Cut}")</div></div>
+                    }
+                </div>
+                <div class="stack" style="gap: 8px">
+                    <a class="b" href="@(_paper == "a4" ? _pattern.TiledA4Url : _pattern.TiledLetterUrl)" download>
+                        <Icon Name="download" Size="18" /> Download printable pattern
+                    </a>
+                    <div class="cluster" role="group" aria-label="Paper size">
+                        <span class="lab">Paper</span>
+                        <button type="button" class="t" aria-pressed="@(_paper == "letter" ? "true" : "false")" @onclick='() => _paper = "letter"'>Letter</button>
+                        <button type="button" class="t" aria-pressed="@(_paper == "a4" ? "true" : "false")" @onclick='() => _paper = "a4"'>A4</button>
+                        <a class="lk" href="@_pattern.CopyShopUrl" download>Copy-shop version (one sheet)</a>
+                    </div>
+                </div>
+                <div class="m tiny">Life-size, tiled. Print at 100% ("Actual size") and check the 5 cm test square on page A1 first.</div>
+            </div>
+            <div class="box" style="flex: 1 1 240px; min-width: 0">
+                <h3 class="h3" style="margin-bottom: 8px">Shopping list</h3>
+                @foreach (var x in _pattern.Materials)
+                {
+                    <div class="li">
+                        <div style="min-width: 0">
+                            <div style="font-size: 15px; font-weight: 600">@x.Description</div>
+                            <div class="m tiny">@Qty(x)</div>
+                            @if (_found.TryGetValue(x.Id, out var found))
+                            {
+                                @if (found.Count == 0) { <div class="m tiny">No shops found.</div> }
+                                @foreach (var f in found.Take(2))
+                                {
+                                    <div class="tiny"><a href="@f.Url" target="_blank" rel="noopener noreferrer nofollow">@f.Store@(f.Price is { } p ? " · " + ResultsView.Money(p, f.Currency) : "")</a></div>
+                                }
+                            }
+                        </div>
+                        @if (!_found.ContainsKey(x.Id))
+                        {
+                            <button type="button" class="lk" @onclick="() => Find(x.Id)" disabled="@(_finding == x.Id)">@(_finding == x.Id ? "Finding…" : "Find it")</button>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+        <details class="box">
+            <summary class="h3" style="cursor: pointer; min-height: 44px; display: flex; align-items: center">How to make it · @_pattern.Difficulty</summary>
+            <ol class="howto">
+                @foreach (var step in _pattern.Steps) { <li>@step</li> }
+            </ol>
+        </details>
+    }
+</div>
+
+@code {
+    private static readonly string[] Sizes = ["XS", "S", "M", "L", "XL"];
+    private string _size = "M";
+    private string _paper = "letter";
+    private Guid? _profileId;
+    private bool _loading;
+    private string? _error;
+    private Guid? _finding;
+    private PatternDto? _pattern;
+    private List<MeasurementProfileDto> _profiles = new();
+    private readonly Dictionary<Guid, IReadOnlyList<MatchDto>> _found = new();
+
+    [Parameter, EditorRequired] public ItemDto Item { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try { _profiles = await Api.GetMeasurementsAsync(); } catch (ApiException) { _profiles = new(); }
+        if (_profiles.FirstOrDefault() is { Id: { } id }) _profileId = id;
+        await Generate();
+    }
+
+    private async Task PickSize(string size) { _size = size; _profileId = null; await Generate(); }
+    private async Task PickProfile(Guid id) { _profileId = id; await Generate(); }
+
+    private async Task Generate()
+    {
+        _loading = true; _error = null;
+        try
+        {
+            _pattern = await Api.CreatePatternAsync(Item.Id, new PatternRequest(_profileId is null ? _size : null, _profileId, null));
+            _found.Clear();
+        }
+        catch (ApiException e) { _error = e.Message; }
+        finally { _loading = false; }
+    }
+
+    private async Task Find(Guid materialId)
+    {
+        _finding = materialId;
+        try { _found[materialId] = (await Api.FindMaterialAsync(materialId)).Matches; }
+        catch (ApiException e) { _error = e.Message; }
+        finally { _finding = null; }
+    }
+
+    private static string Qty(MaterialDto m) => m.Unit switch
+    {
+        "yd" => $"{Fraction(m.Quantity)} yd ({(m.Quantity * 0.9144m):0.0} m)",
+        "m" => $"{m.Quantity:0.##} m",
+        _ => $"{m.Quantity:0.##} {m.Unit}",
+    };
+
+    private static string Fraction(decimal yards)
+    {
+        var whole = Math.Floor(yards);
+        var eighths = (int)Math.Round((yards - whole) * 8);
+        var frac = eighths switch { 0 => "", 1 => "⅛", 2 => "¼", 3 => "⅜", 4 => "½", 5 => "⅝", 6 => "¾", 7 => "⅞", _ => "" };
+        return whole == 0 && frac != "" ? frac : $"{whole}{frac}";
+    }
+}

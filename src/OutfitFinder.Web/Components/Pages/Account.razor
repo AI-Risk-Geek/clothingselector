@@ -1,0 +1,182 @@
+@page "/account"
+@inject OutfitApiClient Api
+@inject NavigationManager Nav
+@inject AuthenticationStateProvider Auth
+@inject WebVisitorState Visitor
+
+<PageTitle>Account & privacy · @Brand.Name</PageTitle>
+
+<main class="wrap w-md" id="main">
+    <div>
+        <h1 class="h1s">Account & privacy</h1>
+        @if (_userName is not null)
+        {
+            <div class="m" style="margin-top: 6px">Signed in as <b>@_userName</b></div>
+        }
+        else
+        {
+            <div class="m" style="margin-top: 6px">You're not signed in. These settings apply to this device.</div>
+        }
+    </div>
+
+    @if (_message is not null) { <div class="note mint" role="status">@_message</div> }
+    @if (_error is not null) { <div class="note danger" role="alert">@_error</div> }
+
+    <section class="card stack" aria-labelledby="data-h">
+        <h2 class="h2" id="data-h">Your data</h2>
+        <div class="li"><div><b>Download my data</b><div class="m small">Your looks, results, measurements and blurred photos, as a zip.</div></div><a class="b w sm" href="account/export" download>Download</a></div>
+        <div class="li">
+            <div><b>Clear my history</b><div class="m small">Deletes every look and photo@(_userName is null ? " on this device" : "").</div></div>
+            <button type="button" class="b w sm" @onclick='() => _confirm = "history"'>Clear history</button>
+        </div>
+        @if (_confirm == "history")
+        {
+            <div class="note coral stack" role="alertdialog" aria-label="Confirm clear history">
+                <span>Delete all your looks and photos? This can't be undone.</span>
+                <div class="cluster"><button type="button" class="b danger sm" @onclick="ClearHistory">Delete everything</button><button type="button" class="b w sm" @onclick="() => _confirm = null">Cancel</button></div>
+            </div>
+        }
+        <div class="li">
+            <div><b>Cookie settings</b><div class="m small">Currently: @(Visitor.ConsentChoice ?? "not chosen").</div></div>
+            <button type="button" class="b w sm" @onclick="Visitor.OpenCookieSettings">Change</button>
+        </div>
+    </section>
+
+    <section class="card stack" aria-labelledby="measurements" id="measurements">
+        <h2 class="h2" id="measurements-h">My measurements</h2>
+        <p class="m small" style="margin: 0">Used to size "Make it" patterns. Leave a box empty to use the nearest standard size.</p>
+        <details class="box">
+            <summary class="lab" style="cursor: pointer; min-height: 44px; display: flex; align-items: center">How to measure</summary>
+            <p class="m small">Use a soft tape measure over thin clothing. Keep it snug but not tight.</p>
+            <dl class="howto-measure">
+                @foreach (var f in Fields) { <dt>@f.Label</dt><dd>@f.HowTo</dd> }
+            </dl>
+        </details>
+        <div class="g3" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px">
+            @foreach (var key in Fields)
+            {
+                <div class="f">
+                    <label class="lab" for="m-@key.Key">@key.Label</label>
+                    <div class="unit-in">
+                        <input id="m-@key.Key" class="in" type="number" inputmode="decimal" min="10" max="200" step="0.5" aria-describedby="m-unit"
+                               value="@(_measurements.TryGetValue(key.Key, out var v) ? v.ToString(CultureInfo.InvariantCulture) : "")"
+                               @onchange="e => SetMeasure(key.Key, e.Value?.ToString())" />
+                        <span class="unit" aria-hidden="true">cm</span>
+                    </div>
+                </div>
+            }
+        </div>
+        <span id="m-unit" class="sr-only">in centimetres</span>
+        <div class="cluster">
+            <button type="button" class="b sm" @onclick="SaveMeasurements">Save measurements</button>
+            @if (_profileId is not null)
+            {
+                <button type="button" class="b w sm" @onclick="DeleteMeasurements">Delete measurements</button>
+            }
+        </div>
+    </section>
+
+    @if (_userName is not null)
+    {
+        <section class="card stack" aria-labelledby="acct-h">
+            <h2 class="h2" id="acct-h">Account</h2>
+            <form method="post" action="signout">
+                <AntiforgeryToken />
+                <button type="submit" class="b w sm">Sign out</button>
+            </form>
+            <div class="li">
+                <div><b>Delete my account</b><div class="m small">Removes your account, every look, photo, pattern and measurement. This can't be undone.</div></div>
+                <button type="button" class="b danger sm" @onclick='() => _confirm = "account"'>Delete account</button>
+            </div>
+            @if (_confirm == "account")
+            {
+                <div class="note coral stack" role="alertdialog" aria-label="Confirm delete account">
+                    <span>Type <b>DELETE</b> to confirm.</span>
+                    <input class="in" @bind="_typed" @bind:event="oninput" aria-label="Type DELETE to confirm" />
+                    <div class="cluster"><button type="button" class="b danger sm" disabled="@(_typed != "DELETE")" @onclick="DeleteAccount">Delete my account</button><button type="button" class="b w sm" @onclick="() => _confirm = null">Cancel</button></div>
+                </div>
+            }
+        </section>
+    }
+    else
+    {
+        <section class="box stack" style="align-items: flex-start">
+            <h2 class="h3">Keep your looks on every device</h2>
+            <a class="b" href="signin?returnUrl=%2Faccount">Sign in or create an account</a>
+        </section>
+    }
+</main>
+
+@code {
+    private static readonly (string Key, string Label, string HowTo)[] Fields =
+    [
+        ("bust", "Bust / chest", "Around the fullest part of the chest, under the arms, tape level across the back."),
+        ("waist", "Waist", "Around your natural waist, the narrowest part above the belly button."),
+        ("hip", "Hip", "Around the fullest part of the hips and bottom, feet together."),
+        ("neck", "Neck", "Around the base of the neck, where a collar sits."),
+        ("shoulder", "Shoulder width", "Across the back from the tip of one shoulder bone to the other."),
+        ("backWaistLength", "Back waist length", "From the bump at the base of the neck down the spine to the waist."),
+        ("upperArm", "Upper arm", "Around the fullest part of the upper arm, arm relaxed."),
+        ("crotchDepth", "Crotch depth", "Sit on a flat chair; measure from the waist at your side straight down to the seat."),
+        ("inseam", "Inseam", "From the crotch down the inside of the leg to the floor, without shoes."),
+    ];
+
+    private string? _userName, _message, _error, _confirm, _typed;
+    private Guid? _profileId;
+    private Dictionary<string, double> _measurements = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var user = (await Auth.GetAuthenticationStateAsync()).User;
+        _userName = user.Identity?.IsAuthenticated == true ? user.Identity.Name ?? user.FindFirst("name")?.Value : null;
+        try
+        {
+            var profile = (await Api.GetMeasurementsAsync()).FirstOrDefault();
+            if (profile is not null) { _profileId = profile.Id; _measurements = profile.Measurements; }
+        }
+        catch (ApiException) { }
+        catch (HttpRequestException) { _error = "We can't reach the service right now."; }
+    }
+
+    private void SetMeasure(string key, string? value)
+    {
+        if (double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out var v) && v > 0) _measurements[key] = v;
+        else _measurements.Remove(key);
+    }
+
+    private async Task SaveMeasurements()
+    {
+        _message = _error = null;
+        try
+        {
+            var saved = await Api.SaveMeasurementsAsync(new MeasurementProfileDto(_profileId, "My measurements", _measurements));
+            _profileId = saved.Id; _measurements = saved.Measurements;
+            _message = "Measurements saved. Patterns will use them.";
+        }
+        catch (ApiException e) { _error = e.Message; }
+    }
+
+    private async Task DeleteMeasurements()
+    {
+        if (_profileId is not { } id) return;
+        await Api.DeleteMeasurementsAsync(id);
+        _profileId = null; _measurements = new(); _message = "Measurements deleted.";
+    }
+
+    private async Task ClearHistory()
+    {
+        _confirm = null;
+        try { await Api.ClearHistoryAsync(); _message = "Your history is cleared."; }
+        catch (ApiException e) { _error = e.Message; }
+    }
+
+    private async Task DeleteAccount()
+    {
+        try
+        {
+            await Api.DeleteAccountAsync();
+            Nav.NavigateTo("signout-complete", forceLoad: true);
+        }
+        catch (ApiException e) { _error = e.Message; }
+    }
+}

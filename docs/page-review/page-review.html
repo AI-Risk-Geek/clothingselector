@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Outfit Finder Page Review</title>
+<style>
+:root{--bg:#fdf6f0;--card:#fff;--ink:#1c1233;--muted:#5d5470;--line:#e7dcd2;--hi:#c62828;--hiBg:#fde7e7;--md:#8a5a00;--mdBg:#fff1cc;--lo:#2f5d9c;--loBg:#e3edfb;--ok:#1d7a46;--okBg:#dcf3e5;--accent:#6c3bff}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#130f24;--card:#1f1838;--ink:#f3eefc;--muted:#b9b0cc;--line:#352c52;--hi:#ff8a80;--hiBg:#3a1820;--md:#ffd36b;--mdBg:#3a2f10;--lo:#9cc3ff;--loBg:#172a45;--ok:#7fe0a6;--okBg:#123224;--accent:#a68bff}}
+:root[data-theme="dark"]{--bg:#130f24;--card:#1f1838;--ink:#f3eefc;--muted:#b9b0cc;--line:#352c52;--hi:#ff8a80;--hiBg:#3a1820;--md:#ffd36b;--mdBg:#3a2f10;--lo:#9cc3ff;--loBg:#172a45;--ok:#7fe0a6;--okBg:#123224;--accent:#a68bff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,Segoe UI,sans-serif}
+main{max-width:980px;margin:0 auto;padding:24px 16px 64px}
+h1{font-size:28px;line-height:1.2;margin:0 0 6px}
+h2{font-size:20px;margin:36px 0 12px}
+h3{font-size:17px;margin:0 0 4px}
+p{margin:0 0 10px}
+.sub{color:var(--muted)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:18px 0}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px}
+.stat b{display:block;font-size:24px}
+.item{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin:12px 0;display:grid;grid-template-columns:1fr 150px;gap:16px;align-items:start}
+.item.noimg{grid-template-columns:1fr}
+.item img{width:150px;border-radius:10px;border:1px solid var(--line);display:block}
+.item a{color:var(--accent)}
+.chip{display:inline-block;font-size:12px;font-weight:700;border-radius:999px;padding:2px 10px;margin-bottom:6px}
+.high{background:var(--hiBg);color:var(--hi)}.med{background:var(--mdBg);color:var(--md)}.low{background:var(--loBg);color:var(--lo)}.good{background:var(--okBg);color:var(--ok)}
+.page{font-size:13px;color:var(--muted)}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
+.gallery a{display:block;text-decoration:none;color:var(--muted);font-size:12px}
+.gallery img{width:100%;height:220px;object-fit:cover;object-position:top;border-radius:10px;border:1px solid var(--line)}
+ul{margin:0;padding-left:20px}
+@media (max-width:600px){.item{grid-template-columns:1fr}.item img{width:100%;max-height:320px;object-fit:cover;object-position:top}}
+</style>
+</head>
+<body>
+<main>
+<h1>Outfit Finder: every page reviewed</h1>
+<p class="sub">Demo build (SQLite, sample AI), run on 25 November 2026. 41 screenshots of 24 pages at phone width (390 px) in light and dark, plus desktop (1280 px), signed out and signed in as the local admin.</p>
+
+<div class="stats">
+<div class="stat"><b>0</b>pages with sideways scrolling</div>
+<div class="stat"><b>0</b>console errors</div>
+<div class="stat"><b>6</b>high priority</div>
+<div class="stat"><b>7</b>medium</div>
+<div class="stat"><b>4</b>low</div>
+</div>
+
+<h2>Update, 26 November: high and medium issues fixed</h2>
+<p class="sub">The 6 high and 7 medium issues are fixed and checked again at phone width. These are the new screenshots, taken after the fixes. The original findings below are kept for reference.</p>
+<div class="gallery">
+<a href="after/18-legal-privacy-phone-light.jpg"><img src="after/18-legal-privacy-phone-light.jpg" alt="">Privacy: providers and contacts filled from settings</a>
+<a href="after/07-results-full-phone-light.jpg"><img src="after/07-results-full-phone-light.jpg" alt="">Results: ✂ marks sewable pieces, Delete moved to the quiet links</a>
+<a href="after/09-make-it-phone-light.jpg"><img src="after/09-make-it-phone-light.jpg" alt="">Make it opens on a sewable piece</a>
+<a href="after/15-install-phone-light.jpg"><img src="after/15-install-phone-light.jpg" alt="">Extension page: honest "coming soon", table stacks on phones</a>
+<a href="after/28-reset-no-code-phone-light.jpg"><img src="after/28-reset-no-code-phone-light.jpg" alt="">Reset link missing: offers a new link</a>
+<a href="after/22-legal-unknown-phone-light.jpg"><img src="after/22-legal-unknown-phone-light.jpg" alt="">Unknown legal page: real 404</a>
+<a href="after/32-admin-ai-phone-light.jpg"><img src="after/32-admin-ai-phone-light.jpg" alt="">AI settings: provider in use is shown</a>
+<a href="after/01-home-first-visit-phone-light.jpg"><img src="after/01-home-first-visit-phone-light.jpg" alt="">Cookie notice no longer covers the upload card</a>
+<a href="after/05-loading-phone-light.jpg"><img src="after/05-loading-phone-light.jpg" alt="">Loading shows your photo</a>
+<a href="after/10-fix-boxes-phone-light.jpg"><img src="after/10-fix-boxes-phone-light.jpg" alt="">Fix the boxes: 48 px touch handles, numbers never hidden</a>
+<a href="after/30-my-looks-signed-in-phone-light.jpg"><img src="after/30-my-looks-signed-in-phone-light.jpg" alt="">My looks: named, with times</a>
+<a href="after/21c-takedown-prefilled-phone-light.jpg"><img src="after/21c-takedown-prefilled-phone-light.jpg" alt="">Report form: short reasons, link pre-filled</a>
+<a href="after/31c-account-how-to-measure-phone-light.jpg"><img src="after/31c-account-how-to-measure-phone-light.jpg" alt="">Account: cm units, how to measure, cookie button</a>
+</div>
+
+<h2>High priority</h2>
+
+<div class="item"><div><span class="chip high">High</span><h3>Privacy Policy shows unfilled placeholders</h3><p class="page">/legal/privacy</p><p>Visitors can read "[AI PROVIDER]", "[CONTENT SAFETY PROVIDER]", "[HOSTING PROVIDER]" and "[PRIVACY EMAIL]". Fill these from settings the same way the brand name is filled, and refuse to start in Production while any placeholder remains.</p></div><a href="18-legal-privacy-phone-light.jpg"><img src="18-legal-privacy-phone-light.jpg" alt="Privacy policy with bracketed placeholders"></a></div>
+
+<div class="item"><div><span class="chip high">High</span><h3>"Make it" is a dead end for most pieces</h3><p class="page">Results › Make it</p><p>The first piece selected is the sunglasses, so the first tap on "Make it" says "No pattern for this piece yet". Only show "Make it" on sewable pieces, or put a scissors mark on the chips that have a pattern and open the first sewable piece by default.</p></div><a href="09-make-it-phone-light.jpg"><img src="09-make-it-phone-light.jpg" alt="Make it tab showing no pattern for sunglasses"></a></div>
+
+<div class="item"><div><span class="chip high">High</span><h3>The extension page contradicts itself and doesn't help phone visitors</h3><p class="page">/install</p><p>The button says "Chrome Web Store listing coming soon", but step 1 says "One click from the Chrome Web Store". The disabled button also wraps onto two lines and looks broken. Phone visitors (who can't use the extension) get no next step: add "Email me the link" or "Remind me on my computer". The permissions table squeezes its first column to one word per line on a phone; stack the rows instead.</p></div><a href="15-install-phone-light.jpg"><img src="15-install-phone-light.jpg" alt="Install page on a phone"></a></div>
+
+<div class="item"><div><span class="chip high">High</span><h3>Reset password page works without a reset link</h3><p class="page">sign-in server /Account/ResetPassword</p><p>Opened without a code, it still shows the new-password form, which can only fail. Show "This link is missing or has expired" with a button to request a new one.</p></div><a href="28-reset-no-code-phone-light.jpg"><img src="28-reset-no-code-phone-light.jpg" alt="Reset password form with no code"></a></div>
+
+<div class="item"><div><span class="chip high">High</span><h3>An unknown legal page is a blank "Page not found"</h3><p class="page">/legal/anything-else</p><p>It has a heading and nothing else. The real 404 page explains what happened and offers "Find a look"; reuse it here.</p></div><a href="22-legal-unknown-phone-light.jpg"><img src="22-legal-unknown-phone-light.jpg" alt="Bare page not found"></a></div>
+
+<div class="item"><div><span class="chip high">High</span><h3>AI settings shows no provider selected</h3><p class="page">/admin/ai</p><p>When the provider comes from app configuration (here Demo), none of the three provider cards is highlighted, so it looks unset. Show the active provider as a selected, read-only card, and say that saving a provider here replaces the one from configuration.</p></div><a href="32-admin-ai-phone-light.jpg"><img src="32-admin-ai-phone-light.jpg" alt="AI settings with no provider selected"></a></div>
+
+<h2>Medium</h2>
+
+<div class="item"><div><span class="chip med">Medium</span><h3>The cookie banner covers the upload buttons on a first phone visit</h3><p class="page">Home</p><p>It hides "Take a photo" and the human check. "Accept" looks like plain text beside a white "Decline" button. Make the two buttons look the same, and leave space below the page so the banner never covers content.</p></div><a href="01-home-first-visit-phone-light.jpg"><img src="01-home-first-visit-phone-light.jpg" alt="Cookie banner over upload card"></a></div>
+
+<div class="item"><div><span class="chip med">Medium</span><h3>The loading screen shows an empty grey box</h3><p class="page">Finding your look</p><p>Show the person's own photo under the scan line. It is the strongest sign that something is happening.</p></div><a href="05-loading-phone-light.jpg"><img src="05-loading-phone-light.jpg" alt="Loading view with empty photo"></a></div>
+
+<div class="item"><div><span class="chip med">Medium</span><h3>Fix the boxes is hard to use with a finger</h3><p class="page">Results › Fix the boxes</p><p>The resize handles are 22 px (aim for 44). On the small sunglasses box the handle covers the number, and the trousers and shoes boxes overlap so their handles collide. "Cancel" sits alone on a third row.</p></div><a href="10-fix-boxes-phone-light.jpg"><img src="10-fix-boxes-phone-light.jpg" alt="Box editor"></a></div>
+
+<div class="item"><div><span class="chip med">Medium</span><h3>Looks in history are hard to tell apart</h3><p class="page">/looks</p><p>Two looks of the same photo show the same picture, "5 pieces" and "Today". Name each look by its main piece ("Linen camp shirt + 4") and show the time.</p></div><a href="30-my-looks-signed-in-phone-light.jpg"><img src="30-my-looks-signed-in-phone-light.jpg" alt="My looks with two identical cards"></a></div>
+
+<div class="item"><div><span class="chip med">Medium</span><h3>Report content form</h3><p class="page">/legal/takedown</p><p>The reason text is cut off ("…without permissio"). When it is opened from a look, fill in the link to that look automatically. Validation messages are clear.</p></div><a href="21b-takedown-empty-submit-phone-light.jpg"><img src="21b-takedown-empty-submit-phone-light.jpg" alt="Takedown form with validation"></a></div>
+
+<div class="item"><div><span class="chip med">Medium</span><h3>Account page details</h3><p class="page">/account</p><p>The measurement boxes don't show "cm" and there's no "how to measure" help. "Cookie settings" tells people to find a footer link instead of giving them a button. "Clear history" and "Delete account" wrap onto two lines on a phone.</p></div><a href="31-account-phone-light.jpg"><img src="31-account-phone-light.jpg" alt="Account page"></a></div>
+
+<div class="item"><div><span class="chip med">Medium</span><h3>Results actions wrap, with Delete left on its own</h3><p class="page">Results</p><p>Delete, a destructive action, ends up centred and prominent on a second row. Keep "Fix the boxes" and "Search again", and move Delete into a "⋯" menu.</p></div><a href="07-results-full-phone-light.jpg"><img src="07-results-full-phone-light.jpg" alt="Results page on a phone"></a></div>
+
+<h2>Low</h2>
+
+<div class="item noimg"><div><span class="chip low">Low</span><h3>Smaller polish</h3><ul>
+<li>The sign-in pages follow the phone's dark setting but not the site's own dark-mode toggle (<a href="25b-login-phone-dark.jpg">screenshot</a>). The demo banner is also missing there.</li>
+<li>The signed-out page has two "back" links, one in the header and one as a button (<a href="29-logout-phone-light.jpg">screenshot</a>).</li>
+<li>On a phone the legal tabs wrap, leaving "Report content" alone on a second row (<a href="18-legal-privacy-phone-light.jpg">screenshot</a>).</li>
+<li>On desktop, a single look highlights "My looks" in the menu. That's fine if intended, but anonymous visitors may not think of it as theirs (<a href="12-results-desktop-light.jpg">screenshot</a>).</li>
+</ul></div></div>
+
+<h2>What works well</h2>
+<div class="item noimg"><div><span class="chip good">Good</span><ul>
+<li>No page scrolls sideways at 390 px, and no page logged a console error.</li>
+<li>Dark mode is consistent across the main site (<a href="08-results-full-phone-dark.jpg">results</a>, <a href="03-home-phone-dark.jpg">home</a>, <a href="31b-account-phone-dark.jpg">account</a>).</li>
+<li>Form errors are specific and next to the field (<a href="25c-login-empty-submit-phone-light.jpg">sign in</a>, <a href="21b-takedown-empty-submit-phone-light.jpg">report content</a>).</li>
+<li>Signing in moved the looks found on this device into the account: two looks appeared in history.</li>
+<li>The 404 and error pages are friendly and offer a way back (<a href="23-not-found-phone-light.jpg">404</a>, <a href="24-error-phone-light.jpg">error</a>).</li>
+<li>Admin pages redirect to sign-in when signed out.</li>
+</ul></div></div>
+
+<h2>All screenshots</h2>
+<div class="gallery">
+<a href="01b-home-full-phone-light.jpg"><img src="01b-home-full-phone-light.jpg" alt="">Home, phone</a>
+<a href="02-menu-open-phone-light.jpg"><img src="02-menu-open-phone-light.jpg" alt="">Menu</a>
+<a href="03-home-phone-dark.jpg"><img src="03-home-phone-dark.jpg" alt="">Home, dark</a>
+<a href="04-home-desktop-light.jpg"><img src="04-home-desktop-light.jpg" alt="">Home, desktop</a>
+<a href="05-loading-phone-light.jpg"><img src="05-loading-phone-light.jpg" alt="">Loading</a>
+<a href="06-results-first-screen-phone-light.jpg"><img src="06-results-first-screen-phone-light.jpg" alt="">Results, first screen</a>
+<a href="07-results-full-phone-light.jpg"><img src="07-results-full-phone-light.jpg" alt="">Results</a>
+<a href="08-results-full-phone-dark.jpg"><img src="08-results-full-phone-dark.jpg" alt="">Results, dark</a>
+<a href="09-make-it-phone-light.jpg"><img src="09-make-it-phone-light.jpg" alt="">Make it</a>
+<a href="10-fix-boxes-phone-light.jpg"><img src="10-fix-boxes-phone-light.jpg" alt="">Fix the boxes</a>
+<a href="11-report-dialog-phone-light.jpg"><img src="11-report-dialog-phone-light.jpg" alt="">Report a problem</a>
+<a href="12-results-desktop-light.jpg"><img src="12-results-desktop-light.jpg" alt="">Results, desktop</a>
+<a href="13-make-it-desktop-dark.jpg"><img src="13-make-it-desktop-dark.jpg" alt="">Make it, desktop dark</a>
+<a href="14-my-looks-anon-phone-light.jpg"><img src="14-my-looks-anon-phone-light.jpg" alt="">My looks</a>
+<a href="15-install-phone-light.jpg"><img src="15-install-phone-light.jpg" alt="">Get the extension</a>
+<a href="15b-install-phone-dark.jpg"><img src="15b-install-phone-dark.jpg" alt="">Extension, dark</a>
+<a href="16-account-anon-phone-light.jpg"><img src="16-account-anon-phone-light.jpg" alt="">Account, signed out</a>
+<a href="18-legal-privacy-phone-light.jpg"><img src="18-legal-privacy-phone-light.jpg" alt="">Privacy</a>
+<a href="18b-legal-privacy-phone-dark.jpg"><img src="18b-legal-privacy-phone-dark.jpg" alt="">Privacy, dark</a>
+<a href="19-legal-terms-phone-light.jpg"><img src="19-legal-terms-phone-light.jpg" alt="">Terms</a>
+<a href="20-legal-cookies-phone-light.jpg"><img src="20-legal-cookies-phone-light.jpg" alt="">Cookies</a>
+<a href="21-legal-takedown-phone-light.jpg"><img src="21-legal-takedown-phone-light.jpg" alt="">Report content</a>
+<a href="22-legal-unknown-phone-light.jpg"><img src="22-legal-unknown-phone-light.jpg" alt="">Unknown legal page</a>
+<a href="23-not-found-phone-light.jpg"><img src="23-not-found-phone-light.jpg" alt="">404</a>
+<a href="24-error-phone-light.jpg"><img src="24-error-phone-light.jpg" alt="">Error</a>
+<a href="25-login-phone-light.jpg"><img src="25-login-phone-light.jpg" alt="">Sign in</a>
+<a href="25b-login-phone-dark.jpg"><img src="25b-login-phone-dark.jpg" alt="">Sign in, dark</a>
+<a href="26-register-phone-light.jpg"><img src="26-register-phone-light.jpg" alt="">Create account</a>
+<a href="27-forgot-phone-light.jpg"><img src="27-forgot-phone-light.jpg" alt="">Forgot password</a>
+<a href="28-reset-no-code-phone-light.jpg"><img src="28-reset-no-code-phone-light.jpg" alt="">Reset password</a>
+<a href="29-logout-phone-light.jpg"><img src="29-logout-phone-light.jpg" alt="">Signed out</a>
+<a href="30-my-looks-signed-in-phone-light.jpg"><img src="30-my-looks-signed-in-phone-light.jpg" alt="">My looks, signed in</a>
+<a href="31-account-phone-light.jpg"><img src="31-account-phone-light.jpg" alt="">Account, signed in</a>
+<a href="31b-account-phone-dark.jpg"><img src="31b-account-phone-dark.jpg" alt="">Account, dark</a>
+<a href="32-admin-ai-phone-light.jpg"><img src="32-admin-ai-phone-light.jpg" alt="">AI settings</a>
+<a href="33-admin-ai-desktop-light.jpg"><img src="33-admin-ai-desktop-light.jpg" alt="">AI settings, desktop</a>
+<a href="34-menu-signed-in-phone-light.jpg"><img src="34-menu-signed-in-phone-light.jpg" alt="">Menu, signed in</a>
+</div>
+</main>
+</body>
+</html>

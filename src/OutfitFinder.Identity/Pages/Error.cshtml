@@ -1,0 +1,14 @@
+﻿@page
+@model ErrorModel
+@{
+    ViewData["Title"] = "Something went wrong";
+}
+<main class="wrap w-sm" id="main">
+    <h1 class="h1s">Something went wrong</h1>
+    <p class="m">We couldn't complete that sign-in step. Please go back and try again.</p>
+    @if (Model.ShowRequestId)
+    {
+        <p class="m tiny">Reference: <code>@Model.RequestId</code></p>
+    }
+    <a class="b" href="@Model.WebUrl">Back to @OutfitFinder.Core.Brand.Name</a>
+</main>

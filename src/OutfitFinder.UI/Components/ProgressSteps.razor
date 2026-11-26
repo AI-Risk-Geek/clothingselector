@@ -1,0 +1,35 @@
+@* Live search steps. Each stage maps to one row; finished rows turn mint, the active row lemon. *@
+<div class="bar" role="progressbar" aria-label="Search progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="@Percent">
+    <div style="width: @(Math.Min(100, Percent + 10))%"></div>
+</div>
+<ol class="steps" aria-live="polite">
+    @for (var i = 0; i < Labels.Length; i++)
+    {
+        var state = i < ActiveIndex ? "done" : i == ActiveIndex ? (Failed ? "fail" : "act") : "";
+        <li class="st @state">
+            @if (state == "done") { <Icon Name="check" Stroke="2.6" Label="Done" /> }
+            else if (state == "act") { <Icon Name="spinner" Stroke="2.6" Class="spin" Label="In progress" /> }
+            else if (state == "fail") { <Icon Name="alert" Stroke="2.4" Label="Stopped" /> }
+            else { <Icon Name="circle" Stroke="2.4" Label="Waiting" Class="m" /> }
+            @Labels[i]
+        </li>
+    }
+</ol>
+
+@code {
+    public static readonly string[] Labels = ["Checking the photo", "Finding every piece", "Searching stores", "Checking links"];
+
+    [Parameter] public SearchStage Stage { get; set; }
+    [Parameter] public bool Failed { get; set; }
+
+    private int ActiveIndex => Stage switch
+    {
+        SearchStage.Queued or SearchStage.CheckingPhoto => 0,
+        SearchStage.FindingPieces => 1,
+        SearchStage.SearchingStores => 2,
+        SearchStage.CheckingLinks => 3,
+        _ => 4,
+    };
+
+    private int Percent => ActiveIndex * 25;
+}

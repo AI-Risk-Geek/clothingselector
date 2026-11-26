@@ -1,0 +1,131 @@
+@page "/popup.html"
+@inherits BasePage
+@inject ExtJs Ext
+@inject OutfitApiClient Api
+@inject ExtensionSettings Settings
+
+<div style="width: 360px">
+    <header class="hdr" style="padding: 10px 14px">
+        <span class="brand" style="font-size: 18px"><span class="logo"><Icon Name="hanger" Size="18" Stroke="2.4" /></span>@Brand.Name</span>
+        <ThemeToggle />
+    </header>
+    <main class="stack" id="main" style="padding: 14px; gap: 14px">
+        @if (_needsNotice)
+        {
+            <UploadNotice OnAccepted="NoticeAccepted" />
+        }
+        else
+        {
+            <div class="blk lemon stack" style="padding: 14px; align-items: center; text-align: center; gap: 10px">
+                <div class="h3">Find a look</div>
+                <label class="b" for="ext-photo">@(_busy ? "Uploading…" : "Upload a photo")</label>
+                <InputFile id="ext-photo" class="sr-only" accept="image/jpeg,image/png,image/webp" OnChange="OnFile" disabled="@_busy" />
+                <div class="small">Or right-click any photo and choose “Find with AI”.</div>
+            </div>
+        }
+        @if (_error is not null) { <div class="note danger" role="alert">@_error</div> }
+
+        <section class="stack" style="gap: 8px">
+            <h2 class="h3">Recent looks</h2>
+            @if (_recent is null) { <div class="sk" style="height: 60px"></div> }
+            else if (_recent.Count == 0) { <p class="m small" style="margin: 0">Nothing yet.</p> }
+            else
+            {
+                @foreach (var l in _recent)
+                {
+                    <button type="button" class="li" style="border-left: 0; border-right: 0; border-bottom: 0; background: none; width: 100%; cursor: pointer; color: inherit; text-align: left" @onclick="() => Open(l.Id)">
+                        <span class="cluster">
+                            @if (l.ImageUrl is not null) { <img src="@l.ImageUrl" alt="" width="40" height="52" style="object-fit: cover; border-radius: 8px" /> }
+                            <span><b>@(l.Status == SearchStatus.Completed ? $"{l.ItemCount} pieces" : "Searching…")</b><br /><span class="m tiny">@l.CreatedUtc.ToLocalTime().ToString("d MMM, HH:mm", CultureInfo.InvariantCulture)</span></span>
+                        </span>
+                        <Icon Name="external" Size="18" />
+                    </button>
+                }
+            }
+        </section>
+
+        <div class="spread" style="border-top: var(--border-width) solid var(--color-rule); padding-top: 10px">
+            @if (_user is not null)
+            {
+                <span class="small">Signed in as <b>@_user</b></span>
+                <button type="button" class="lk" @onclick="SignOut">Sign out</button>
+            }
+            else
+            {
+                <span class="small m">Sign in to keep looks on every device.</span>
+                <button type="button" class="b w sm" @onclick="SignIn" disabled="@_busy">Sign in</button>
+            }
+        </div>
+        <div class="cluster tiny" style="justify-content: center; gap: 0 14px">
+            <button type="button" class="lk" @onclick='() => OpenSite("legal/privacy")'>Privacy</button>
+            <button type="button" class="lk" @onclick='() => OpenSite("legal/terms")'>Terms</button>
+            <span class="m">v@(_version)</span>
+        </div>
+    </main>
+</div>
+
+@code {
+    private List<SearchSummaryDto>? _recent;
+    private string? _user, _error, _version;
+    private bool _busy, _needsNotice;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _version = await Ext.Call<string>("version");
+        _user = await Ext.Call<string?>("getUserName");
+        _needsNotice = !await Ext.Call<bool>("getFlag", "noticeAccepted");
+        await LoadRecent();
+    }
+
+    private async Task LoadRecent()
+    {
+        try { _recent = await Api.ListSearchesAsync(3); }
+        catch (Exception e) when (e is ApiException or HttpRequestException) { _recent = new(); _error = "We can't reach the search service right now."; }
+    }
+
+    private async Task NoticeAccepted() { await Ext.Call("setFlag", "noticeAccepted"); _needsNotice = false; }
+
+    private async Task OnFile(InputFileChangeEventArgs e)
+    {
+        _error = null; _busy = true;
+        try
+        {
+            // Open the side panel first: the click is still a user gesture here.
+            await Ext.Call("openSidePanel");
+            await using var stream = e.File.OpenReadStream(10 * 1024 * 1024);
+            using var ms = new MemoryStream();
+            await stream.CopyToAsync(ms);
+            ms.Position = 0;
+            var id = await Api.CreateSearchAsync(ms, e.File.Name, e.File.ContentType, SearchSource.ExtensionUpload, null);
+            await Ext.Call("setPendingSearch", id.ToString());
+        }
+        catch (IOException) { _error = "Photos must be 10 MB or smaller."; }
+        catch (ApiException ex) { _error = ex.Message; }
+        finally { _busy = false; }
+    }
+
+    private async Task Open(Guid id)
+    {
+        await Ext.Call("openSidePanel");
+        await Ext.Call("setPendingSearch", id.ToString());
+    }
+
+    private async Task SignIn()
+    {
+        _busy = true; _error = null;
+        try
+        {
+            _user = await Ext.Call<string>("signIn", Settings.IdentityAuthority, Settings.ClientId);
+            var visitor = await Ext.Call<string>("getVisitorId");
+            await Api.MergeVisitorAsync(Guid.Parse(visitor));
+            await LoadRecent();
+        }
+        catch (JSException ex) { _error = "Sign-in didn't finish: " + ex.Message; }
+        catch (ApiException ex) { _error = ex.Message; }
+        finally { _busy = false; }
+    }
+
+    private ValueTask OpenSite(string path) => Ext.Call("openTab", Settings.WebsiteUrl.TrimEnd('/') + "/" + path);
+
+    private async Task SignOut() { await Ext.Call("signOut"); _user = null; await LoadRecent(); }
+}

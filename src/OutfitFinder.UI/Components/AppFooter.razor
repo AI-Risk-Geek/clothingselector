@@ -1,0 +1,17 @@
+<footer class="ftr">
+    <a href="legal/privacy">Privacy</a>
+    <a href="legal/terms">Terms</a>
+    <a href="legal/cookies">Cookies</a>
+    <a href="@(ReportHref ?? "legal/takedown")">Report content</a>
+    @if (OnCookieSettings.HasDelegate)
+    {
+        <button type="button" class="lk" @onclick="OnCookieSettings">Cookie settings</button>
+    }
+    <span class="m tiny">© @DateTime.UtcNow.Year @Brand.Name</span>
+</footer>
+
+@code {
+    [Parameter] public EventCallback OnCookieSettings { get; set; }
+    /// <summary>On a look page, the report link carries that look's address so the form is pre-filled.</summary>
+    [Parameter] public string? ReportHref { get; set; }
+}

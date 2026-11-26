@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Clickable prototype</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+.r{--bg:#FFF8F2;--surface:#ffffff;--soft:#FFF8F2;--ink:#1B1033;--muted:#51466B;--line:#1B1033;--shadow:#1B1033;--act:#6C3BFF;--link:#4a22c9;--skel:#F1E6DC;--hover:#FFE9A8;--rule:#F1E6DC;
+container-type:inline-size;min-height:900px;display:flex;flex-direction:column;background:var(--bg);color:var(--ink);font-family:'DM Sans',system-ui,sans-serif;font-size:16px;line-height:1.5}
+.r.dark{--bg:#15102A;--surface:#221A40;--soft:#2B2250;--ink:#F6F1FF;--muted:#C3B8E4;--line:#F6F1FF;--shadow:#6C3BFF;--link:#C9B8FF;--skel:#2B2250;--hover:#3A2F66;--rule:#3A2F66}
+.r *{box-sizing:border-box}
+.r a,.r .lk{color:var(--link);font-weight:700}
+.lk{border:0;background:none;padding:0;min-height:44px;font:700 14px 'DM Sans',system-ui,sans-serif;cursor:pointer;text-decoration:underline}
+.h1{margin:0;font:800 60px/1.02 Outfit,system-ui,sans-serif;letter-spacing:-.03em}
+.h1s{margin:0;font:800 44px/1.05 Outfit,system-ui,sans-serif;letter-spacing:-.02em}
+.h2{margin:0;font:700 24px/1.2 Outfit,system-ui,sans-serif}
+.h3{margin:0;font:700 18px/1.25 Outfit,system-ui,sans-serif}
+.m{color:var(--muted)}
+.wrap{width:100%;margin:0 auto;padding:44px 24px 56px;display:flex;flex-direction:column;gap:28px}
+.row{display:flex;flex-wrap:wrap;gap:36px;align-items:flex-start}
+.card{background:var(--surface);border:2px solid var(--line);border-radius:28px;padding:24px}
+.pop{box-shadow:6px 6px 0 var(--shadow)}
+.box{background:var(--soft);border:2px solid var(--line);border-radius:20px;padding:18px}
+.blk{border:2px solid var(--line);border-radius:24px;padding:24px;color:#1B1033}
+.b{font:600 15px 'DM Sans',system-ui,sans-serif;min-height:48px;padding:0 24px;border-radius:999px;border:2px solid var(--line);background:var(--act);color:#fff;cursor:pointer;box-shadow:3px 3px 0 var(--shadow);transition:transform .1s,box-shadow .1s}
+.b:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--shadow)}
+.b:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--shadow)}
+.b.w{background:var(--surface);color:var(--ink)}
+.n{font:600 15px 'DM Sans',system-ui,sans-serif;min-height:44px;padding:0 14px;border:0;border-radius:999px;background:none;color:var(--ink);cursor:pointer;text-align:left}
+.n:hover{background:var(--hover)}
+.t{font:600 14px 'DM Sans',system-ui,sans-serif;min-height:44px;padding:0 16px;border-radius:999px;border:2px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.t.on{background:var(--ink);color:var(--bg)}
+.in{height:50px;width:100%;padding:0 14px;border:2px solid var(--line);border-radius:14px;background:var(--surface);color:var(--ink);font:400 16px 'DM Sans',system-ui,sans-serif}
+.lab{font-size:14px;font-weight:700}
+.f{display:flex;flex-direction:column;gap:6px}
+.k{transition:transform .12s}.k:hover{transform:translateY(-3px)}
+.hdr{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px 20px;padding:12px 32px;border-bottom:2px solid var(--line)}
+.brand{display:flex;align-items:center;gap:10px;border:0;background:none;cursor:pointer;color:var(--ink);font:800 22px Outfit,system-ui,sans-serif;min-height:44px;padding:0}
+.logo{display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:12px;background:#FFD84D;border:2px solid var(--line)}
+.nav{display:flex;align-items:center;flex-wrap:wrap;gap:4px}
+.burger{display:none;align-items:center;justify-content:center;width:48px;height:48px;border:2px solid var(--line);border-radius:14px;background:var(--surface);color:var(--ink);cursor:pointer}
+.ico{display:flex;align-items:center;justify-content:center;width:44px;height:44px;border:0;border-radius:999px;background:none;color:var(--ink);cursor:pointer}
+.ico:hover{background:var(--hover)}
+.tl{display:none}
+.photo{position:relative;border:2px solid var(--line);border-radius:28px;overflow:hidden;box-shadow:6px 6px 0 var(--shadow)}
+.photo svg{display:block;width:100%}
+.col-photo{flex:1 1 300px;max-width:360px;display:flex;flex-direction:column;gap:14px}
+.col-main{flex:999 1 480px;min-width:0;display:flex;flex-direction:column;gap:22px}
+.dot{position:absolute;transform:translate(-50%,-50%);width:44px;height:44px;border-radius:999px;border:3px solid #fff;background:#1B1033;color:#fff;font:700 16px 'DM Sans',system-ui,sans-serif;cursor:pointer;box-shadow:0 0 0 2px #1B1033}
+.dot.on{background:#FFD84D;color:#1B1033}
+.st{display:flex;align-items:center;gap:14px;padding:14px 18px;border:2px solid var(--line);border-radius:16px;background:var(--surface);font-size:17px;font-weight:600}
+.st.done{background:#A8EBCB;color:#1B1033}.st.act{background:#FFD84D;color:#1B1033}
+.bar{height:18px;border:2px solid var(--line);border-radius:999px;background:var(--surface);overflow:hidden}
+.bar div{height:100%;background:var(--act);transition:width .5s}
+.sk{height:120px;border-radius:20px;background:var(--skel);animation:of-pulse 1.2s infinite}
+.g3{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px}
+.gp{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:16px}
+.li{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;border-top:2px solid var(--rule)}
+.badge{position:absolute;left:8px;top:8px;padding:3px 10px;border-radius:999px;background:#fff;border:2px solid #1B1033;color:#1B1033;font-size:12px;font-weight:700}
+.note{padding:12px 16px;background:#D9CCFF;color:#1B1033;border:2px solid var(--line);border-radius:16px;font-size:15px}
+.ftr{margin-top:auto;padding:14px 24px;border-top:2px solid var(--line);display:flex;flex-wrap:wrap;gap:0 22px;justify-content:center}
+.cookie{position:sticky;bottom:12px;margin:0 16px 12px;align-self:center;max-width:720px;padding:14px 18px;background:var(--ink);color:var(--bg);border-radius:20px;display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;font-size:14px}
+.r button:focus-visible,.r a:focus-visible,.r input:focus-visible{outline:3px solid var(--act);outline-offset:2px}
+@keyframes of-spin{to{transform:rotate(360deg)}}
+@keyframes of-pulse{0%,100%{opacity:1}50%{opacity:.45}}
+@keyframes of-scan{0%{top:0}100%{top:calc(100% - 6px)}}
+@container (max-width: 760px){
+.hdr{padding:10px 16px}
+.burger{display:flex}
+.nav{display:none;width:100%;flex-direction:column;align-items:stretch;gap:2px;padding:8px 0 4px}
+.nav.open{display:flex}
+.nav .n,.nav .b{width:100%;min-height:52px;font-size:17px;margin:0}
+.nav .ico{width:100%;justify-content:flex-start;gap:10px;padding:0 14px;border-radius:999px;min-height:52px;font:600 17px 'DM Sans',system-ui,sans-serif}
+.tl{display:inline}
+.h1{font-size:40px}.h1s{font-size:32px}.h2{font-size:21px}
+.wrap{padding:28px 16px 40px;gap:22px}
+.row{gap:22px}
+.card{padding:18px;border-radius:22px}
+.blk{padding:18px}
+.col-photo{max-width:none;flex-basis:100%}
+.photo{max-width:300px;margin:0 auto;width:100%}
+.gp{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.pop{box-shadow:4px 4px 0 var(--shadow)}
+.b{padding:0 18px}
+}
+@media (prefers-reduced-motion: reduce){.r *{animation:none!important;transition:none!important}}
+</style>
+</helmet>
+<div class="{{ rootClass }}">
+
+<header class="hdr">
+<button type="button" class="brand" onClick="{{ goHome }}"><span class="logo"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1B1033" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 8a2 2 0 1 0-2-2"/><path d="M12 8v2l8.5 6.2a1 1 0 0 1-.6 1.8H4.1a1 1 0 0 1-.6-1.8L12 10"/></svg></span>Outfit Finder</button>
+<button type="button" class="burger" aria-label="Menu" aria-expanded="{{ menu }}" aria-controls="of-nav" onClick="{{ toggleMenu }}">
+<sc-if value="{{ menuClosed }}" hint-placeholder-val="{{ true }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></sc-if>
+<sc-if value="{{ menu }}" hint-placeholder-val="{{ false }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></sc-if>
+</button>
+<nav id="of-nav" class="{{ navClass }}" aria-label="Main">
+<button type="button" class="n" onClick="{{ goHome }}">Find a look</button>
+<button type="button" class="n" onClick="{{ goHistory }}">My looks</button>
+<button type="button" class="n" onClick="{{ goInstall }}">Get the extension</button>
+<button type="button" class="ico" aria-label="{{ themeLabel }}" onClick="{{ toggleTheme }}">
+<sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></sc-if>
+<sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/></svg></sc-if>
+<span class="tl" aria-hidden="true">{{ themeText }}</span>
+</button>
+<button type="button" class="b w" style="min-height: 44px; margin-left: 8px" onClick="{{ goSignIn }}">{{ accountLabel }}</button>
+</nav>
+</header>
+
+<sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+<main class="wrap" style="max-width: 1180px; gap: 44px">
+<section class="row" style="align-items: center">
+<div style="flex: 1 1 380px; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 18px">
+<span style="padding: 6px 14px; border-radius: 999px; background: #A8EBCB; color: #1B1033; border: 2px solid var(--line); font-size: 14px; font-weight: 700">Snap it. Shop it. Sew it.</span>
+<h1 class="h1">Love the look? Find every piece.</h1>
+<p class="m" style="margin: 0; max-width: 480px; font-size: 18px">Upload a photo of any outfit. We spot each piece, find where to buy it, and give you a pattern to make it yourself.</p>
+</div>
+<div class="blk pop" style="flex: 1 1 340px; min-width: 0; background: #FFD84D; border-radius: 28px; display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center">
+<div style="width: 100%; padding: 28px 16px; background: var(--surface); color: var(--ink); border: 2px dashed var(--line); border-radius: 20px; display: flex; flex-direction: column; align-items: center; gap: 14px">
+<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5-5-8 8"/></svg>
+<div class="h2">Drop a photo here</div>
+<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px">
+<button type="button" class="b" onClick="{{ start }}">Choose a photo</button>
+<button type="button" class="b w" onClick="{{ start }}">Try a sample photo</button>
+</div>
+</div>
+<div style="font-size: 14px">Faces are blurred before anything is saved. Photos are deleted after 90 days.</div>
+</div>
+</section>
+<section class="g3">
+<div class="blk" style="background: #D9CCFF"><div class="h1s">1</div><h2 class="h2" style="margin: 8px 0 4px">Upload a photo</h2><p style="margin: 0">From your camera roll, or right-click any photo with the Chrome extension.</p></div>
+<div class="blk" style="background: #A8EBCB"><div class="h1s">2</div><h2 class="h2" style="margin: 8px 0 4px">We find each piece</h2><p style="margin: 0">Top, trousers, shoes, bag, glasses: every item, matched across online stores.</p></div>
+<div class="blk" style="background: #FF9B85"><div class="h1s">3</div><h2 class="h2" style="margin: 8px 0 4px">Buy it or make it</h2><p style="margin: 0">Shop the closest matches, or print a life-size sewing pattern with a materials list.</p></div>
+</section>
+</main>
+</sc-if>
+
+<sc-if value="{{ isLoading }}" hint-placeholder-val="{{ false }}">
+<main class="wrap" style="max-width: 1080px">
+<div class="row">
+<div class="col-photo">
+<div class="photo">
+<svg viewBox="0 0 300 400" role="img" aria-label="Sample outfit photo"><rect width="300" height="400" fill="#D9CCFF"/><circle cx="150" cy="70" r="30" fill="#F2C6A8"/><rect x="118" y="56" width="64" height="14" rx="7" fill="#1B1033"/><path d="M95 115h110l22 60-26 12-8-22v70H107v-70l-8 22-26-12z" fill="#2B3A8C"/><path d="M107 235h86l8 130h-38l-13-90-13 90H99z" fill="#E9DFC9"/><rect x="92" y="365" width="48" height="16" rx="8" fill="#7A4A2B"/><rect x="160" y="365" width="48" height="16" rx="8" fill="#7A4A2B"/><rect x="30" y="200" width="46" height="56" rx="6" fill="#FF9B85"/><path d="M40 200c0-26 26-26 26 0" fill="none" stroke="#1B1033" stroke-width="3"/></svg>
+<div aria-hidden="true" style="position: absolute; left: 0; right: 0; height: 6px; background: #6C3BFF; animation: of-scan 1.6s ease-in-out infinite alternate"></div>
+</div>
+</div>
+<div class="col-main">
+<h1 class="h1s">Finding your look…</h1>
+<div class="bar" role="progressbar" aria-label="Search progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ pct }}"><div style="width: {{ pctWidth }}"></div></div>
+<ol style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px">
+<sc-for list="{{ steps }}" as="s" hint-placeholder-count="4">
+<li class="{{ s.cls }}">
+<sc-if value="{{ s.done }}" hint-placeholder-val="{{ false }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="Done"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></sc-if>
+<sc-if value="{{ s.active }}" hint-placeholder-val="{{ false }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" role="img" aria-label="In progress" style="animation: of-spin .9s linear infinite"><path d="M12 3a9 9 0 1 0 9 9"/></svg></sc-if>
+<sc-if value="{{ s.pending }}" hint-placeholder-val="{{ true }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" opacity=".55" role="img" aria-label="Waiting"><circle cx="12" cy="12" r="8"/></svg></sc-if>
+{{ s.label }}
+</li>
+</sc-for>
+</ol>
+<div aria-hidden="true" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px"><div class="sk"></div><div class="sk"></div><div class="sk"></div></div>
+<button type="button" class="b w" style="align-self: flex-start" onClick="{{ goHome }}">Cancel</button>
+</div>
+</div>
+</main>
+</sc-if>
+
+<sc-if value="{{ isResults }}" hint-placeholder-val="{{ false }}">
+<main class="wrap" style="max-width: 1220px">
+<div class="row">
+<div class="col-photo">
+<div class="photo">
+<svg viewBox="0 0 300 400" role="img" aria-label="Sample outfit photo"><rect width="300" height="400" fill="#D9CCFF"/><circle cx="150" cy="70" r="30" fill="#F2C6A8"/><rect x="118" y="56" width="64" height="14" rx="7" fill="#1B1033"/><path d="M95 115h110l22 60-26 12-8-22v70H107v-70l-8 22-26-12z" fill="#2B3A8C"/><path d="M107 235h86l8 130h-38l-13-90-13 90H99z" fill="#E9DFC9"/><rect x="92" y="365" width="48" height="16" rx="8" fill="#7A4A2B"/><rect x="160" y="365" width="48" height="16" rx="8" fill="#7A4A2B"/><rect x="30" y="200" width="46" height="56" rx="6" fill="#FF9B85"/><path d="M40 200c0-26 26-26 26 0" fill="none" stroke="#1B1033" stroke-width="3"/></svg>
+<sc-for list="{{ items }}" as="item" hint-placeholder-count="5">
+<button type="button" class="{{ item.dotClass }}" aria-label="{{ item.aria }}" aria-pressed="{{ item.selected }}" onClick="{{ item.pick }}" style="left: {{ item.left }}; top: {{ item.top }}">{{ item.n }}</button>
+</sc-for>
+</div>
+<div class="m" style="font-size: 14px; text-align: center">Tap a number to see that piece. Faces are blurred.</div>
+<button type="button" class="b w" style="align-self: center" onClick="{{ goHome }}">Try another photo</button>
+</div>
+<div class="col-main">
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px">
+<h1 class="h1s">We found 5 pieces</h1>
+<div style="padding: 8px 16px; background: #FFD84D; color: #1B1033; border: 2px solid var(--line); border-radius: 999px; font-size: 15px; font-weight: 700">Whole look $310 – $540</div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{ items }}" as="item" hint-placeholder-count="5">
+<button type="button" class="{{ item.chipClass }}" aria-pressed="{{ item.selected }}" onClick="{{ item.pick }}">{{ item.n }} · {{ item.short }}</button>
+</sc-for>
+</div>
+<section class="card" style="display: flex; flex-direction: column; gap: 18px">
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px">
+<div style="min-width: 0"><h2 class="h2">{{ sel.name }}</h2><div class="m" style="font-size: 15px">{{ sel.desc }}</div></div>
+<div role="tablist" aria-label="Buy or make" style="display: flex; gap: 6px">
+<button type="button" class="{{ buyClass }}" role="tab" aria-selected="{{ isBuy }}" onClick="{{ tabBuy }}">Buy it</button>
+<button type="button" class="{{ makeClass }}" role="tab" aria-selected="{{ isMake }}" onClick="{{ tabMake }}">Make it</button>
+</div>
+</div>
+<sc-if value="{{ isBuy }}" hint-placeholder-val="{{ true }}">
+<div class="gp">
+<sc-for list="{{ sel.matches }}" as="m" hint-placeholder-count="3">
+<article class="box k" style="padding: 10px; display: flex; flex-direction: column; gap: 6px">
+<div style="position: relative; height: 130px; border-radius: 12px; background: {{ m.bg }}; color: #1B1033; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600">Product photo<span class="badge">{{ m.badge }}</span></div>
+<div class="m" style="font-size: 13px">{{ m.store }}</div>
+<div style="font-weight: 600; line-height: 1.3">{{ m.title }}</div>
+<div class="h2">{{ m.price }}</div>
+<button type="button" class="b" style="min-height: 44px; padding: 0 10px; font-size: 14px">View at store</button>
+</article>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ showPattern }}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 18px">
+<div class="note">A pattern in the style of this piece, sized to you. It is not an exact copy of the original.</div>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px">
+<span class="lab" style="margin-right: 4px">Size</span>
+<sc-for list="{{ sizes }}" as="z" hint-placeholder-count="5"><button type="button" class="{{ z.cls }}" style="min-width: 52px" aria-pressed="{{ z.on }}" onClick="{{ z.pick }}">{{ z.label }}</button></sc-for>
+</div>
+<div class="row" style="gap: 18px">
+<div class="box" style="flex: 1 1 260px; min-width: 0; display: flex; flex-direction: column; gap: 14px">
+<h3 class="h3">Pattern pieces</h3>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; text-align: center; font-size: 13px">
+<div><svg viewBox="0 0 80 110" style="width: 100%; height: 96px" fill="#A8EBCB" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-dasharray="5 3" role="img" aria-label="Front piece"><path d="M14 8h18l8 10 8-10h18l8 16-10 8v70H18V32L8 24z"/></svg>Front</div>
+<div><svg viewBox="0 0 80 110" style="width: 100%; height: 96px" fill="#FFD84D" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-dasharray="5 3" role="img" aria-label="Back piece"><path d="M14 8h52l8 16-10 8v70H16V32L6 24z"/></svg>Back</div>
+<div><svg viewBox="0 0 80 110" style="width: 100%; height: 96px" fill="#FF9B85" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-dasharray="5 3" role="img" aria-label="Third piece"><path d="M8 50C22 20 58 20 72 50l-6 34H14z"/></svg>{{ sel.piece3 }}</div>
+</div>
+<button type="button" class="b" onClick="{{ download }}">{{ downloadLabel }}</button>
+<div class="m" style="font-size: 13px">Life-size, tiled for Letter or A4. Print at 100% and check the test square first.</div>
+</div>
+<div class="box" style="flex: 1 1 240px; min-width: 0">
+<h3 class="h3" style="margin-bottom: 8px">Shopping list</h3>
+<sc-for list="{{ sel.materials }}" as="x" hint-placeholder-count="4">
+<div class="li"><div style="min-width: 0"><div style="font-size: 15px; font-weight: 600">{{ x.name }}</div><div class="m" style="font-size: 13px">{{ x.qty }}</div></div><button type="button" class="lk">Find it</button></div>
+</sc-for>
+</div>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{ showNoPattern }}" hint-placeholder-val="{{ false }}">
+<div class="box" style="border-style: dashed; display: flex; flex-direction: column; align-items: flex-start; gap: 10px">
+<div class="h3">No pattern for this piece yet</div>
+<div class="m" style="font-size: 15px">Patterns are available for sewn clothing like tops, trousers, skirts and dresses.</div>
+<button type="button" class="b w" onClick="{{ tabBuy }}">See where to buy it</button>
+</div>
+</sc-if>
+</section>
+</div>
+</div>
+</main>
+</sc-if>
+
+<sc-if value="{{ isHistory }}" hint-placeholder-val="{{ false }}">
+<main class="wrap" style="max-width: 1180px">
+<div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px">
+<div><h1 class="h1s">My looks</h1><div class="m" style="margin-top: 6px; font-size: 15px">Kept for 90 days, then deleted.</div></div>
+<button type="button" class="b" onClick="{{ goHome }}">Find a new look</button>
+</div>
+<div class="gp">
+<sc-for list="{{ looks }}" as="l" hint-placeholder-count="6">
+<button type="button" class="card k" onClick="{{ openLook }}" style="padding: 10px; border-radius: 24px; display: flex; flex-direction: column; gap: 8px; text-align: left; color: var(--ink); font: inherit; cursor: pointer">
+<span style="display: flex; align-items: center; justify-content: center; height: 180px; border-radius: 16px; background: {{ l.bg }}; color: #1B1033; font-size: 14px; font-weight: 600">Photo</span>
+<span style="font-weight: 700">{{ l.count }} pieces</span><span class="m" style="font-size: 14px">{{ l.when }}</span>
+</button>
+</sc-for>
+</div>
+</main>
+</sc-if>
+
+<sc-if value="{{ isInstall }}" hint-placeholder-val="{{ false }}">
+<main class="wrap" style="max-width: 1040px">
+<section class="blk pop" style="background: #D9CCFF; border-radius: 32px; padding: 36px 20px; display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center">
+<h1 class="h1s">See a look online? Right-click it.</h1>
+<p style="margin: 0; max-width: 540px; font-size: 18px">Right-click any photo on any site and choose "Find with AI". Your results open right beside the page.</p>
+<button type="button" class="b" style="min-height: 54px; font-size: 17px" onClick="{{ install }}">{{ installLabel }}</button>
+<div style="font-size: 14px">Version [VERSION] · Desktop Chrome, Edge and Brave</div>
+</section>
+<section class="g3">
+<div class="card"><div class="h1s">1</div><h2 class="h3" style="margin: 8px 0 4px">Add to Chrome</h2><p class="m" style="margin: 0; font-size: 15px">One click from the Chrome Web Store.</p></div>
+<div class="card"><div class="h1s">2</div><h2 class="h3" style="margin: 8px 0 4px">Right-click a photo</h2><p class="m" style="margin: 0; font-size: 15px">Choose "Find with AI" from the menu.</p></div>
+<div class="card"><div class="h1s">3</div><h2 class="h3" style="margin: 8px 0 4px">Shop or sew</h2><p class="m" style="margin: 0; font-size: 15px">Results open in a side panel next to the page.</p></div>
+</section>
+</main>
+</sc-if>
+
+<sc-if value="{{ isSignIn }}" hint-placeholder-val="{{ false }}">
+<main class="wrap" style="max-width: 460px">
+<h1 class="h1s" style="text-align: center">{{ authTitle }}</h1>
+<div role="tablist" aria-label="Account" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+<button type="button" class="{{ inClass }}" role="tab" aria-selected="{{ isIn }}" onClick="{{ authIn }}">Sign in</button>
+<button type="button" class="{{ upClass }}" role="tab" aria-selected="{{ isUp }}" onClick="{{ authUp }}">Create account</button>
+</div>
+<form class="card pop" style="display: flex; flex-direction: column; gap: 16px">
+<div class="f"><label class="lab" for="p-user">Username</label><input class="in" id="p-user" type="text" autocomplete="username"></div>
+<div class="f"><label class="lab" for="p-pass">Password</label><input class="in" id="p-pass" type="password" autocomplete="current-password"></div>
+<sc-if value="{{ isUp }}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 16px">
+<div class="f"><label class="lab" for="p-pass2">Confirm password</label><input class="in" id="p-pass2" type="password" autocomplete="new-password"><span class="m" style="font-size: 13px">At least 10 characters.</span></div>
+<div style="display: flex; align-items: flex-start; gap: 10px; font-size: 14px"><input id="p-agree" type="checkbox" style="width: 22px; height: 22px; margin: 0; flex: none; accent-color: #6C3BFF"><label for="p-agree">I am 16 or older and agree to the Terms and Privacy Policy.</label></div>
+</div>
+</sc-if>
+<button type="button" class="b" onClick="{{ signUp }}">{{ authButton }}</button>
+<div style="display: flex; flex-wrap: wrap; gap: 0 18px; justify-content: center"><button type="button" class="lk" onClick="{{ goTerms }}">Terms</button><button type="button" class="lk" onClick="{{ goPrivacy }}">Privacy Policy</button></div>
+</form>
+<p class="m" style="margin: 0; font-size: 14px; text-align: center">Looks you found on this device move into your account when you sign in.</p>
+</main>
+</sc-if>
+
+<sc-if value="{{ isLegal }}" hint-placeholder-val="{{ false }}">
+<main class="wrap" style="max-width: 820px">
+<h1 class="h1s">{{ doc.title }}</h1>
+<div role="tablist" aria-label="Legal documents" style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{ legalTabs }}" as="lt" hint-placeholder-count="3"><button type="button" class="{{ lt.cls }}" role="tab" aria-selected="{{ lt.on }}" onClick="{{ lt.pick }}">{{ lt.label }}</button></sc-for>
+</div>
+<div class="note" style="background: #FFD84D">Draft summary for layout only. Version [VERSION], effective [DATE]. Final wording needs legal review.</div>
+<article class="card" style="display: flex; flex-direction: column; gap: 20px">
+<sc-for list="{{ doc.sections }}" as="sec" hint-placeholder-count="4">
+<section><h2 class="h3" style="margin-bottom: 6px">{{ sec.h }}</h2><p class="m" style="margin: 0">{{ sec.p }}</p></section>
+</sc-for>
+</article>
+</main>
+</sc-if>
+
+<sc-if value="{{ isAdmin }}" hint-placeholder-val="{{ false }}">
+<main class="wrap" style="max-width: 860px">
+<div><h1 class="h1s">AI settings</h1><div class="m" style="margin-top: 6px; font-size: 15px">Admins only. Changes apply to new searches straight away.</div></div>
+<section class="card" style="display: flex; flex-direction: column; gap: 14px">
+<h2 class="h3">Provider</h2>
+<div class="g3" style="grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px">
+<sc-for list="{{ providers }}" as="p" hint-placeholder-count="3">
+<button type="button" class="{{ p.cls }}" aria-pressed="{{ p.on }}" onClick="{{ p.pick }}" style="border-radius: 18px; min-height: 64px; text-align: left; font-size: 16px">{{ p.label }}</button>
+</sc-for>
+</div>
+<div class="note">Changing provider changes which company receives uploaded photos. Update the Privacy Policy to match.</div>
+</section>
+<section class="card" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px">
+<div class="f"><label class="lab" for="a-model">{{ modelLabel }}</label><input class="in" id="a-model" type="text" placeholder="[MODEL NAME]"></div>
+<sc-if value="{{ isAzure }}" hint-placeholder-val="{{ true }}">
+<div class="f"><label class="lab" for="a-end">Endpoint</label><input class="in" id="a-end" type="url" placeholder="https://[RESOURCE].azure.com"></div>
+</sc-if>
+<div class="f"><label class="lab" for="a-key">API key</label><input class="in" id="a-key" type="password" placeholder="Saved key ends in ••••"><span class="m" style="font-size: 13px">Stored encrypted. Only the last 4 characters are ever shown.</span></div>
+<div style="display: flex; align-items: center; gap: 12px"><input id="a-web" type="checkbox" checked style="width: 22px; height: 22px; margin: 0; accent-color: #6C3BFF"><label class="lab" for="a-web">Use the model's web search</label></div>
+</section>
+<section class="card" style="display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; flex-wrap: wrap; gap: 10px">
+<button type="button" class="b w" onClick="{{ runTest }}">Test connection</button>
+<button type="button" class="b" onClick="{{ save }}">{{ saveLabel }}</button>
+</div>
+<sc-if value="{{ testRunning }}" hint-placeholder-val="{{ false }}">
+<div class="st act" role="status"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true" style="animation: of-spin .9s linear infinite"><path d="M12 3a9 9 0 1 0 9 9"/></svg>Running a sample photo…</div>
+</sc-if>
+<sc-if value="{{ testOk }}" hint-placeholder-val="{{ false }}">
+<div class="st done" role="status" style="flex-wrap: wrap"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Connected. Sample result: 5 pieces, 14 working links, 41 seconds.</div>
+</sc-if>
+</section>
+</main>
+</sc-if>
+
+<footer class="ftr">
+<button type="button" class="lk" onClick="{{ goPrivacy }}">Privacy</button>
+<button type="button" class="lk" onClick="{{ goTerms }}">Terms</button>
+<button type="button" class="lk" onClick="{{ goCookies }}">Cookies</button>
+<button type="button" class="lk" onClick="{{ goAdmin }}">Admin</button>
+</footer>
+<sc-if value="{{ showCookie }}" hint-placeholder-val="{{ false }}">
+<div class="cookie" role="region" aria-label="Cookie notice">
+<div style="flex: 1 1 240px">We use one cookie to remember your looks on this device. No ads, no tracking.</div>
+<div style="display: flex; gap: 8px"><button type="button" class="t" onClick="{{ cookieOk }}">Decline</button><button type="button" class="t" onClick="{{ cookieOk }}">Accept</button></div>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1000}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+let dark = false;
+try { dark = window.matchMedia('(prefers-color-scheme: dark)').matches; } catch (e) {}
+this.state = { screen: 'home', step: 0, item: 1, tab: 'buy', size: 'M', user: false, installed: false, downloaded: false, dark, menu: false, auth: 'in', legal: 'privacy', provider: 'azure', test: 'idle', saved: false, cookie: true };
+this.timers = [];
+}
+clearTimers() { this.timers.forEach(clearTimeout); this.timers = []; }
+componentWillUnmount() { this.clearTimers(); }
+go(screen, extra) { this.clearTimers(); this.setState({ screen, menu: false, ...(extra || {}) }); }
+start() {
+this.clearTimers();
+this.setState({ screen: 'loading', step: 0, menu: false });
+[1, 2, 3].forEach((n) => this.timers.push(setTimeout(() => this.setState({ step: n }), n * 1100)));
+this.timers.push(setTimeout(() => this.setState({ screen: 'results', item: 1, tab: 'buy', downloaded: false }), 4700));
+}
+renderVals() {
+const s = this.state;
+const on = (base, flag) => base + (flag ? ' on' : '');
+const blocks = ['#D9CCFF', '#A8EBCB', '#FFD84D', '#FF9B85', '#A9D8FF'];
+const mk = (rows) => rows.map((r, i) => ({ store: r[0], title: r[1], price: r[2], badge: i === 0 && r[3] ? 'Exact match' : 'Similar', bg: blocks[(i + r[1].length) % 5] }));
+const sew = (fabric, yd, third, extra) => ({ makeable: true, piece3: third, materials: [{ name: fabric, qty: yd }, extra, { name: 'Matching thread', qty: '1 spool' }, { name: 'Fusible interfacing', qty: '½ yd' }] });
+const data = [
+{ short: 'Sunglasses', name: 'Rectangular sunglasses', desc: 'Black acetate frame, dark lens', x: 50, y: 15, makeable: false, matches: mk([['Sample Store F', 'Slim rectangle sunglasses', '$38'], ['Sample Store B', 'Square acetate shades', '$65'], ['Sample Store G', 'Classic black frames', '$24']]) },
+{ short: 'Shirt', name: 'Linen camp shirt', desc: 'Navy, short sleeve, open collar', x: 50, y: 42, ...sew('Mid-weight linen, navy', '1¾ yd at 60 in wide', 'Sleeve', { name: 'Buttons, 12 mm', qty: '6' }), matches: mk([['Sample Store A', 'Linen camp-collar shirt', '$68', true], ['Sample Store B', 'Relaxed linen shirt', '$45'], ['Sample Store C', 'Resort collar shirt', '$89']]) },
+{ short: 'Trousers', name: 'Pleated trousers', desc: 'Stone, wide leg, single pleat', x: 50, y: 72, ...sew('Cotton twill, stone', '2½ yd at 60 in wide', 'Waistband', { name: 'Trouser zipper, 7 in', qty: '1' }), matches: mk([['Sample Store D', 'Single-pleat wide trouser', '$110'], ['Sample Store A', 'Pleated chino', '$79'], ['Sample Store E', 'Wide-leg cotton trouser', '$135']]) },
+{ short: 'Loafers', name: 'Leather loafers', desc: 'Brown, penny strap, low heel', x: 50, y: 93, makeable: false, matches: mk([['Sample Store H', 'Penny loafer, brown', '$120', true], ['Sample Store D', 'Soft leather loafer', '$95'], ['Sample Store F', 'Classic slip-on', '$70']]) },
+{ short: 'Tote', name: 'Canvas tote bag', desc: 'Coral, short handles', x: 18, y: 57, makeable: false, matches: mk([['Sample Store C', 'Everyday canvas tote', '$32'], ['Sample Store G', 'Heavy cotton tote', '$28'], ['Sample Store A', 'Colour-block tote', '$48']]) }
+];
+const items = data.map((d, i) => ({ ...d, n: i + 1, selected: i === s.item, aria: 'Item ' + (i + 1) + ', ' + d.name, left: d.x + '%', top: d.y + '%', dotClass: on('dot', i === s.item), chipClass: on('t', i === s.item), pick: () => this.setState({ item: i, tab: 'buy', downloaded: false }) }));
+const sel = items[s.item];
+const isBuy = s.tab === 'buy', isMake = !isBuy, isUp = s.auth === 'up';
+const labels = ['Checking the photo', 'Finding every piece', 'Searching stores', 'Checking links'];
+const docs = {
+privacy: { title: 'Privacy Policy', sections: [
+{ h: 'What we collect', p: 'The photos you upload, the results we find, your username, and body measurements if you choose to add them.' },
+{ h: 'How photos are handled', p: 'Each photo is checked for unsafe content, sent to our AI provider to find the clothing, and faces are blurred. Only the blurred copy is saved.' },
+{ h: 'How long we keep it', p: 'Photos and results are deleted after 90 days. You can delete any search, or everything, at any time.' },
+{ h: 'Who processes your data', p: '[HOSTING PROVIDER] and [AI PROVIDER]. We do not sell your data or show ads.' },
+{ h: 'Your rights', p: 'Download your data, correct it, or delete your account from Account & privacy. Contact: [PRIVACY EMAIL].' } ] },
+terms: { title: 'Terms of Service', sections: [
+{ h: 'Who can use it', p: 'You must be 16 or older.' },
+{ h: 'Photos you upload', p: 'Only upload photos you have the right to use. No photos of children, and no explicit or illegal content.' },
+{ h: 'Results', p: 'Matches, prices and stock come from other websites and can be wrong or out of date. Check with the store before you buy.' },
+{ h: 'Patterns', p: 'Patterns are drafted in the style of a garment for personal use. They are not copies of the original design.' },
+{ h: 'Misuse', p: 'We can suspend accounts that break these terms. Report a problem: [ABUSE EMAIL].' } ] },
+cookies: { title: 'Cookie Policy', sections: [
+{ h: 'The cookies we use', p: 'One cookie remembers your looks on this device, and one keeps you signed in. That is all.' },
+{ h: 'What we do not use', p: 'No advertising cookies and no third-party tracking.' },
+{ h: 'Your choice', p: 'If you decline, the site still works but your looks are not remembered between visits.' } ] }
+};
+const prov = [['azure', 'Azure AI Foundry'], ['openai', 'OpenAI'], ['google', 'Google Gemini']];
+const legal = (k) => () => this.go('legal', { legal: k });
+return {
+rootClass: on('r', false) + (s.dark ? ' dark' : ''), isDark: s.dark, isLight: !s.dark, themeLabel: s.dark ? 'Switch to light mode' : 'Switch to dark mode', themeText: s.dark ? 'Light mode' : 'Dark mode', toggleTheme: () => this.setState({ dark: !s.dark }),
+menu: s.menu, menuClosed: !s.menu, navClass: 'nav' + (s.menu ? ' open' : ''), toggleMenu: () => this.setState({ menu: !s.menu }),
+isHome: s.screen === 'home', isLoading: s.screen === 'loading', isResults: s.screen === 'results', isHistory: s.screen === 'history', isInstall: s.screen === 'install', isSignIn: s.screen === 'signin', isLegal: s.screen === 'legal', isAdmin: s.screen === 'admin',
+goHome: () => this.go('home'), goHistory: () => this.go('history'), goInstall: () => this.go('install'), goSignIn: () => this.go('signin'), goAdmin: () => this.go('admin'),
+goPrivacy: legal('privacy'), goTerms: legal('terms'), goCookies: legal('cookies'),
+start: () => this.start(), openLook: () => this.go('results', { item: 1, tab: 'buy' }),
+isIn: !isUp, isUp, inClass: on('t', !isUp), upClass: on('t', isUp), authIn: () => this.setState({ auth: 'in' }), authUp: () => this.setState({ auth: 'up' }),
+authTitle: isUp ? 'Save your looks' : 'Welcome back', authButton: isUp ? 'Create account' : 'Sign in',
+signUp: () => this.go('history', { user: true }), accountLabel: s.user ? 'My account' : 'Sign in',
+install: () => this.setState({ installed: true }), installLabel: s.installed ? 'Added to Chrome' : 'Add to Chrome',
+download: () => this.setState({ downloaded: true }), downloadLabel: s.downloaded ? 'Pattern downloaded' : 'Download printable pattern',
+pct: s.step * 25, pctWidth: (s.step * 25 + 10) + '%',
+steps: labels.map((label, i) => ({ label, done: i < s.step, active: i === s.step, pending: i > s.step, cls: 'st' + (i < s.step ? ' done' : i === s.step ? ' act' : '') })),
+items, sel, isBuy, isMake, showPattern: isMake && !!sel.makeable, showNoPattern: isMake && !sel.makeable,
+tabBuy: () => this.setState({ tab: 'buy' }), tabMake: () => this.setState({ tab: 'make' }), buyClass: on('t', isBuy), makeClass: on('t', isMake),
+sizes: ['XS', 'S', 'M', 'L', 'XL'].map((label) => ({ label, on: label === s.size, cls: on('t', label === s.size), pick: () => this.setState({ size: label }) })),
+looks: [[5, 'Today'], [4, 'Yesterday'], [6, '3 days ago'], [3, 'Last week'], [5, '2 weeks ago'], [7, 'Last month']].map((l, i) => ({ count: l[0], when: l[1], bg: blocks[i % 5] })),
+doc: docs[s.legal], legalTabs: [['privacy', 'Privacy'], ['terms', 'Terms'], ['cookies', 'Cookies']].map((t) => ({ label: t[1], on: s.legal === t[0], cls: on('t', s.legal === t[0]), pick: () => this.setState({ legal: t[0] }) })),
+providers: prov.map((p) => ({ label: p[1], on: s.provider === p[0], cls: on('t', s.provider === p[0]), pick: () => this.setState({ provider: p[0], test: 'idle', saved: false }) })),
+isAzure: s.provider === 'azure', modelLabel: s.provider === 'azure' ? 'Deployment name' : 'Model',
+runTest: () => { this.clearTimers(); this.setState({ test: 'run' }); this.timers.push(setTimeout(() => this.setState({ test: 'ok' }), 1800)); },
+testRunning: s.test === 'run', testOk: s.test === 'ok', save: () => this.setState({ saved: true }), saveLabel: s.saved ? 'Saved' : 'Save settings',
+showCookie: s.cookie && s.screen === 'home', cookieOk: () => this.setState({ cookie: false })
+};
+}
+}
+</script>
+</body>
+</html>
