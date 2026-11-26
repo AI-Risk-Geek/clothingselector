@@ -49,6 +49,10 @@ public sealed class UsageGuard(OutfitDbContext db, IConfiguration config, ILogge
             }
         }
 
+        // Admins test the service all day, so the per-account, per-device and per-network counts don't apply to them.
+        // The daily budget above still does: it protects the money, whoever is searching.
+        if (caller.IsAdmin && caller.UserId is not null) return GuardResult.Ok;
+
         var today = db.Searches.Where(s => s.CreatedUtc >= dayStart && s.Status != SearchStatus.Rejected);
         if (caller.UserId is not null)
         {
