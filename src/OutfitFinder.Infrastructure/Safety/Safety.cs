@@ -54,8 +54,9 @@ public sealed class LinkChecker(HttpClient http, ILogger<LinkChecker> log) : ILi
 
     private async Task<bool> IsLiveAsync(string url, CancellationToken ct)
     {
-        if (!Uri.TryCreate(url, UriKind.Absolute, out var uri) || (uri.Scheme != "https" && uri.Scheme != "http")) return false;
-        if (await UrlGuard.IsBlockedHostAsync(uri, ct)) return false;
+        if (!Uri.TryCreate(url, UriKind.Absolute, out var uri) || (uri.Scheme != "https" && uri.Scheme != "http"))
+            return Rejected(url, "not a web address");
+        if (await UrlGuard.IsBlockedHostAsync(uri, ct)) return Rejected(url, "host doesn't resolve or is private");
         using var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
         cts.CancelAfter(TimeSpan.FromSeconds(5));
         try
@@ -63,17 +64,28 @@ public sealed class LinkChecker(HttpClient http, ILogger<LinkChecker> log) : ILi
             using var head = new HttpRequestMessage(HttpMethod.Head, uri);
             using var r = await http.SendAsync(head, HttpCompletionOption.ResponseHeadersRead, cts.Token);
             if ((int)r.StatusCode < 400) return true;
-            if (r.StatusCode is not (HttpStatusCode.MethodNotAllowed or HttpStatusCode.Forbidden or HttpStatusCode.NotImplemented)) return false;
+            if (r.StatusCode is not (HttpStatusCode.MethodNotAllowed or HttpStatusCode.Forbidden or HttpStatusCode.NotImplemented))
+                return Rejected(url, $"HTTP {(int)r.StatusCode}");
             using var get = new HttpRequestMessage(HttpMethod.Get, uri);
             using var r2 = await http.SendAsync(get, HttpCompletionOption.ResponseHeadersRead, cts.Token);
             // Many stores answer bots with 403 even for live pages; treat 403 as "unknown but present".
-            return (int)r2.StatusCode < 400 || r2.StatusCode == HttpStatusCode.Forbidden;
+            return (int)r2.StatusCode < 400 || r2.StatusCode == HttpStatusCode.Forbidden || Rejected(url, $"HTTP {(int)r2.StatusCode}");
         }
-        catch (Exception e) when (e is HttpRequestException or TaskCanceledException)
+        catch (TaskCanceledException) when (!ct.IsCancellationRequested)
         {
-            log.LogDebug("Link check failed for {Host}: {Error}", uri.Host, e.Message);
-            return false;
+            return Rejected(url, "no answer within 5 seconds");
         }
+        catch (HttpRequestException e)
+        {
+            return Rejected(url, e.Message);
+        }
+    }
+
+    /// <summary>Logged at Information so "No shops found" can be explained from the API log.</summary>
+    private bool Rejected(string url, string reason)
+    {
+        log.LogInformation("Link rejected ({Reason}): {Url}", reason, url.Length > 200 ? url[..200] : url);
+        return false;
     }
 }
 

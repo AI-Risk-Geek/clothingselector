@@ -68,37 +68,58 @@ public abstract class ResponsesApiAnalyzer(HttpClient http, ILogger logger) : IO
             },
             ["store"] = false,
         };
-        if (s.WebSearchEnabled) body["tools"] = new JsonArray { new JsonObject { ["type"] = "web_search" } };
+        if (s.WebSearchEnabled)
+        {
+            body["tools"] = new JsonArray { new JsonObject { ["type"] = "web_search" } };
+            // With "auto" a small model sometimes skips searching and answers from memory: no links, or made-up
+            // ones that fail the link check ("No shops found"). "required" makes it search before answering.
+            body["tool_choice"] = "required";
+        }
 
+        var sw = Stopwatch.StartNew();
+        var (status, text) = await SendAsync(body, s, ct);
+        if (status == 400 && body.ContainsKey("tool_choice") && text.Contains("tool_choice", StringComparison.OrdinalIgnoreCase))
+        {
+            // A model or deployment that can't be forced to use a tool: fall back to letting it choose.
+            logger.LogWarning("{Provider} model {Model} doesn't accept tool_choice=required; retrying with auto. {Body}", Kind, ModelName(s), Truncate(text, 300));
+            body.Remove("tool_choice");
+            (status, text) = await SendAsync(body, s, ct);
+        }
+        if (status is < 200 or > 299)
+        {
+            logger.LogError("{Provider} returned {Status}: {Body}", Kind, status, Truncate(text, 500));
+            throw new AiResponseException($"The AI provider returned an error ({status}).");
+        }
+        var doc = JsonNode.Parse(text)!;
+        var output = ExtractOutputText(doc) ?? throw new AiResponseException("The AI returned no text output.");
+        var cost = EstimateCost(doc, s);
+        logger.LogInformation("{Provider} {Model} answered in {Ms} ms after {Searches} web searches ({Cost:0.0000} USD)",
+            Kind, ModelName(s), (int)sw.ElapsedMilliseconds, CountWebSearches(doc), cost);
+        return (output, cost, sw.Elapsed);
+    }
+
+    private async Task<(int Status, string Body)> SendAsync(JsonObject body, AiRuntimeSettings s, CancellationToken ct)
+    {
         using var req = new HttpRequestMessage(HttpMethod.Post, ResponsesUri(s))
         {
             Content = new StringContent(body.ToJsonString(), Encoding.UTF8, "application/json"),
         };
         Authorize(req, s);
-
         using var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
         cts.CancelAfter(TimeSpan.FromSeconds(s.TimeoutSeconds));
-        var sw = Stopwatch.StartNew();
-        HttpResponseMessage res;
-        try { res = await http.SendAsync(req, cts.Token); }
+        try
+        {
+            using var res = await http.SendAsync(req, cts.Token);
+            return ((int)res.StatusCode, await res.Content.ReadAsStringAsync(ct));
+        }
         catch (TaskCanceledException) when (!ct.IsCancellationRequested)
         {
             throw new AiResponseException($"The AI took longer than {s.TimeoutSeconds} seconds.");
         }
-        using (res)
-        {
-            var text = await res.Content.ReadAsStringAsync(ct);
-            if (!res.IsSuccessStatusCode)
-            {
-                logger.LogError("{Provider} returned {Status}: {Body}", Kind, (int)res.StatusCode, Truncate(text, 500));
-                throw new AiResponseException($"The AI provider returned an error ({(int)res.StatusCode}).");
-            }
-            var doc = JsonNode.Parse(text)!;
-            var output = ExtractOutputText(doc) ?? throw new AiResponseException("The AI returned no text output.");
-            var cost = EstimateCost(doc, s);
-            return (output, cost, sw.Elapsed);
-        }
     }
+
+    public static int CountWebSearches(JsonNode doc) =>
+        doc["output"]?.AsArray().Count(o => o?["type"]?.GetValue<string>() == "web_search_call") ?? 0;
 
     public static string? ExtractOutputText(JsonNode doc)
     {
@@ -121,7 +142,7 @@ public abstract class ResponsesApiAnalyzer(HttpClient http, ILogger logger) : IO
         var usage = doc["usage"];
         var input = usage?["input_tokens"]?.GetValue<long>() ?? 0;
         var output = usage?["output_tokens"]?.GetValue<long>() ?? 0;
-        var searches = doc["output"]?.AsArray().Count(o => o?["type"]?.GetValue<string>() == "web_search_call") ?? 0;
+        var searches = CountWebSearches(doc);
         var p = AiPricing.For(s.Model);
         return input / 1_000_000m * p.InputPerMillion + output / 1_000_000m * p.OutputPerMillion + searches * p.PerSearch;
     }

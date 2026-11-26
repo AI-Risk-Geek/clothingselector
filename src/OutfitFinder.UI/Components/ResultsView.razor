@@ -94,7 +94,13 @@
                 {
                     @if (sel.Matches.Count == 0)
                     {
-                        <EmptyState Title="No shops found for this piece" Text="None of the links we found were working. Try Search again, or adjust the box around this piece." />
+                        @* Not a dead end: offer a search the person runs themselves, clearly marked as not checked by us. *@
+                        <EmptyState Title="No checked shop links for this piece" Text="We only show links we've checked are working, and none passed this time. Try Search again, or search the shops yourself.">
+                            <a class="b w sm" href="@ShoppingSearchUrl(sel)" target="_blank" rel="noopener noreferrer">
+                                Search shops for “@sel.Name” <Icon Name="external" Size="16" />
+                            </a>
+                            <span class="m tiny">Opens Google Shopping. These results aren't checked by @Brand.Name.</span>
+                        </EmptyState>
                     }
                     else
                     {
@@ -156,6 +162,10 @@
     [Parameter] public EventCallback<SearchDto> OnChanged { get; set; }
 
     private void Select(int i) { _selected = i; _tab = "buy"; }
+
+    /// <summary>Only the piece's short name goes into the query: never anything about the person or the photo.</summary>
+    internal static string ShoppingSearchUrl(ItemDto item) =>
+        "https://www.google.com/search?tbm=shop&q=" + Uri.EscapeDataString(item.Name);
 
     private static string Pct(double v) => (Math.Clamp(v, 0.03, 0.97) * 100).ToString("0.##", CultureInfo.InvariantCulture) + "%";
 

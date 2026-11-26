@@ -135,6 +135,8 @@ public sealed class SearchPipeline(
             };
             item.Matches = ToMatches(item.Id, ai.Matches, live, bad);
             items.Add(item);
+            log.LogInformation("Search {Id} item {Number} '{Name}': AI suggested {Suggested} links, {Kept} passed the link and safety checks",
+                searchId, item.Number, item.Name, ai.Matches.Count, item.Matches.Count);
         }
         return items;
     }
@@ -160,7 +162,8 @@ public sealed class SearchPipeline(
             .Where(s => s.Id != search.Id && s.ImageHash == search.ImageHash && s.Status == SearchStatus.Completed
                         && s.CreatedUtc >= since && s.BlurredBlobPath != null)
             .OrderByDescending(s => s.CreatedUtc).FirstOrDefaultAsync(ct);
-        if (cached is null || cached.Items.Count == 0) return false;
+        // A result where no piece kept a working shop link isn't worth repeating: search again instead of copying it.
+        if (cached is null || cached.Items.Count == 0 || !cached.Items.Any(i => i.Matches.Count > 0)) return false;
         var blurred = await blobs.ReadAsync(cached.BlurredBlobPath!, ct);
         if (blurred is null) return false;
 
